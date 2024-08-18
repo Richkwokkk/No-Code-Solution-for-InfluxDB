@@ -2,8 +2,8 @@ version: "3"
 
 services:
   influxdb:
-    image: influxdb:2.7
-    container_name: ${INFLUXDB_CONTAINER_NAME}
+    image: influxdb:${INFLUXDB_VERSION}
+    container_name: ${INFLUXDB_CONTAINER_NAME}-${INFLUXDB_VERSION}
     ports:
       - "8086:8086"
     environment:
@@ -15,8 +15,8 @@ services:
       - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
     read_only: true
   grafana:
-    image: grafana/grafana:latest
-    container_name: ${GF_CONTAINER_NAME}
+    image: grafana/grafana:${GRAFANA_VERSION}
+    container_name: ${GF_CONTAINER_NAME}-${GRAFANA_VERSION}
     ports:
       - "3000:3000"
     environment:
@@ -25,3 +25,24 @@ services:
     depends_on:
       - influxdb
     read_only: true
+  # server:
+  #   image: server:${SERVER_VERSION}
+  #   container_name: ${SERVER_CONTAINER_NAME}-${SERVER_VERSION}
+  #   ports:
+  #     - "8888:8888"
+  #   depends_on:
+  #     - influxdb
+  #     - grafana
+  #   environment:
+  #     - name=value
+  #   read_only: true
+  # frontend:
+  #   image: frontend:${FRONTEND_VERSION}
+  #   container_name: ${FRONTEND_CONTAINER_NAME}-${FE_VERSION}
+  #   ports:
+  #     - "8866:8866"
+  #   depends_on:
+  #     - server
+  #   environment:
+  #     - name=value
+  #   read_only: true
