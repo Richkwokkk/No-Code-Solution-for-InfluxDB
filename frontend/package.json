@@ -19,6 +19,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.1.0",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@xyflow/react": "^12.0.4",
@@ -30,7 +31,8 @@
     "react-dom": "^18",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",
