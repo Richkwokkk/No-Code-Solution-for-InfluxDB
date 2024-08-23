@@ -51,7 +51,7 @@ services:
       dockerfile: ../containerisation/frontend/Dockerfile.dev
     image: visual-flux-frontend-dev
     ports:
-      - "3000:3000"
+      - "4000:4000"
     develop:
       watch:
         - action: sync
@@ -61,20 +61,20 @@ services:
             - /node_modules
         - action: rebuild
           path: ../frontend/package.json
-  visual-flux-frontend-staging:
-    build:
-      context: ../frontend
-      dockerfile: ../containerisation/frontend/Dockerfile.staging
-    image: visual-flux-frontend-staging
-    ports:
-      - "4000:4000"
-  visual-flux-frontend-prod:
-    build:
-      context: ../frontend
-      dockerfile: ../containerisation/frontend/Dockerfile.prod
-    image: visual-flux-frontend-prod
-    ports:
-      - "4000:4000"
+  # visual-flux-frontend-staging:
+  #   build:
+  #     context: ../frontend
+  #     dockerfile: ../containerisation/frontend/Dockerfile.staging
+  #   image: visual-flux-frontend-staging
+  #   ports:
+  #     - "4000:4000"
+  # visual-flux-frontend-prod:
+  #   build:
+  #     context: ../frontend
+  #     dockerfile: ../containerisation/frontend/Dockerfile.prod
+  #   image: visual-flux-frontend-prod
+  #   ports:
+  #     - "4000:4000"
 
 volumes:
   node_modules:
