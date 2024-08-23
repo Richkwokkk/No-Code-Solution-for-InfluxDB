@@ -7,7 +7,7 @@
     "preinstall": "npx only-allow pnpm",
     "dev": "next dev --turbo -p 4000",
     "build": "tsec --noEmit && next build",
-    "start": "next start",
+    "start": "next start -p 4000",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json,mjs,cjs,yml,yaml}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,css,json,mjs,cjs,yml,yaml}\"",

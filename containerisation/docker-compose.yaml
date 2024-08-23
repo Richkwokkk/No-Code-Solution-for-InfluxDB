@@ -5,7 +5,7 @@ services:
     image: influxdb:${INFLUXDB_VERSION}
     container_name: ${INFLUXDB_CONTAINER_NAME}-${INFLUXDB_VERSION}
     ports:
-      - "8086:8086"
+      - ${INFLUXDB_PORT}
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=${DOCKER_INFLUXDB_INIT_MODE}
       - DOCKER_INFLUXDB_INIT_USERNAME=${DOCKER_INFLUXDB_INIT_USERNAME}
@@ -17,7 +17,7 @@ services:
     image: grafana/grafana:${GRAFANA_VERSION}
     container_name: ${GF_CONTAINER_NAME}-${GRAFANA_VERSION}
     ports:
-      - "3000:3000"
+      - ${GF_PORT}
     environment:
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
@@ -25,56 +25,13 @@ services:
       - influxdb
     volumes:
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
-  # server:
-  #   image: server:${SERVER_VERSION}
-  #   container_name: ${SERVER_CONTAINER_NAME}-${SERVER_VERSION}
-  #   ports:
-  #     - "8888:8888"
-  #   depends_on:
-  #     - influxdb
-  #     - grafana
-  #   environment:
-  #     - name=value
-  # frontend:
-  #   image: frontend:${FRONTEND_VERSION}
-  #   container_name: ${FRONTEND_CONTAINER_NAME}-${FE_VERSION}
-  #   ports:
-  #     - "8866:8866"
-  #   depends_on:
-  #     - server
-  #   environment:
-  #     - name=value
-  #   read_only: true
-  visual-flux-frontend-dev:
+  frontend:
     build:
       context: ../frontend
-      dockerfile: ../containerisation/frontend/Dockerfile.dev
-    image: visual-flux-frontend-dev
+      dockerfile: ${FE_DOCKERFILE_PATH}
+    image: frontend:${FE_VERSION}
+    container_name: ${FE_CONTAINER_NAME}-${FE_VERSION}
     ports:
-      - "4000:4000"
-    develop:
-      watch:
-        - action: sync
-          path: ../frontend/app
-          target: /app/app
-          ignore:
-            - /node_modules
-        - action: rebuild
-          path: ../frontend/package.json
-  # visual-flux-frontend-staging:
-  #   build:
-  #     context: ../frontend
-  #     dockerfile: ../containerisation/frontend/Dockerfile.staging
-  #   image: visual-flux-frontend-staging
-  #   ports:
-  #     - "4000:4000"
-  # visual-flux-frontend-prod:
-  #   build:
-  #     context: ../frontend
-  #     dockerfile: ../containerisation/frontend/Dockerfile.prod
-  #   image: visual-flux-frontend-prod
-  #   ports:
-  #     - "4000:4000"
-
-volumes:
-  node_modules:
+      - ${FE_PORT}
+    volumes:
+      - ../frontend:/app
