@@ -14,30 +14,6 @@ git clone https://github.cs.adelaide.edu.au/INFLUXUI-ATYSYS/InfluxUI-PG02.git
 
 ## Run and Build
 
-### With Docker (Safer & Easier)
-
-#### Development Build
-
-To run the development build with Docker and hot reload:
-
-```bash
-docker compose -f containerisation/docker-compose.yaml up visual-flux-frontend-dev --watch
-```
-
-Then open the app via `http://localhost:3000` in the browser.
-
-#### Production Build
-
-To run the production build with Docker:
-
-```bash
-docker compose -f containerisation/docker-compose.yaml up visual-flux-frontend-prod
-```
-
-This will run the production build on http://localhost:4000.
-
-### Without Docker
-
 #### Prerequisites: Install `pnpm`
 
 For this project, we use `pnpm` instead of `npm` to manage packages. `pnpm` is a package manager more efficient than `npm`. It will significantly speed up your package management.
@@ -114,8 +90,6 @@ For details on how to write tests, please visit
 
 ### How to Run Tests
 
-Testing on your own computer requires a [local development / production build without Docker](#without-docker)
-
 If you are using VSCode, please download the official extensions for [Vitest](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) and [Playwright](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright). They should cover most of the use cases for our testing.
 
 Alternatively, here are all the testing commands you can run manually for more details:
@@ -132,10 +106,10 @@ For end-to-end testing, first build and run the production version, and then run
 # Install Playwright and its utilities (only need to run for the first time you run e2e tests)
 pnpm exec playwright install # nlx playwright install
 
-# From the root directory, run the production build
-docker compose -f containerisation/docker-compose.yaml up visual-flux-frontend-prod
+cd frontend # cd into frontend from the root directory
 
-cd frontend
+pnpm run build # generate the production build
+pnpm run start # run the production build
 
 # Run all end-to-end tests using playwright
 pnpm test:e2e # nr test:e2e
