@@ -10,7 +10,4 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-ENV PORT=4000
-EXPOSE 4000
-
 CMD ["pnpm", "run", "dev"]

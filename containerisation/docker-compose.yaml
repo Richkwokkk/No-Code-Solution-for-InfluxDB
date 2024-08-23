@@ -3,7 +3,7 @@ version: "3"
 services:
   influxdb:
     image: influxdb:${INFLUXDB_VERSION}
-    container_name: ${INFLUXDB_CONTAINER_NAME}-${INFLUXDB_VERSION}
+    container_name: ${INFLUXDB_CONTAINER}-${INFLUXDB_VERSION}
     ports:
       - ${INFLUXDB_PORT}
     environment:
@@ -15,7 +15,7 @@ services:
       - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
   grafana:
     image: grafana/grafana:${GRAFANA_VERSION}
-    container_name: ${GF_CONTAINER_NAME}-${GRAFANA_VERSION}
+    container_name: ${GF_CONTAINER}-${GRAFANA_VERSION}
     ports:
       - ${GF_PORT}
     environment:
@@ -26,12 +26,14 @@ services:
     volumes:
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: ${FE_DOCKERFILE_PATH}
-    image: frontend:${FE_VERSION}
-    container_name: ${FE_CONTAINER_NAME}-${FE_VERSION}
+    image: ${FE_IMAGE}:${FE_VERSION}
+    container_name: ${FE_CONTAINER}-${FE_VERSION}
     ports:
       - ${FE_PORT}
-    volumes:
-      - ../frontend:/app
+    environment:
+       - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING}
+    # volumes:
+    #   - ../frontend/:/app
+    depends_on:
+      - influxdb
+      - grafana
