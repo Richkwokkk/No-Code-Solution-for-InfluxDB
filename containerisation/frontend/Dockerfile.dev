@@ -1,0 +1,16 @@
+FROM node:20.16.0-alpine
+
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml ./
+
+RUN pnpm install --frozen-lockfile
+
+COPY . .
+
+ENV PORT=4000
+EXPOSE 4000
+
+CMD ["pnpm", "run", "dev"]
