@@ -1,38 +1,56 @@
 import { test, expect } from "@playwright/test";
 
-test("should display login form correctly", async ({ page }) => {
-  await page.goto("/");
+test.describe("Login Form", () => {
+  test("should display login form correctly", async ({ page }) => {
+    await page.goto("/login");
 
-  // Check if the login form elements are present
-  await expect(page.getByRole("heading", { name: "Login" })).toBeVisible();
-  await expect(
-    page.getByText("Enter your email below to login to your account"),
-  ).toBeVisible();
-  await expect(page.getByLabel("Email")).toBeVisible();
-  await expect(page.getByLabel("Password")).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Forgot your password?" }),
-  ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Login" })).toBeVisible();
-  await expect(page.getByText("Don't have an account?")).toBeVisible();
-  await expect(page.getByRole("link", { name: "Sign up" })).toBeVisible();
-});
+    await expect(page.getByRole("heading", { name: "Login" })).toBeVisible();
+    await expect(page.getByText("Enter your username below")).toBeVisible();
+    await expect(page.getByLabel("Username")).toBeVisible();
+    await expect(page.getByLabel("Password")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Login" })).toBeVisible();
+  });
 
-test("should fill in login form and submit", async ({ page }) => {
-  await page.goto("/");
+  test("should show validation errors for empty fields", async ({ page }) => {
+    await page.goto("/login");
 
-  // Fill in the form
-  await page.getByLabel("Email").fill("test@example.com");
-  await page.getByLabel("Password").fill("password123");
+    await page.getByRole("button", { name: "Login" }).click();
 
-  // Click the login button
-  await page.getByRole("button", { name: "Login" }).click();
+    await expect(page.getByText("Username is required")).toBeVisible();
+    await expect(page.getByText("Password is required")).toBeVisible();
+  });
 
-  // Add assertions here for successful login (e.g., redirect, success message)
-});
+  test("should show validation error for short password", async ({ page }) => {
+    await page.goto("/login");
 
-test("should navigate to forgot password page", async ({ page }) => {
-  await page.goto("/");
+    await page.getByLabel("Username").fill("testuser");
+    await page.getByLabel("Password").fill("short");
+    await page.getByRole("button", { name: "Login" }).click();
 
-  await page.getByRole("link", { name: "Forgot your password?" });
+    await expect(
+      page.getByText("Password must be at least 8 characters"),
+    ).toBeVisible();
+  });
+
+  test("should submit form with valid data", async ({ page }) => {
+    await page.goto("/login");
+
+    await page.getByLabel("Username").fill("testuser");
+    await page.getByLabel("Password").fill("validpassword123");
+
+    const loginButton = page.getByRole("button", { name: "Login" });
+    await loginButton.click();
+
+    await page.waitForFunction(
+      (selector) =>
+        document.querySelector(selector)?.innerHTML === "Logging in...",
+      "button",
+    );
+
+    // Wait for the login process to complete (adjust timeout as needed)
+    await page.waitForTimeout(1500);
+
+    // Add assertions for successful login (e.g., redirect, success message)
+    // This will depend on your application's behavior after successful login
+  });
 });
