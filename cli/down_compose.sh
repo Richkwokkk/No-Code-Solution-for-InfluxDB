@@ -1,2 +1,2 @@
-cd containerisation
+cd .docker
 docker compose down
