@@ -7,4 +7,5 @@ docker compose \
     --env-file .env/server.dev.env \
     --env-file .env/frontend.dev.env \
     up \
-    --detach
+    --build \
+    --watch
