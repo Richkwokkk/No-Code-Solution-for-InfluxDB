@@ -22,7 +22,7 @@ export default defineConfig({
         "**/*.config.*",
         "**/snapshot-tests/**",
         "**/coverage/**",
-        "app/{layout,swr-provider}.tsx",
+        "app/**/{layout,*provider}.tsx",
       ],
       thresholds: {
         branches: 80,

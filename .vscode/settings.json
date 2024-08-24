@@ -1,0 +1,10 @@
+{
+  "conventionalCommits.scopes": [
+    "infra",
+    "frontend",
+    "server"
+  ],
+  "cSpell.words": [
+    "tanstack"
+  ]
+}
