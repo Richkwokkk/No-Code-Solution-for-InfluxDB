@@ -24,6 +24,9 @@ services:
     volumes:
       - ${GF_INI}:/etc/grafana/grafana.ini
   frontend:
+    build:
+      context: ./frontend
+      dockerfile: ${FE_DOCKERFILE}
     image: ${FE_IMAGE}:${FE_VERSION}
     container_name: ${FE_CONTAINER}-${FE_VERSION}
     ports:
@@ -31,3 +34,14 @@ services:
     depends_on:
       - influxdb
       - grafana
+    develop:
+      watch:
+        - path: ./frontend/package.json
+          action: rebuild
+        - path: ./frontend/package-lock.json
+          action: rebuild
+        - path: ./frontend/pnpm-lock.json
+          action: rebuild
+        - path: ./frontend
+          target: /app
+          action: sync
