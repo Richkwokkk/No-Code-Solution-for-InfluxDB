@@ -13,7 +13,7 @@ export default defineConfig({
     setupFiles: ["./tests/setup/setup-test-env.ts"],
     exclude: ["**/tests/**", "**/node_modules/**"],
     coverage: {
-      include: ["app/**/*", "lib/**/*"],
+      include: ["app/**/*", "lib/**/*", "features/**/*"],
       exclude: [
         "test/**",
         "vite.*.ts",

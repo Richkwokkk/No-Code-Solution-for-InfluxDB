@@ -15,16 +15,19 @@ const cardVariant = cva(
   },
 );
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { variant?: "default" | "ghost" }
->(({ className, variant, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(cardVariant({ variant }), className)}
-    {...props}
-  />
-));
+export interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariant> {}
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, variant, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(cardVariant({ variant }), className)}
+      {...props}
+    />
+  ),
+);
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<
@@ -52,16 +55,19 @@ const cardTitleVariant = cva(
   },
 );
 
-const CardTitle = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement> & { variant?: "default" | "center" }
->(({ className, variant, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn(cardTitleVariant({ variant }), className)}
-    {...props}
-  />
-));
+export interface CardTitleProps
+  extends React.HTMLAttributes<HTMLHeadingElement>,
+    VariantProps<typeof cardTitleVariant> {}
+
+const CardTitle = React.forwardRef<HTMLParagraphElement, CardTitleProps>(
+  ({ className, variant, ...props }, ref) => (
+    <h3
+      ref={ref}
+      className={cn(cardTitleVariant({ variant }), className)}
+      {...props}
+    />
+  ),
+);
 CardTitle.displayName = "CardTitle";
 
 const cardDescriptionVariant = cva("text-sm text-muted-foreground", {
@@ -74,11 +80,13 @@ const cardDescriptionVariant = cva("text-sm text-muted-foreground", {
   defaultVariants: { variant: "default" },
 });
 
+export interface CardDescriptionProps
+  extends React.HTMLAttributes<HTMLParagraphElement>,
+    VariantProps<typeof cardDescriptionVariant> {}
+
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement> & {
-    variant?: "default" | "center";
-  }
+  CardDescriptionProps
 >(({ className, variant, ...props }, ref) => (
   <p
     ref={ref}
