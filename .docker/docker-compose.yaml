@@ -23,6 +23,17 @@ services:
       - influxdb
     volumes:
       - ${GF_INI}:/etc/grafana/grafana.ini
+  server:
+    build:
+      context: ./server
+      dockerfile: ${SERVER_DOCKERFILE}
+    image: ${SERVER_IMAGE}:${SERVER_VERSION}
+    container_name: ${SERVER_CONTAINER}-${SERVER_VERSION}
+    ports:
+      - ${SERVER_PORT}
+    depends_on:
+      - influxdb
+      - grafana
   frontend:
     build:
       context: ./frontend
@@ -34,6 +45,7 @@ services:
     depends_on:
       - influxdb
       - grafana
+      - server
     develop:
       watch:
         - path: ./frontend/package.json
