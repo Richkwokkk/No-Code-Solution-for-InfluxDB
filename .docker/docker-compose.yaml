@@ -31,6 +31,8 @@ services:
     container_name: ${SERVER_CONTAINER}-${SERVER_VERSION}
     ports:
       - ${SERVER_PORT}
+    volumes:
+      - ./server:/app
     depends_on:
       - influxdb
       - grafana
