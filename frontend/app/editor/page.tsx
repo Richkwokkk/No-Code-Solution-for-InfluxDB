@@ -1,7 +1,8 @@
+import Header from '@/features/editor/components/Header'
 import React from 'react'
 
 export default function page() {
   return (
-    <div className="bg-muted">page</div>
+    <Header />
   )
 }
