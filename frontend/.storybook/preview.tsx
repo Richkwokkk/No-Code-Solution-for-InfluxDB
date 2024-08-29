@@ -1,9 +1,9 @@
-import React from 'react';
-import { ReactFlowProvider } from '@xyflow/react';
+/* eslint-disable import/order */
+// @ts-ignore
 import type { Preview } from "@storybook/react";
-import '@xyflow/react/dist/style.css';
-// import '@/tailwind.css';
-import '../app/globals.css';
+import { ReactFlowProvider } from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
+import "../app/globals.css";
 
 const preview: Preview = {
   decorators: [

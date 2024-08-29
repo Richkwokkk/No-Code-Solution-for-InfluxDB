@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 interface EditorLayoutProps {
   children: React.ReactNode;
@@ -6,9 +6,9 @@ interface EditorLayoutProps {
 
 const EditorLayout = function ({ children }: EditorLayoutProps) {
   return (
-    <div className="w-full flex">
+    <div className="flex w-full">
       <div className="hidden h-screen w-screen bg-muted lg:block">
-      {children}
+        {children}
       </div>
     </div>
   );
