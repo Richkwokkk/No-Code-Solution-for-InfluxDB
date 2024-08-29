@@ -1,7 +1,11 @@
-import React from 'react'
+"use client";
 
-export default function page() {
+import EditorFlow from "@/features/editor/components/EditorFlow";
+
+export default function EditorPage() {
   return (
-    <div className="bg-muted">page</div>
-  )
+    <div className="h-screen w-screen">
+      <EditorFlow />
+    </div>
+  );
 }

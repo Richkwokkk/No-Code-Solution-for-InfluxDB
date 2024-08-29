@@ -6,6 +6,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const twclsx = (...classes: ClassValue[]) => twMerge(clsx(...classes));
+
 export const saltAndHashPassword = async (
   password: string,
 ): Promise<string> => {
