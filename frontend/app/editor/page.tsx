@@ -5,11 +5,9 @@ import Header from "@/features/editor/components/Header";
 
 export default function EditorPage() {
   return (
-    <div className="h-screen w-screen">
+    <div className="flex h-screen w-screen flex-col">
       <Header />
-      <div className="h-full w-full">
-        <EditorFlow />
-      </div>
+      <EditorFlow />
     </div>
   );
 }
