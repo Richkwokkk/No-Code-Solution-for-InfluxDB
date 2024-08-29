@@ -1,5 +1,3 @@
-/* eslint-disable import/order */
-// @ts-ignore
 import type { Preview } from "@storybook/react";
 import { ReactFlowProvider } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";

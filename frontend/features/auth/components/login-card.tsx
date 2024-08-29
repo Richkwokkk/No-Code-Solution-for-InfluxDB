@@ -31,10 +31,10 @@ export function LoginCard() {
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async () => {
     setIsLoading(true);
     setError(null);
-    await new Promise((resolve) =>
+    await new Promise(() =>
       setTimeout(() => {
         setIsLoading(false);
       }, 1000),
