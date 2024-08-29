@@ -7,7 +7,7 @@ interface EditorNodeProps {
   icon: LucideIcon;
   children?: React.ReactNode;
   leftHandle?: boolean;
-  righttHandle?: boolean;
+  rightHandle?: boolean;
 }
 
 function EditorNode({
@@ -16,7 +16,7 @@ function EditorNode({
   icon: Icon,
   children,
   leftHandle = true,
-  righttHandle = true,
+  rightHandle: rightHandle = true,
 }: EditorNodeProps) {
   return (
     <div className="min-w-40 rounded-lg border bg-background">
@@ -38,7 +38,7 @@ function EditorNode({
             <p className="text-xs font-bold">{title}</p>
           </div>
         </div>
-        {righttHandle ? (
+        {rightHandle ? (
           <Handle
             type="source"
             id="node-target"
@@ -61,7 +61,7 @@ const BucketNode = () => {
       title="example-bucket"
       icon={Cylinder}
       leftHandle={false}
-      righttHandle
+      rightHandle
     />
   );
 };
@@ -73,7 +73,7 @@ const MeasurementNode = () => {
       title="example-measurement"
       icon={Grid2X2}
       leftHandle
-      righttHandle
+      rightHandle
     />
   );
 };
@@ -85,7 +85,7 @@ export const FieldNode = () => {
       title="example-field"
       icon={RectangleEllipsis}
       leftHandle
-      righttHandle
+      rightHandle
     />
   );
 };

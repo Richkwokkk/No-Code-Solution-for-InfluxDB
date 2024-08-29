@@ -20,7 +20,7 @@ export const BucketNode: Story = {
     title: "example-bucket",
     icon: Cylinder,
     leftHandle: false,
-    righttHandle: true,
+    rightHandle: true,
   },
 };
 
@@ -30,7 +30,7 @@ export const MeasurementNode: Story = {
     title: "example-measurement",
     icon: Grid2X2,
     leftHandle: true,
-    righttHandle: true,
+    rightHandle: true,
   },
 };
 
@@ -40,6 +40,6 @@ export const FieldNode: Story = {
     title: "example-field",
     icon: RectangleEllipsis,
     leftHandle: true,
-    righttHandle: true,
+    rightHandle: true,
   },
 };
