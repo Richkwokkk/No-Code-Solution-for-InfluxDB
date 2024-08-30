@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const Header = () => {
+export const EditorHeader = () => {
   return (
     <header className="z-50 flex w-screen items-center justify-between border bg-background px-6 py-3">
       <div className="flex w-1/2 items-center justify-between">
@@ -31,5 +31,3 @@ const Header = () => {
     </header>
   );
 };
-
-export default Header;

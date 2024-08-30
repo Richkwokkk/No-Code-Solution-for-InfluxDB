@@ -1,6 +1,6 @@
 "use client";
 
-import { nodeTypes } from "@/features/editor/components/EditorNode";
+import { nodeTypes } from "@/features/editor/components/editor-nodes";
 import {
   ReactFlow,
   MiniMap,
@@ -69,6 +69,7 @@ const initialEdges: Edge[] = [
     target: "2",
     animated: true,
     style: { strokeWidth: 2 },
+    type: "smoothstep",
   },
 ];
 
@@ -76,7 +77,7 @@ const fitViewOptions: FitViewOptions = {
   padding: 0.2,
 };
 
-export default function EditorFlow() {
+export function EditorFlow() {
   const [nodes, setNodes] = useNodesState(initialNodes);
   const [edges, setEdges] = useEdgesState(initialEdges);
 
@@ -98,6 +99,7 @@ export default function EditorFlow() {
             ...params,
             animated: true,
             style: { strokeWidth: 2 },
+            type: "smoothstep",
           },
           eds,
         ),
@@ -113,11 +115,11 @@ export default function EditorFlow() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        connectionLineType={ConnectionLineType.Bezier}
+        connectionLineType={ConnectionLineType.SmoothStep}
         nodeTypes={nodeTypes}
         fitView
         fitViewOptions={fitViewOptions}
-        maxZoom={1.2}
+        maxZoom={1}
         proOptions={{ hideAttribution: true }}
       >
         <Controls />
