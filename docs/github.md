@@ -3,7 +3,7 @@ This is the GitHub instructions for general purposes.
 
 ## Structure <a name="top"></a>
 [A. How to clone or pull from GitHub](#a-how-to-clone-or-pull-from-github) <br>
-[B. How to checkout and switch to the branch](#b-how-to-checkout-and-switch-to-the-branch)<br>
+[B. How to checkout the branch](#b-how-to-checkout-the-branch)<br>
 [C. How to create a new branch](#c-how-to-create-a-new-branch)<br>
 [D. You had updated something in local, and need to push to GitHub](#d-you-had-updated-something-in-local-and-need-to-push-to-github)<br>
 [E. You had completed your code in branch, and want to merge](#e-you-had-completed-your-code-in-branch-and-want-to-merge)<br>
@@ -21,7 +21,7 @@ This is the GitHub instructions for general purposes.
    git pull origin develop
    ```
 [Back to Top](#top)
-### <span style="color:cyan">B. How to checkout and switch to the branch:
+### <span style="color:cyan">B. How to checkout the branch:
 #### Checkout the local branch (on your local machine)
    ```bash
    git branch
