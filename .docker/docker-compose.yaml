@@ -11,6 +11,8 @@ services:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN_FILE=${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN_FILE}
       - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG}
       - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
+    networks:
+      - main_network
   grafana:
     image: grafana/grafana:${GF_VERSION}
     container_name: ${GF_CONTAINER}-${GF_VERSION}
@@ -23,6 +25,23 @@ services:
       - influxdb
     volumes:
       - ${GF_INI}:/etc/grafana/grafana.ini
+    networks:
+      - main_network
+  server:
+    build:
+      context: ./server
+      dockerfile: ${SERVER_DOCKERFILE}
+    image: ${SERVER_IMAGE}:${SERVER_VERSION}
+    container_name: ${SERVER_CONTAINER}-${SERVER_VERSION}
+    ports:
+      - ${SERVER_PORT}
+    volumes:
+      - ./server:/app
+    depends_on:
+      - influxdb
+      - grafana
+    networks:
+      - main_network
   frontend:
     build:
       context: ./frontend
@@ -34,6 +53,7 @@ services:
     depends_on:
       - influxdb
       - grafana
+      - server
     develop:
       watch:
         - path: ./frontend/package.json
@@ -45,3 +65,9 @@ services:
         - path: ./frontend
           target: /app
           action: sync
+    networks:
+        - main_network
+
+networks:
+  main_network:
+    driver: bridge
