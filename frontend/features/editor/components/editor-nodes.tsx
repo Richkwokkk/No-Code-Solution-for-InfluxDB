@@ -30,6 +30,7 @@ export interface EditorBaseNodeProps {
   children?: React.ReactNode;
   leftHandle?: boolean;
   rightHandle?: boolean;
+  ariaExpanded?: boolean;
 }
 
 function EditorBaseNode({
@@ -38,11 +39,13 @@ function EditorBaseNode({
   icon: Icon,
   leftHandle = true,
   rightHandle = true,
+  ariaExpanded = false,
 }: EditorBaseNodeProps) {
   return (
     <Button
       asChild
       variant="outline"
+      aria-expanded={ariaExpanded}
       className="min-w-40 rounded-lg border px-2 py-7 shadow-md hover:bg-background"
     >
       <div className="relative flex items-center justify-between p-2">
@@ -97,7 +100,7 @@ export function EditorComboboxNode({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger>
+      <PopoverTrigger className="focus:outline-none">
         <EditorBaseNode
           value={
             value || `Select ${type.charAt(0).toUpperCase() + type.slice(1)}`
@@ -106,6 +109,7 @@ export function EditorComboboxNode({
           icon={icon}
           rightHandle={rightHandle}
           leftHandle={leftHandle}
+          ariaExpanded={open}
         />
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">

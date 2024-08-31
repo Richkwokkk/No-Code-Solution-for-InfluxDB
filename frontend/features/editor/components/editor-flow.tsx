@@ -109,7 +109,7 @@ export function EditorFlow() {
 
   const showToastWarning = throttle(() => {
     toast.warning("Invalid connection", {
-      description: "Bucket -> Measurement -> Field",
+      description: "Please connect bucket -> measurement -> field",
     });
   }, 1000);
 
