@@ -1,6 +1,5 @@
-"use client";
-
 import { nodeTypes } from "@/features/editor/components/editor-nodes";
+import { throttle } from "@/lib/utils";
 import {
   ReactFlow,
   MiniMap,
@@ -22,6 +21,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import React, { useCallback } from "react";
+import { toast } from "sonner";
 
 const initialNodes: Node[] = [
   {
@@ -107,16 +107,45 @@ export function EditorFlow() {
     [setEdges],
   );
 
+  const showToastWarning = throttle(() => {
+    toast.warning("Invalid connection", {
+      description: "Bucket -> Measurement -> Field",
+    });
+  }, 1000);
+
+  const throttleToastWarning = useCallback(showToastWarning, [
+    showToastWarning,
+  ]);
+
+  const isValidConnection = useCallback(
+    (connection: Edge | Connection) => {
+      const sourceNode = nodes.find((node) => node.id === connection.source);
+      const targetNode = nodes.find((node) => node.id === connection.target);
+
+      if (!sourceNode || !targetNode) return false;
+
+      if (sourceNode.type === "bucket" && targetNode.type === "measurement")
+        return true;
+      if (sourceNode.type === "measurement" && targetNode.type === "field")
+        return true;
+
+      throttleToastWarning();
+      return false;
+    },
+    [nodes, throttleToastWarning],
+  );
+
   return (
     <div className="h-full w-full">
       <ReactFlow
+        nodeTypes={nodeTypes}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         connectionLineType={ConnectionLineType.SmoothStep}
-        nodeTypes={nodeTypes}
+        isValidConnection={isValidConnection}
         fitView
         fitViewOptions={fitViewOptions}
         maxZoom={1}

@@ -14,7 +14,12 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Handle, Position } from "@xyflow/react";
-import { Cylinder, Grid, LucideIcon, RectangleEllipsis } from "lucide-react";
+import {
+  Cylinder,
+  Grid,
+  type LucideIcon,
+  RectangleEllipsis,
+} from "lucide-react";
 import { Check } from "lucide-react";
 import * as React from "react";
 
@@ -54,7 +59,9 @@ function EditorBaseNode({
             <Icon size={20} />
           </div>
           <div className="flex flex-col pr-1">
-            <p className="text-start text-[10px] opacity-50">{type}</p>
+            <p className="text-start text-[10px] capitalize opacity-50">
+              {type}
+            </p>
             <p className="text-start text-xs font-bold">{value}</p>
           </div>
         </div>
@@ -92,7 +99,9 @@ export function EditorComboboxNode({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
         <EditorBaseNode
-          value={value || `Select a ${type}`}
+          value={
+            value || `Select ${type.charAt(0).toUpperCase() + type.slice(1)}`
+          }
           type={type}
           icon={icon}
           rightHandle={rightHandle}
@@ -101,7 +110,9 @@ export function EditorComboboxNode({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder={`Search for a ${type}...`} />
+          <CommandInput
+            placeholder={`Search ${type.charAt(0).toUpperCase() + type.slice(1)}...`}
+          />
           <CommandList>
             <CommandEmpty>No {type} found.</CommandEmpty>
             <CommandGroup>

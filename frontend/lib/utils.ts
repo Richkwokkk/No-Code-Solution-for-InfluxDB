@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -6,11 +5,17 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const saltAndHashPassword = async (
-  password: string,
-): Promise<string> => {
-  const saltRounds = 10; // You can adjust this value based on your security requirements
-  const salt = await bcrypt.genSalt(saltRounds);
-  const hashedPassword = await bcrypt.hash(password, salt);
-  return hashedPassword;
+export const throttle = <T extends (..._args: any[]) => void>(
+  func: T,
+  wait: number,
+) => {
+  let timeout: NodeJS.Timeout | null = null;
+  return (...args: Parameters<T>) => {
+    if (!timeout) {
+      timeout = setTimeout(() => {
+        func(...args);
+        timeout = null;
+      }, wait);
+    }
+  };
 };
