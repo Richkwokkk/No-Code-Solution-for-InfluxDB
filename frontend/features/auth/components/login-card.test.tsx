@@ -1,4 +1,4 @@
-import { User } from "@/lib/mocks/mockAuthService";
+import { LoginCard } from "@/features/auth/components/login-card";
 import {
   QueryClient,
   UseMutationResult,
@@ -6,12 +6,18 @@ import {
 } from "@tanstack/react-query";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { toast } from "sonner";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { useLogin } from "../hooks/useLogin";
-import { LoginCard } from "./login-card";
 
-vi.mock("../hooks/useLogin", () => ({
+vi.mock("@/features/auth/hooks/useLogin", () => ({
   useLogin: vi.fn(),
+}));
+
+vi.mock("sonner", () => ({
+  toast: {
+    error: vi.fn(),
+  },
 }));
 
 vi.mock("@tanstack/react-query", async () => {
@@ -36,7 +42,7 @@ describe("LoginCard", () => {
       error: null,
       reset: vi.fn(),
     } as unknown as UseMutationResult<
-      User,
+      void,
       Error,
       { username: string; password: string },
       unknown
@@ -69,7 +75,7 @@ describe("LoginCard", () => {
       error: null,
       reset: vi.fn(),
     } as unknown as UseMutationResult<
-      User,
+      void,
       Error,
       { username: string; password: string },
       unknown
@@ -105,14 +111,14 @@ describe("LoginCard", () => {
       error: new Error("Invalid credentials"),
       reset: vi.fn(),
     } as unknown as UseMutationResult<
-      User,
+      void,
       Error,
       { username: string; password: string },
       unknown
     >);
 
     render(<LoginCard />);
-    expect(screen.getByText("Invalid credentials")).toBeDefined();
+    expect(toast.error).toHaveBeenCalledWith("Invalid username or password");
   });
 
   it("disables submit button and shows loading state when login is in progress", () => {
@@ -127,7 +133,7 @@ describe("LoginCard", () => {
       error: null,
       reset: vi.fn(),
     } as unknown as UseMutationResult<
-      User,
+      void,
       Error,
       { username: string; password: string },
       unknown
@@ -158,7 +164,7 @@ describe("LoginCard", () => {
       isPending: false,
       reset: mockReset,
     } as unknown as UseMutationResult<
-      User,
+      void,
       Error,
       { username: string; password: string },
       unknown
@@ -166,7 +172,7 @@ describe("LoginCard", () => {
 
     render(<LoginCard />);
 
-    expect(screen.getByText("Invalid credentials")).toBeDefined();
+    expect(toast.error).toHaveBeenCalledWith("Invalid username or password");
 
     fireEvent.focus(screen.getByLabelText("Username"));
     expect(mockReset).toHaveBeenCalledTimes(1);
@@ -206,7 +212,7 @@ describe("LoginCard", () => {
       error: null,
       reset: vi.fn(),
     } as unknown as UseMutationResult<
-      User,
+      void,
       Error,
       { username: string; password: string },
       unknown

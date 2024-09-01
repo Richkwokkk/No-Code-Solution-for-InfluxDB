@@ -1,6 +1,5 @@
 "use client";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,9 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
+import { useAuthStatus } from "../hooks/useAuthStatus";
 import { useLogin } from "../hooks/useLogin";
 
 const loginSchema = z.object({
@@ -35,9 +37,14 @@ export function LoginCard() {
   });
 
   const { mutate, isError, isPending, reset } = useLogin();
+
   const onSubmit = (data: FormData) => {
     mutate(data);
   };
+
+  if (isError) {
+    toast.error("Invalid username or password");
+  }
 
   return (
     <Card variant="ghost" className="w-[350px]">
@@ -62,7 +69,7 @@ export function LoginCard() {
               />
               {errors.username && (
                 <span className="text-sm text-red-500">
-                  {errors.username.message}
+                  {errors.username.message ?? " "}
                 </span>
               )}
             </div>
@@ -83,14 +90,9 @@ export function LoginCard() {
               )}
             </div>
           </div>
-          {isError && (
-            <Alert variant="destructive" className="mt-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>Invalid credentials</AlertDescription>
-            </Alert>
-          )}
-          <CardFooter className="mt-4 flex justify-between px-0">
+          <CardFooter className="relative mt-4 flex flex-col gap-2 px-0">
             <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isPending ? "Logging in..." : "Login"}
             </Button>
           </CardFooter>

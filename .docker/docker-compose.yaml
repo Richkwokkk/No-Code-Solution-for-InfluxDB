@@ -50,6 +50,8 @@ services:
     container_name: ${FE_CONTAINER}-${FE_VERSION}
     ports:
       - ${FE_PORT}
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
     depends_on:
       - influxdb
       - grafana
@@ -66,7 +68,7 @@ services:
           target: /app
           action: sync
     networks:
-        - main_network
+      - main_network
 
 networks:
   main_network:

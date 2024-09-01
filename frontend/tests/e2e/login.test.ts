@@ -1,67 +1,93 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Login Form", () => {
+test.describe("Authentication Flow", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/login");
   });
 
-  test("should display login form correctly", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "Login" })).toBeVisible();
-    await expect(page.getByText("Enter your username below")).toBeVisible();
-    await expect(page.getByLabel("Username")).toBeVisible();
-    await expect(page.getByLabel("Password")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Login" })).toBeVisible();
+  test("successful login redirects to editor page", async ({ page }) => {
+    await page.fill('input[name="username"]', "dev1");
+    await page.fill('input[name="password"]', "developer@123influx");
+    await page.click('button[type="submit"]');
+
+    // Wait for navigation or potential error messages
+    const result = await Promise.race([
+      page.waitForURL("/editor", { timeout: 5000 }).then(() => "editor"),
+      page
+        .waitForSelector('li[role="status"][data-type="error"]', {
+          timeout: 5000,
+        })
+        .then(() => "error"),
+      page.waitForTimeout(5000).then(() => "timeout"),
+    ]);
+
+    console.log("Race result:", result);
+    console.log("Current URL:", page.url());
+
+    if (result === "editor") {
+      await expect(page).toHaveURL("/editor");
+      await expect(page.getByText("Editor Page")).toBeVisible();
+    } else {
+      const errorToasts = await page
+        .locator('li[role="status"][data-type="error"]')
+        .all();
+      for (const toast of errorToasts) {
+        console.log("Error message:", await toast.textContent());
+      }
+
+      console.log("Page content:", await page.content());
+      await page.screenshot({ path: "login-failure.png" });
+      throw new Error(`Login failed: ${result}`);
+    }
   });
 
-  test("should show validation errors for empty fields", async ({ page }) => {
-    await page.getByRole("button", { name: "Login" }).click();
+  test("failed login shows error message", async ({ page }) => {
+    await page.fill('input[name="username"]', "wronguser");
+    await page.fill('input[name="password"]', "wrongpassword");
+    await page.click('button[type="submit"]');
+
+    // Wait for at least one error toast to appear
+    await page.waitForSelector('li[role="status"][data-type="error"]');
+
+    // Get all error toasts
+    const errorToasts = await page
+      .locator('li[role="status"][data-type="error"]')
+      .all();
+
+    // Ensure at least one error toast is present
+    expect(errorToasts.length).toBeGreaterThan(0);
+
+    // Check if any of the error toasts contain the expected message
+    let hasExpectedError = false;
+    for (const toast of errorToasts) {
+      const toastContent = await toast.locator("[data-title]").textContent();
+      if (toastContent === "Invalid username or password") {
+        hasExpectedError = true;
+        break;
+      }
+    }
+    expect(hasExpectedError).toBe(true);
+
+    await expect(page).toHaveURL("/login");
+  });
+
+  test("empty form submission shows validation errors", async ({ page }) => {
+    await page.click('button[type="submit"]');
 
     await expect(page.getByText("Username is required")).toBeVisible();
     await expect(page.getByText("Password is required")).toBeVisible();
-
-    await expect(page.getByLabel("Username")).toHaveAttribute(
-      "aria-invalid",
-      "true",
-    );
-    await expect(page.getByLabel("Password")).toHaveAttribute(
-      "aria-invalid",
-      "true",
-    );
   });
 
-  test("should clear validation errors on input focus", async ({ page }) => {
-    await page.getByRole("button", { name: "Login" }).click();
-    await expect(page.getByText("Username is required")).toBeVisible();
+  test("logged in user gets redirected to editor page when going to the login page", async ({
+    page,
+  }) => {
+    await page.fill('input[name="username"]', "dev1");
+    await page.fill('input[name="password"]', "developer@123influx");
+    await page.click('button[type="submit"]');
+    await page.waitForURL("/editor");
 
-    await page.getByLabel("Username").fill("a");
-    await expect(page.getByText("Username is required")).not.toBeVisible();
-  });
-
-  test("should submit form with valid data", async ({ page }) => {
-    await page.getByLabel("Username").fill("testuser");
-    await page.getByLabel("Password").fill("validpassword");
-
-    await page.getByRole("button", { name: "Login" }).click();
-
-    await expect(
-      page.getByRole("button", { name: "Logging in..." }),
-    ).toBeVisible();
-
-    await page.waitForTimeout(1500);
-
-    // Add assertions for successful login (e.g., redirect, success message)
-    // This will depend on your application's behavior after successful login
-    // For example:
-    // await expect(page).toHaveURL("/dashboard");
-  });
-
-  test("should show error message on login failure", async ({ page }) => {
-    // Assuming invalid credentials
-    await page.getByLabel("Username").fill("invaliduser");
-    await page.getByLabel("Password").fill("invalidpassword");
-
-    await page.getByRole("button", { name: "Login" }).click();
-
-    await expect(page.getByText("Invalid credentials")).toBeVisible();
+    await page.goto("/login");
+    await page.waitForURL("/editor");
+    await expect(page.getByText("Editor Page")).toBeVisible();
   });
 });
