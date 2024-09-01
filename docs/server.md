@@ -15,6 +15,7 @@ influx auth create \
 ```
 - Step 4: Create authorisation token
 ```bash
+# Using signup API before do it
 influx auth create       \
   --org ${ORG}         \
   --user ${USERNAME}    \
