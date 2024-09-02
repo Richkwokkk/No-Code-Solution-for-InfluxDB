@@ -20,25 +20,24 @@ class RetrieveBucketsView(generics.GenericAPIView):
         except requests.exceptions.RequestException as e:
             return JsonResponse({"error": "Failed to connect to the external API", "details": str(e)}, status=500)
 
-    def get_1(self, request):
-        api_url = 'http://influxdb:8086/api/v2/buckets'
+
+class RetrieveMeasurementsView(generics.GenericAPIView):
+    def post(self, request, bucket):        
+        influx_url = 'http://influxdb:8086'
         try:
-            authorization_token = request.headers.get("Authorization")
-            headers = {
-                'Authorization': authorization_token,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-            response = requests.get(api_url, headers=headers)
-            if response.status_code == 200:
-                buckets_data = response.json()["buckets"]
-                buckets_name = [bucket["name"] for bucket in buckets_data]
-                return JsonResponse({"buckets": buckets_name}, status=response.status_code)
-            else:
-                return JsonResponse({
-                    "error": "External API returned an error",
-                    "status_code": response.status_code,
-                    "response": response.text
-                }, status=response.status_code)
+            time_start = request.data.get("time_start")
+            time_stop= request.data.get("time_stop")
+            token = request.headers.get("Authorization").replace("Token ", "")
+            with InfluxDBClient(url=influx_url, token=token, org="ATSYS") as client:
+                tables = client.query_api().query(
+                    f'from(bucket: \"{bucket}\") \
+                        |> range(start: {time_start}, stop: {time_stop})'
+                )
+                measurements_name = []
+                for record in tables[0].records:
+                    measurement = record.get_measurement()
+                    if measurement not in measurements_name:
+                        measurements_name.append(measurement)
+            return JsonResponse({"measurements": measurements_name})
         except requests.exceptions.RequestException as e:
             return JsonResponse({"error": "Failed to connect to the external API", "details": str(e)}, status=500)
