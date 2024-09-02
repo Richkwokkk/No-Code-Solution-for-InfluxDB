@@ -3,7 +3,6 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "preinstall": "npx only-allow npm",
     "prepare": "husky"
   },
   "devDependencies": {
