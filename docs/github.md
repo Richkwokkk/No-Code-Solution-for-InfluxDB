@@ -3,10 +3,12 @@ This is the GitHub instructions for general purposes.
 
 ## Structure <a name="top"></a>
 [A. How to clone or pull from GitHub](#a-how-to-clone-or-pull-from-github) <br>
-[B. How to checkout and switch to the branch](#b-how-to-checkout-and-switch-to-the-branch)<br>
+[B. How to checkout the branch](#b-how-to-checkout-the-branch)<br>
 [C. How to create a new branch](#c-how-to-create-a-new-branch)<br>
-[D. You had updated in local, and need to push to GitHub](#d-you-had-updated-in-local-and-need-to-push-to-github)<br>
-[E. Addditional information](#e-addditional-information)<br>
+[D. If you are in your branch, you need to merge from 'develop' for the lastest content](#d-if-you-are-in-your-branch-you-need-to-merge-from-develop-for-the-lastest-content)<br>
+[E. You had updated something in local, and need to push to GitHub](#e-you-had-updated-something-in-local-and-need-to-push-to-github)<br>
+[F. You had completed your code in branch, and want to merge](#f-you-had-completed-your-code-in-branch-and-want-to-merge)<br>
+[G. Additioanl information](#g-additional-information)
 
 
 ### <span style="color:cyan">A. How to clone or pull from GitHub:
@@ -20,7 +22,7 @@ This is the GitHub instructions for general purposes.
    git pull origin develop
    ```
 [Back to Top](#top)
-### <span style="color:cyan">B. How to checkout and switch to the branch:
+### <span style="color:cyan">B. How to checkout the branch:
 #### Checkout the local branch (on your local machine)
    ```bash
    git branch
@@ -52,11 +54,29 @@ This is the GitHub instructions for general purposes.
 
 [Back to Top](#top)
 
-### <span style="color:cyan">D. You had updated in local, and need to push to GitHub:
+### <span style="color:cyan">D. If you are in your branch, you need to merge from 'develop' for the lastest content:
+   Step-by-step:
+
+1. check you are in your branch, ex: 
+   ```bash
+   git checkout feat/8-retrieve-measurements
+   ```
+2. pull and merge the updated content in our main branch -> 'develop'
+   ```bash
+   git fetch origin
+   ```
+3. merge the content to your branch:
+   ```bash
+   git merge origin/develop
+   ```
+
+[Back to Top](#top)
+
+### <span style="color:cyan">E. You had updated something in local, and need to push to GitHub:
 Step-by-step:
 1. In VScode, open the terminal
 2. Check the status the branch
-   for example: in 'develop' branch
+   for example: in 'develop' branch <span style='color:red'>but please do not develop in 'develop' branch!
    ```bash
    git checkout develop
    git status
@@ -65,9 +85,9 @@ Step-by-step:
    ```bash
    git add .
    ```
-   Or add specific file by specific file name:
+   Or add specific file by specific file name, ex:
    ```bash
-   git add file_name
+   git add docs/github.md
    ```
 4. Commit the changes to the local repository:
    ```bash
@@ -81,7 +101,42 @@ Step-by-step:
 
 [Back to Top](#top)
 
-### <span style="color:cyan">E. Additional information: 
+### <span style="color:cyan">F. You had completed your code in branch, and want to merge:
+1. check the status of the branch:
+   ```bash
+   git status
+   ```
+2. check the branch you are in:
+   ```bash 
+   git branch
+   ```
+3. switch to the your branch you want to merge, for example: to branch: feat/14-dnd-nodes
+   ```bash
+   git checkout feat/14-dnd.nodes
+   git status
+   ```
+4. commit the changes to the local repository:
+   ```bash
+   git add .
+   git commit -m "type your commit message here"
+   ```
+4. checkout to the branch you want to merge in, for example, to branch: feat/14-xyflowreact-drag-and-drop  
+   ```bash
+   git checkout feat/14-xyflowreact-drag-and-drop
+   ```
+5. merge the branch you want to merge in
+   ```bash
+   git merge feat/14-dnd-nodes
+   ```
+6. push the changes to the GitHub remote repository:
+   ```bash
+   git push origin feat/14-xyflowreact-drag-and-drop
+   ```
+7. refresh the GitHub project page, and check the changes.
+
+[Back to Top](#top)
+
+### <span style="color:cyan">G. Additional information: 
 If you are in a initial stage of any project, the basic git steps from your local ternimal(in VScode) to GitHub are as follows:<br>
 
 Step-by-step:
