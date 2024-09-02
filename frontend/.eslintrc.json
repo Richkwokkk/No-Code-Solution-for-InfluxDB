@@ -5,9 +5,7 @@
     "plugin:@tanstack/eslint-plugin-query/recommended",
     "plugin:storybook/recommended"
   ],
-  "plugins": [
-    "unused-imports"
-  ],
+  "plugins": ["unused-imports"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "warn",
