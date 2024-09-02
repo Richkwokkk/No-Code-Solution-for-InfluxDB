@@ -18,7 +18,6 @@ import {
   applyEdgeChanges,
   Node,
   Edge,
-  FitViewOptions,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import React, { useCallback } from "react";
@@ -72,10 +71,6 @@ const initialEdges: Edge[] = [
   },
 ];
 
-const fitViewOptions: FitViewOptions = {
-  padding: 0.2,
-};
-
 export default function EditorFlow() {
   const [nodes, setNodes] = useNodesState(initialNodes);
   const [edges, setEdges] = useEdgesState(initialEdges);
@@ -106,7 +101,7 @@ export default function EditorFlow() {
   );
 
   return (
-    <div className="h-full w-full">
+    <main className="h-full w-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -116,8 +111,7 @@ export default function EditorFlow() {
         connectionLineType={ConnectionLineType.Bezier}
         nodeTypes={nodeTypes}
         fitView
-        fitViewOptions={fitViewOptions}
-        maxZoom={1.2}
+        maxZoom={1}
         proOptions={{ hideAttribution: true }}
       >
         <Controls />
@@ -129,6 +123,6 @@ export default function EditorFlow() {
           className="bg-muted"
         />
       </ReactFlow>
-    </div>
+    </main>
   );
 }
