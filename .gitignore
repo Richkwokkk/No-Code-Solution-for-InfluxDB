@@ -44,3 +44,9 @@
 *.log
 
 *storybook.log
+
+# python
+__pycache__
+
+# database
+*.sqlite3

@@ -1,7 +1,7 @@
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import "@xyflow/react/dist/style.css";
-import type { Metadata } from "next";
+import { type Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 

@@ -7,13 +7,14 @@ export default defineConfig({
   test: {
     globals: true,
     environmentMatchGlobs: [
+      ["**/*.test.ts", "jsdom"],
       ["**/*.test.tsx", "jsdom"],
       ["**/*.component.test.ts", "jsdom"],
     ],
     setupFiles: ["./tests/setup/setup-test-env.ts"],
     exclude: ["**/tests/**", "**/node_modules/**"],
     coverage: {
-      include: ["app/**/*", "lib/**/*"],
+      include: ["app/**/*", "features/**/*"],
       exclude: [
         "test/**",
         "vite.*.ts",
