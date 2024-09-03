@@ -22,12 +22,12 @@ vi.mock("next/navigation", () => ({
 }));
 
 // Mock sessionStorage
-const mockSessionStorage = {
+const mockLocalStorage = {
   getItem: vi.fn(),
   setItem: vi.fn(),
   removeItem: vi.fn(),
 };
-vi.stubGlobal("sessionStorage", mockSessionStorage);
+vi.stubGlobal("localStorage", mockLocalStorage);
 
 // Mock btoa function
 global.btoa = vi.fn((str) => Buffer.from(str).toString("base64"));
@@ -106,7 +106,7 @@ describe("useLogin", () => {
     expect(mockQueryClient.invalidateQueries).toHaveBeenCalled();
     expect(mockQueryClient.setQueryData).toHaveBeenCalled();
     expect(mockRouter.push).toHaveBeenCalledWith("/editor");
-    expect(mockSessionStorage.setItem).toHaveBeenCalledWith(
+    expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
       "vf-token",
       btoa(Date.now().toString()),
     );
@@ -132,6 +132,6 @@ describe("useLogin", () => {
       });
     });
 
-    expect(mockSessionStorage.removeItem).toHaveBeenCalledWith("vf-token");
+    expect(mockLocalStorage.removeItem).toHaveBeenCalledWith("vf-token");
   });
 });

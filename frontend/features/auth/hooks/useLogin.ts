@@ -17,11 +17,11 @@ export function useLogin() {
       queryClient.setQueryData(authQueryKeys.authStatus, {
         isAuthenticated: true,
       });
-      sessionStorage.setItem("vf-token", btoa(Date.now().toString()));
+      localStorage.setItem("vf-token", btoa(Date.now().toString()));
       router.push("/editor");
     },
     onError: () => {
-      sessionStorage.removeItem("vf-token");
+      localStorage.removeItem("vf-token");
     },
   });
 }

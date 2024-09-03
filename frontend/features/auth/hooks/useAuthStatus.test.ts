@@ -10,12 +10,12 @@ vi.mock("@tanstack/react-query", () => ({
 }));
 
 // Mock sessionStorage
-const mockSessionStorage = {
+const mockLocalStorage = {
   getItem: vi.fn(),
   setItem: vi.fn(),
   removeItem: vi.fn(),
 };
-vi.stubGlobal("sessionStorage", mockSessionStorage);
+vi.stubGlobal("localStorage", mockLocalStorage);
 
 describe("useAuthStatus", () => {
   beforeEach(() => {
@@ -23,7 +23,7 @@ describe("useAuthStatus", () => {
   });
 
   it("should return isAuthenticated: true when token exists", () => {
-    mockSessionStorage.getItem.mockReturnValue("mock-token");
+    mockLocalStorage.getItem.mockReturnValue("mock-token");
     let capturedQueryFn: () => { isAuthenticated: boolean };
 
     (useQuery as jest.Mock).mockImplementation(
@@ -36,7 +36,7 @@ describe("useAuthStatus", () => {
     const { result } = renderHook(() => useAuthStatus());
 
     expect(result.current.data).toEqual({ isAuthenticated: true });
-    expect(mockSessionStorage.getItem).toHaveBeenCalledWith("vf-token");
+    expect(mockLocalStorage.getItem).toHaveBeenCalledWith("vf-token");
     expect(useQuery).toHaveBeenCalledWith({
       queryKey: authQueryKeys.authStatus,
       queryFn: expect.any(Function),
@@ -45,7 +45,7 @@ describe("useAuthStatus", () => {
   });
 
   it("should return isAuthenticated: false when token doesn't exist", () => {
-    mockSessionStorage.getItem.mockReturnValue(null);
+    mockLocalStorage.getItem.mockReturnValue(null);
 
     let capturedQueryFn: () => { isAuthenticated: boolean };
     (useQuery as jest.Mock).mockImplementation(
@@ -58,7 +58,7 @@ describe("useAuthStatus", () => {
     const { result } = renderHook(() => useAuthStatus());
 
     expect(result.current.data).toEqual({ isAuthenticated: false });
-    expect(mockSessionStorage.getItem).toHaveBeenCalledWith("vf-token");
+    expect(mockLocalStorage.getItem).toHaveBeenCalledWith("vf-token");
     expect(useQuery).toHaveBeenCalledWith({
       queryKey: authQueryKeys.authStatus,
       queryFn: expect.any(Function),

@@ -5,7 +5,7 @@ export function useAuthStatus() {
   return useQuery({
     queryKey: authQueryKeys.authStatus,
     queryFn: () => {
-      const token = sessionStorage.getItem("vf-token");
+      const token = localStorage.getItem("vf-token");
       if (!token) {
         return { isAuthenticated: false };
       }
