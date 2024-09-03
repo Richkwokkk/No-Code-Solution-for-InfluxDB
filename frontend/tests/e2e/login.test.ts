@@ -90,4 +90,24 @@ test.describe("Authentication Flow", () => {
     await page.waitForURL("/editor");
     await expect(page.getByText("Editor Page")).toBeVisible();
   });
+
+  test("logged in user stays on editor page when going to the login page after closing the window", async ({
+    page,
+  }) => {
+    await page.goto("/login");
+    await page.waitForURL("/login");
+    await page.fill('input[name="username"]', "dev1");
+    await page.fill('input[name="password"]', "developer@123influx");
+    await page.click('button[type="submit"]');
+    await page.waitForURL("/editor");
+    await page.reload();
+    await page.waitForURL("/editor");
+    await expect(page.getByText("Editor Page")).toBeVisible();
+    await page.evaluate(() => {
+      localStorage.removeItem("vf-token");
+    });
+    await page.reload();
+    await page.waitForURL("/login");
+    await expect(page.getByRole("heading", { name: "Login" })).toBeVisible();
+  });
 });
