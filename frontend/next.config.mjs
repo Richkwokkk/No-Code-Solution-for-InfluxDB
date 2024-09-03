@@ -7,8 +7,8 @@ const nextConfig = {
         destination: "/editor",
         permanent: true,
       },
-    ]
+    ];
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

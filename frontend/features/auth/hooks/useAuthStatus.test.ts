@@ -1,8 +1,8 @@
+import { authQueryKeys } from "@/features/auth/hooks/queryKeys";
+import { useAuthStatus } from "@/features/auth/hooks/useAuthStatus";
 import { useQuery } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { authQueryKeys } from "./queryKeys";
-import { useAuthStatus } from "./useAuthStatus";
 
 // Mock dependencies
 vi.mock("@tanstack/react-query", () => ({
@@ -24,11 +24,9 @@ describe("useAuthStatus", () => {
 
   it("should return isAuthenticated: true when token exists", () => {
     mockLocalStorage.getItem.mockReturnValue("mock-token");
-    let capturedQueryFn: () => { isAuthenticated: boolean };
 
     (useQuery as jest.Mock).mockImplementation(
       ({ queryFn }: { queryFn: () => { isAuthenticated: boolean } }) => {
-        capturedQueryFn = queryFn;
         return { data: queryFn() };
       },
     );
@@ -47,10 +45,8 @@ describe("useAuthStatus", () => {
   it("should return isAuthenticated: false when token doesn't exist", () => {
     mockLocalStorage.getItem.mockReturnValue(null);
 
-    let capturedQueryFn: () => { isAuthenticated: boolean };
     (useQuery as jest.Mock).mockImplementation(
       ({ queryFn }: { queryFn: () => { isAuthenticated: boolean } }) => {
-        capturedQueryFn = queryFn;
         return { data: queryFn() };
       },
     );

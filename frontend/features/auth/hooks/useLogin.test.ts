@@ -1,9 +1,9 @@
+import { useLogin } from "@/features/auth/hooks/useLogin";
 import { apiClient } from "@/lib/api-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { renderHook, act } from "@testing-library/react";
 import { useRouter } from "next/navigation";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { useLogin } from "./useLogin";
 
 // Mock dependencies
 vi.mock("@/lib/api-client", () => ({
