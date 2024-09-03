@@ -152,6 +152,7 @@ export const BucketNode = () => {
       type="bucket"
       icon={Cylinder}
       selections={["bucket-1", "bucket-2", "bucket-3", "bucket-4"]}
+      leftHandle={false}
     />
   );
 };

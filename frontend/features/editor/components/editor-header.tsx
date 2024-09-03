@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const EditorHeader = () => {
   return (
-    <header className="z-50 flex w-screen items-center justify-between border bg-background px-6 py-3 shadow-sm">
+    <header className="z-50 flex w-screen items-center justify-between border bg-background px-6 py-3 shadow-md">
       <div className="flex w-1/2 items-center justify-between">
         <Link href="/">
           <h1 className="text-xl font-bold">InfluxUI</h1>

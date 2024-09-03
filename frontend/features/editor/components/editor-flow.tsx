@@ -11,10 +11,6 @@ import {
   useEdgesState,
   addEdge,
   Connection,
-  applyNodeChanges,
-  NodeChange,
-  EdgeChange,
-  applyEdgeChanges,
   Node,
   Edge,
 } from "@xyflow/react";
@@ -24,87 +20,40 @@ import { toast } from "sonner";
 
 const initialNodes: Node[] = [
   {
-    id: "1",
+    id: "bucket",
     type: "bucket",
     deletable: false,
     position: {
-      x: 0,
-      y: 0,
-    },
-    data: {
-      label: "1",
-    },
-  },
-  {
-    id: "2",
-    type: "measurement",
-    deletable: true,
-    position: {
       x: 400,
-      y: 200,
+      y: 300,
     },
-    data: {
-      label: "2",
-    },
-  },
-  {
-    id: "3",
-    type: "field",
-    deletable: true,
-    position: {
-      x: 800,
-      y: 400,
-    },
-    data: {
-      label: "3",
-    },
-  },
-];
-
-const initialEdges: Edge[] = [
-  {
-    id: "e1-2",
-    source: "1",
-    target: "2",
-    animated: true,
-    style: { strokeWidth: 2 },
-    type: "smoothstep",
+    data: {},
   },
 ];
 
 export function EditorFlow() {
-  const [nodes, setNodes] = useNodesState(initialNodes);
-  const [edges, setEdges] = useEdgesState(initialEdges);
+  const [nodes, _, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
-  const onNodesChange = useCallback(
-    (changes: NodeChange[]) =>
-      setNodes((nds) => applyNodeChanges(changes, nds) as typeof initialNodes),
-    [setNodes],
-  );
-  const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) =>
-      setEdges((eds) => applyEdgeChanges(changes, eds) as typeof initialEdges),
-    [setEdges],
-  );
   const onConnect = useCallback(
-    (params: Connection) =>
+    (params: Connection) => {
       setEdges((eds) =>
         addEdge(
           {
             ...params,
+            type: "bezier",
             animated: true,
-            style: { strokeWidth: 2 },
-            type: "smoothstep",
           },
           eds,
         ),
-      ),
+      );
+    },
     [setEdges],
   );
 
   const showToastWarning = throttle(() => {
     toast.warning("Invalid connection", {
-      description: "Please connect bucket -> measurement -> field",
+      description: "Please connect bucket ⇢ measurement ⇢ field",
     });
   }, 1000);
 
@@ -139,9 +88,8 @@ export function EditorFlow() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        connectionLineType={ConnectionLineType.SmoothStep}
+        connectionLineType={ConnectionLineType.Bezier}
         isValidConnection={isValidConnection}
-        fitView
         maxZoom={1}
         proOptions={{ hideAttribution: true }}
       >

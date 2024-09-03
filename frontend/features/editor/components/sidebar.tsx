@@ -1,35 +1,15 @@
+import { SidebarDraggable } from "@/features/editor/components/sidebar-draggable";
+import { SidebarToggle } from "@/features/editor/components/sidebar-toggle";
 import { useSidebarToggle } from "@/features/editor/hooks/use-sidebar-toggle";
+import { nodes } from "@/features/editor/utils";
 import { useStore } from "@/hooks/use-store";
 import { cn } from "@/lib/utils";
-import { Cylinder, Grid, RectangleEllipsis } from "lucide-react";
 import { LucideIcon } from "lucide-react";
-import SidebarDraggable from "./sidebar-draggable";
-import { SidebarToggle } from "./sidebar-toggle";
 
 export type DraggableNode = {
   label: string;
   title: string;
   icon: LucideIcon;
-};
-
-export type NodeTypes = "bucket" | "measurement" | "field";
-
-export const nodes: Record<NodeTypes, DraggableNode> = {
-  bucket: {
-    label: "Selector",
-    title: "Bucket",
-    icon: Cylinder,
-  },
-  measurement: {
-    label: "Selector",
-    title: "Measurement",
-    icon: Grid,
-  },
-  field: {
-    label: "Selector",
-    title: "Field",
-    icon: RectangleEllipsis,
-  },
 };
 
 export const Sidebar = () => {

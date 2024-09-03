@@ -1,18 +1,25 @@
 import { useDraggable } from "@dnd-kit/core";
+import { LucideIcon } from "lucide-react";
 
-interface CustomDraggableProps {
+export type SidebarDraggable = {
+  label: string;
+  title: string;
+  icon: LucideIcon;
+};
+
+interface DraggableProps {
   id: string;
   className?: string;
   children: React.ReactNode;
   type: string;
 }
 
-const SidebarDraggable = ({
+export const SidebarDraggable = ({
   id,
   className,
   children,
   type,
-}: CustomDraggableProps) => {
+}: DraggableProps) => {
   const { attributes, listeners, setNodeRef } = useDraggable({
     id,
     data: { type },
@@ -24,5 +31,3 @@ const SidebarDraggable = ({
     </div>
   );
 };
-
-export default SidebarDraggable;
