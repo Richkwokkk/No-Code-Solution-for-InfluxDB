@@ -1,5 +1,5 @@
-import { nodeTypes } from "@/features/editor/components/editor-nodes";
-import { throttle } from "@/lib/utils";
+import React, { useCallback } from "react";
+
 import {
   ReactFlow,
   MiniMap,
@@ -15,8 +15,11 @@ import {
   Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import React, { useCallback } from "react";
+
 import { toast } from "sonner";
+
+import { nodeTypes } from "@/features/editor/components/editor-nodes";
+import { throttle } from "@/lib/utils";
 
 const initialNodes: Node[] = [
   {

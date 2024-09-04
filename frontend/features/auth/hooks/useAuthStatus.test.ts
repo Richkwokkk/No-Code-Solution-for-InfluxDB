@@ -1,8 +1,10 @@
-import { authQueryKeys } from "@/features/auth/hooks/queryKeys";
-import { useAuthStatus } from "@/features/auth/hooks/useAuthStatus";
 import { useQuery } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
+
 import { describe, it, expect, vi, beforeEach } from "vitest";
+
+import { authQueryKeys } from "@/features/auth/hooks/queryKeys";
+import { useAuthStatus } from "@/features/auth/hooks/useAuthStatus";
 
 // Mock dependencies
 vi.mock("@tanstack/react-query", () => ({

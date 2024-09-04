@@ -1,10 +1,11 @@
 "use client";
 
+import { ReactFlowProvider } from "@xyflow/react";
+
 import { DndContext } from "@/features/editor/components/dnd-context";
 import { EditorFlow } from "@/features/editor/components/editor-flow";
 import { EditorHeader } from "@/features/editor/components/editor-header";
 import { Sidebar } from "@/features/editor/components/sidebar";
-import { ReactFlowProvider } from "@xyflow/react";
 
 export default function EditorPage() {
   return (

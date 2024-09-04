@@ -1,4 +1,3 @@
-import { LoginCard } from "@/features/auth/components/login-card";
 import {
   QueryClient,
   UseMutationResult,
@@ -6,8 +5,12 @@ import {
 } from "@tanstack/react-query";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+
 import { toast } from "sonner";
 import { vi, describe, it, expect, beforeEach } from "vitest";
+
+import { LoginCard } from "@/features/auth/components/login-card";
+
 import { useLogin } from "../hooks/useLogin";
 
 vi.mock("@/features/auth/hooks/useLogin", () => ({

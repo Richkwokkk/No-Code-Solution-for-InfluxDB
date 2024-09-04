@@ -1,5 +1,6 @@
-import { type SidebarDraggable } from "@/features/editor/components/sidebar-draggable";
 import { Cylinder, Grid, RectangleEllipsis } from "lucide-react";
+
+import { type SidebarDraggable } from "@/features/editor/components/sidebar-draggable";
 
 export type NodeTypes = "bucket" | "measurement" | "field";
 
