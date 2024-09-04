@@ -1,3 +1,15 @@
+import * as React from "react";
+
+import { Handle, Position } from "@xyflow/react";
+
+import {
+  Check,
+  Cylinder,
+  Grid,
+  type LucideIcon,
+  RectangleEllipsis,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -13,15 +25,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Handle, Position } from "@xyflow/react";
-import {
-  Cylinder,
-  Grid,
-  type LucideIcon,
-  RectangleEllipsis,
-} from "lucide-react";
-import { Check } from "lucide-react";
-import * as React from "react";
 
 export interface EditorBaseNodeProps {
   value: string;

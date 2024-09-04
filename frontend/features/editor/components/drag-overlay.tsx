@@ -1,5 +1,6 @@
-import { NodeTypes, nodes } from "@/features/editor/utils";
 import { DragOverlay, useDndContext } from "@dnd-kit/core";
+
+import { NodeTypes, nodes } from "@/features/editor/utils";
 
 export const DndDragOverlay = () => {
   const { active } = useDndContext();

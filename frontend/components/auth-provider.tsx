@@ -1,7 +1,9 @@
-import { useAuthStatus } from "@/features/auth/hooks/useAuthStatus";
+import { useEffect } from "react";
+
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+
+import { useAuthStatus } from "@/features/auth/hooks/useAuthStatus";
 
 interface AuthProviderProps {
   children: React.ReactNode;

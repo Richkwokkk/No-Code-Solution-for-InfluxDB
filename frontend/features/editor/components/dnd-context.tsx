@@ -1,9 +1,12 @@
-import { DndDragOverlay } from "@/features/editor/components/drag-overlay";
-import { nodes, NodeTypes } from "@/features/editor/utils";
+import { useCallback, useId } from "react";
+
 import { DndContext as DndKitContext, DragEndEvent } from "@dnd-kit/core";
 import { useReactFlow } from "@xyflow/react";
-import { useCallback, useId } from "react";
+
 import short from "short-uuid";
+
+import { DndDragOverlay } from "@/features/editor/components/drag-overlay";
+import { nodes, NodeTypes } from "@/features/editor/utils";
 
 interface DndContextProps {
   children: React.ReactNode;

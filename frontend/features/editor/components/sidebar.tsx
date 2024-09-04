@@ -1,10 +1,11 @@
+import { LucideIcon } from "lucide-react";
+
 import { SidebarDraggable } from "@/features/editor/components/sidebar-draggable";
 import { SidebarToggle } from "@/features/editor/components/sidebar-toggle";
 import { useSidebarToggle } from "@/features/editor/hooks/use-sidebar-toggle";
 import { nodes } from "@/features/editor/utils";
 import { useStore } from "@/hooks/use-store";
 import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
 
 export type DraggableNode = {
   label: string;
