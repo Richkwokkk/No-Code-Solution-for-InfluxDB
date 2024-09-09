@@ -95,6 +95,10 @@ export function EditorFlow() {
         isValidConnection={isValidConnection}
         maxZoom={1}
         proOptions={{ hideAttribution: true }}
+        style={{
+          transitionDuration: "150",
+          transition: "ease-in-out",
+        }}
       >
         <Controls />
         <MiniMap />
