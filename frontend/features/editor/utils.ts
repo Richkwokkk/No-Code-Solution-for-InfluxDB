@@ -1,7 +1,7 @@
 import { type SidebarDraggable } from "@/features/editor/components/sidebar-draggable";
 import { Cylinder, Grid, RectangleEllipsis } from "lucide-react";
 
-export type NodeTypes = "bucket" | "measurement" | "field";
+export type NodeTypes = "bucket" | "measurement" | "field" | "filter";
 
 export const nodes: Record<NodeTypes, SidebarDraggable> = {
   bucket: {
@@ -17,6 +17,11 @@ export const nodes: Record<NodeTypes, SidebarDraggable> = {
   field: {
     label: "Selector",
     title: "Field",
+    icon: RectangleEllipsis,
+  },
+  filter: {
+    label: "Filter",
+    title: "Filter",
     icon: RectangleEllipsis,
   },
 };

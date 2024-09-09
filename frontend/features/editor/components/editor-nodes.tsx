@@ -21,7 +21,15 @@ import {
   RectangleEllipsis,
 } from "lucide-react";
 import { Check } from "lucide-react";
+// export const FilterNode = () => {
+//   return (
+//     <DatePickerWithRange
+//     />
+//   );
+// };
+import { Calendar as CalendarIcon } from "lucide-react";
 import * as React from "react";
+import { DatePickerWithRange } from "./date-range-picker";
 
 export interface EditorBaseNodeProps {
   value: string;
@@ -182,8 +190,132 @@ export const FieldNode = () => {
   );
 };
 
+type EditorDatePickerNodeProps = {
+  type: string;
+  icon: React.ComponentType<any>;
+  leftHandle?: boolean;
+  rightHandle?: boolean;
+};
+
+export function EditorDatePickerNode({
+  type,
+  icon: Icon,
+  leftHandle = true,
+  rightHandle = true,
+}: EditorDatePickerNodeProps) {
+  const [dateRange, setDateRange] = React.useState<string>("Pick a date");
+
+  return (
+    <Button
+      asChild
+      variant="outline"
+      className="min-w-40 rounded-lg border px-2 py-7 shadow-md hover:bg-background"
+    >
+      <div className="relative flex items-center justify-between p-2">
+        {leftHandle ? (
+          <Handle
+            type="target"
+            position={Position.Left}
+            className="!-left-[2px] !h-4 !w-1 !min-w-0 !rounded-none !rounded-l-[2px] !border-none !bg-primary shadow-md"
+          />
+        ) : null}
+
+        <div className="flex items-center space-x-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
+            {Icon && <Icon size={20} />}
+          </div>
+          <div className="flex flex-col pr-1">
+            <p className="text-start text-[10px] capitalize opacity-50">
+              {type}
+            </p>
+            <Popover>
+              <PopoverTrigger className="text-xs font-bold">
+                {dateRange}
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <DatePickerWithRange
+                  onChange={(range) => {
+                    if (range?.from && range?.to) {
+                      setDateRange(
+                        `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`,
+                      );
+                    } else if (range?.from) {
+                      setDateRange(range.from.toLocaleDateString());
+                    } else {
+                      setDateRange("Pick a date");
+                    }
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+
+        {rightHandle ? (
+          <Handle
+            type="source"
+            position={Position.Right}
+            className="!-right-[2px] !h-4 !w-1 !min-w-0 !rounded-none !rounded-r-[2px] !border-none !bg-primary shadow-md"
+          />
+        ) : null}
+      </div>
+    </Button>
+  );
+}
+
+// export function EditorDatePickerNode({
+//   type,
+//   icon: Icon,
+//   leftHandle = true,
+//   rightHandle = true,
+// }: EditorDatePickerNodeProps) {
+//   return (
+//     <div className="relative flex items-center justify-between p-2 border rounded-lg shadow-md bg-white">
+//       {leftHandle ? (
+//         <Handle
+//           type="target"
+//           position={Position.Left}
+//           className="!h-4 !w-1 !min-w-0 !rounded-none !bg-primary shadow-md"
+//         />
+//       ) : null}
+
+//       <div className="flex items-center space-x-2">
+//         <div className="flex items-center justify-center rounded-md bg-gray-100">
+//           {Icon && <Icon size={20} />}
+//         </div>
+//         <div className="flex flex-col pr-1">
+//           <p className="text-start text-[10px] capitalize opacity-50">
+//             {type}
+//           </p>
+//           <DatePickerWithRange />
+//         </div>
+//       </div>
+
+//       {rightHandle ? (
+//         <Handle
+//           type="source"
+//           position={Position.Right}
+//           className="!h-4 !w-1 !min-w-0 !rounded-none !bg-primary shadow-md"
+//         />
+//       ) : null}
+//     </div>
+//   );
+// }
+
+export const FilterNode = () => {
+  return (
+    <EditorDatePickerNode
+      type="filter"
+      icon={CalendarIcon}
+      leftHandle={true}
+      rightHandle={true}
+    />
+  );
+};
+
 export const nodeTypes = {
   bucket: BucketNode,
   measurement: MeasurementNode,
   field: FieldNode,
+  filter: FilterNode,
 } as any;

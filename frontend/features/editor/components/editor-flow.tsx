@@ -68,9 +68,32 @@ export function EditorFlow() {
 
       if (!sourceNode || !targetNode) return false;
 
-      if (sourceNode.type === "bucket" && targetNode.type === "measurement")
+      const validPair1 = ["bucket", "measurement"];
+      const validPair2 = ["field", "measurement"];
+      const validPair3 = ["filter", "field"];
+      const validPair4 = ["filter", "filter"];
+
+      if (
+        validPair1.includes(sourceNode.type as string) &&
+        validPair1.includes(targetNode.type as string)
+      )
         return true;
-      if (sourceNode.type === "measurement" && targetNode.type === "field")
+      if (
+        validPair2.includes(sourceNode.type as string) &&
+        validPair2.includes(targetNode.type as string)
+      )
+        return true;
+
+      if (
+        validPair3.includes(sourceNode.type as string) &&
+        validPair3.includes(targetNode.type as string)
+      )
+        return true;
+
+      if (
+        validPair4.includes(sourceNode.type as string) &&
+        validPair4.includes(targetNode.type as string)
+      )
         return true;
 
       throttleToastWarning();
