@@ -49,7 +49,7 @@ function EditorBaseNode({
       asChild
       variant="outline"
       aria-expanded={ariaExpanded}
-      className="min-w-40 rounded-lg border px-2 py-7 shadow-md hover:bg-background"
+      className="min-w-40 rounded-lg border px-2 py-7 shadow-md transition-colors hover:bg-primary-foreground"
     >
       <div className="relative flex items-center justify-between p-2">
         {leftHandle ? (
