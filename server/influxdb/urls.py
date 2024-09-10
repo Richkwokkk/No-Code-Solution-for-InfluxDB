@@ -5,7 +5,8 @@ from .views import (
     RetrieveMeasurementsView
 )
 
+
 urlpatterns = [
     path("buckets", RetrieveBucketsView.as_view()),
-    path("<str:bucket>/measurements", RetrieveMeasurementsView.as_view()),
+    path("<str:organization>/<str:bucket>/measurements", RetrieveMeasurementsView.as_view()),
 ]
