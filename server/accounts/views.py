@@ -6,24 +6,29 @@ from django.http import HttpResponse
 
 class LoginView(generics.GenericAPIView):
     def post(self, request):
-        api_url = 'http://influxdb:8086/api/v2/signin'
-        username = request.data.get("username")
-        password = request.data.get("password")
+        influx_url = 'http://influxdb:8086/api/v2/signin'
         try:
-            response = requests.post(api_url, auth=(username, password))
-            if response.status_code == 204:
-                cookies_dict = requests.utils.dict_from_cookiejar(response.cookies)
-                cookie_value = cookies_dict.get('influxdb-oss-session')
-                response_to_frontend = JsonResponse({
+            username = request.data.get("username")
+            password = request.data.get("password")
+            response_influxdb = requests.post(influx_url, auth=(username, password))
+            if response_influxdb.status_code == 204:
+                cookies_dict = requests.utils.dict_from_cookiejar(response_influxdb.cookies)
+                response = JsonResponse({
                     'message': 'Sign-in successful',
                 })
-                response_to_frontend.set_cookie('set-cookie', cookie_value)
-                return response_to_frontend
+                response.set_cookie(
+                    key='influxdb-oss-session', 
+                    value=cookies_dict.get('influxdb-oss-session'),
+                    domain="localhost",
+                    httponly=True,
+                    samesite="Strict",
+                )
+                return response
             else:
                 return JsonResponse({
                     "error": "External API returned an error",
-                    "status_code": response.status_code,
-                    "response": response.text
-                }, status=response.status_code)
+                    "status_code": response_influxdb.status_code,
+                    "response": response_influxdb.text
+                }, status=response_influxdb.status_code)
         except requests.exceptions.RequestException as e:
             return JsonResponse({"error": "Failed to connect to the external API", "details": str(e)}, status=500)
