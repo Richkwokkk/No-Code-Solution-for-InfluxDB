@@ -21,9 +21,26 @@ class RetrieveMeasurementsView(generics.GenericAPIView):
                 "Accept": "application/csv",
                 "Content-Type": "application/vnd.flux"
             }
-            params = {
-                "orgID": organization
-            }
+            
+            response_org = requests.get(f"{influxdb_url}/api/v2/orgs", headers=headers)
+            response_data = response_org.json()
+            if response_org.status_code != 200:
+                return JsonResponse({
+                    "error": "InfluxDB API returned an error",
+                    "details": response_data["message"]
+                }, status=response_org.status_code)
+            orgs_data = response_data['orgs']
+            params = None
+            for org in orgs_data:
+                if org['name'] == organization:
+                    params = {
+                        "orgID": org["id"]
+                    }
+                    break
+            if params is None:
+                return JsonResponse({
+                    "error": "Organization not found"
+                }, status=404)
             data = f'from(bucket: "{bucket}") |> range(start: {time_start}, stop: {time_stop})'
             response_query = requests.post(f"{influxdb_url}/api/v2/query", headers=headers, params=params, data=data)
             if response_query.status_code != 200:
