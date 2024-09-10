@@ -1,44 +1,43 @@
-import requests
 from rest_framework import generics
 from django.http import JsonResponse
-
-from influxdb_client import InfluxDBClient
-
+from influxdb_client import InfluxDBClient, ApiException
+import requests
 import logging
 logger = logging.getLogger(__name__)
 
 
 class RetrieveBucketsView(generics.GenericAPIView):
     def get(self, request):        
-        try:
-            influx_url = 'http://influxdb:8086'
-            token = request.headers.get("Authorization").replace("Token ", "")
-            with InfluxDBClient(url=influx_url, token=token) as client:
-                response = client.buckets_api().find_buckets()
-                buckets_name = [bucket.name for bucket in response.buckets]
-            return JsonResponse({"buckets": buckets_name})
-        except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": "Failed to connect to the external API", "details": str(e)}, status=500)
+        
+        influx_url = 'http://influxdb:8086'
+        token = request.headers.get("Authorization")
 
-    def get_1(self, request):
-        api_url = 'http://influxdb:8086/api/v2/buckets'
+        if not token or not token.startswith("Token "):
+            logging.warning("Unauthorized access attempt: Missing or malformed Authorization header")
+            return JsonResponse({"error": "Unauthorized access"}, status=401)
+        
+        token = token.replace("Token ", "")
+
         try:
-            authorization_token = request.headers.get("Authorization")
-            headers = {
-                'Authorization': authorization_token,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-            response = requests.get(api_url, headers=headers)
-            if response.status_code == 200:
-                buckets_data = response.json()["buckets"]
-                buckets_name = [bucket["name"] for bucket in buckets_data]
-                return JsonResponse({"buckets": buckets_name}, status=response.status_code)
-            else:
-                return JsonResponse({
-                    "error": "External API returned an error",
-                    "status_code": response.status_code,
-                    "response": response.text
-                }, status=response.status_code)
+            with InfluxDBClient(url=influx_url, token=token) as client:
+                try:
+                    response = client.buckets_api().find_buckets()
+                    buckets_name = [bucket.name for bucket in response.buckets]
+                    return JsonResponse({"buckets": buckets_name})
+                except ApiException as e:
+                    logger.error(f"InfluxDB API error: {str(e)}")
+                    if e.status == 401:
+                        return JsonResponse({"error": "Unauthorized access"}, status=401)
+                    elif e.status == 404:
+                        return JsonResponse({"error": "Resource not found"}, status=404)
+                    elif e.status == 500:
+                        return JsonResponse({"error": "Server error"}, status=500)
+                    else:
+                        return JsonResponse({"error": "Unexpected error"}, status=500)
+        
         except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": "Failed to connect to the external API", "details": str(e)}, status=500)
+            logger.error(f"Connection error: {str(e)}")
+            return JsonResponse({"error": "Server error"}, status=500)
+        except Exception as e:
+            logger.error(f"Unexpected error: {str(e)}")
+            return JsonResponse({"error": "Unexpected error"}, status=500)
