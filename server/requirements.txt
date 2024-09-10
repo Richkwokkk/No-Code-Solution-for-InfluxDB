@@ -2,3 +2,5 @@ django
 djangorestframework
 requests
 gunicorn
+django-cors-headers
+influxdb_client

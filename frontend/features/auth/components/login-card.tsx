@@ -1,6 +1,13 @@
 "use client";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,34 +19,33 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AlertCircle } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useLogin } from "@/features/auth/hooks/useLogin";
 
-type FormData = {
-  username: string;
-  password: string;
-};
+const loginSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
+});
+
+export type FormData = z.infer<typeof loginSchema>;
 
 export function LoginCard() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<FormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
-  const onSubmit = async (data: FormData) => {
-    setIsLoading(true);
-    setError(null);
-    await new Promise((resolve) =>
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000),
-    );
+  const { mutate, isError, isPending, reset } = useLogin();
+
+  const onSubmit = (data: FormData) => {
+    mutate(data);
   };
+
+  if (isError) {
+    toast.error("Invalid username or password");
+  }
 
   return (
     <Card variant="ghost" className="w-[350px]">
@@ -57,12 +63,14 @@ export function LoginCard() {
               <Label htmlFor="username">Username</Label>
               <Input
                 id="username"
-                {...register("username", { required: "Username is required" })}
+                onFocus={reset}
+                {...register("username")}
                 placeholder="Enter your username"
+                aria-invalid={errors.username ? "true" : "false"}
               />
               {errors.username && (
                 <span className="text-sm text-red-500">
-                  {errors.username.message}
+                  {errors.username.message ?? " "}
                 </span>
               )}
             </div>
@@ -71,14 +79,10 @@ export function LoginCard() {
               <Input
                 id="password"
                 type="password"
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 8,
-                    message: "Password must be at least 8 characters",
-                  },
-                })}
+                onFocus={reset}
+                {...register("password")}
                 placeholder="Enter your password"
+                aria-invalid={errors.password ? "true" : "false"}
               />
               {errors.password && (
                 <span className="text-sm text-red-500">
@@ -87,15 +91,10 @@ export function LoginCard() {
               )}
             </div>
           </div>
-          {error && (
-            <Alert variant="destructive" className="mt-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-          <CardFooter className="mt-4 flex justify-between px-0">
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Logging in..." : "Login"}
+          <CardFooter className="relative mt-4 flex flex-col gap-2 px-0">
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isPending ? "Logging in..." : "Login"}
             </Button>
           </CardFooter>
         </form>

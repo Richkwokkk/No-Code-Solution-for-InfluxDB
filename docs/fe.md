@@ -116,3 +116,14 @@ pnpm test:e2e # nr test:e2e
 # Run all end-to-end tests using playwright with a web UI
 pnpm test:e2e:watch # nr test:e2e:watch
 ```
+
+Storybook:
+
+Storybook is a tool for building UI components in isolation. It is useful for creating reusable components that can be used across different applications. For our project, we use Storybook to build UI components for the editor. You don't have to write any complex stories for the components, but you can build simple ones to make sure the component works as expected, at least visually. So using storybook is not a requirement for this project, but it is a good way to build UI components in isolation. For more details, please visit https://storybook.js.org/docs/get-started/whats-a-story.
+
+To run Storybook, run the following command:
+
+```bash
+cd frontend
+pnpm storybook
+```

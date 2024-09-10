@@ -2,9 +2,11 @@
   "conventionalCommits.scopes": [
     "infra",
     "frontend",
-    "server"
+    "server",
+    "docs"
   ],
   "cSpell.words": [
+    "autodocs",
     "tanstack"
   ]
 }

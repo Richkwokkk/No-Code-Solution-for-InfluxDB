@@ -1,17 +1,9 @@
 {
+  "name": "influxui-pg02",
   "version": "1.0.0",
-  "description": "",
   "type": "module",
-  "scripts": {
-    "preinstall": "npx only-allow npm",
-    "prepare": "husky"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^19.4.0",
-    "@commitlint/config-conventional": "^19.2.2",
-    "husky": "^9.1.4"
-  },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "description": ""
 }
