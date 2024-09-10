@@ -2,6 +2,9 @@ import requests
 from rest_framework import generics
 from django.http import JsonResponse
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class LoginView(generics.GenericAPIView):
     def post(self, request):
@@ -10,8 +13,8 @@ class LoginView(generics.GenericAPIView):
             username = request.data.get("username")
             password = request.data.get("password")
             response = requests.post(f'{influxdb_url}/api/v2/signin', auth=(username, password))
-            response_data = response.json()
             if response.status_code != 204:
+                response_data = response.json()
                 return JsonResponse({
                     "error": "InfluxDB API returned an error",
                     "details": response_data["message"]
