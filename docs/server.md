@@ -217,7 +217,7 @@
   - Testing <u>InfluxDB server</u> - <u>Login</u>:
 
     - step 1: InfluxDB server -> <span style="color:yellow">POST</span> Login -> <span style="background-color:blue; padding:2px;">Send</span>
-    - step 2: You will see the result <span style="background-color:green; padding:2px;">204 No Content</span> for succefully access the influxDB.
+    - step 2: You will see the result <span style="background-color:green; padding:2px;">204 No Content</span> for successfully access the influxDB.
     - step 3:In <u>Headers</u>, you will see the <u>Value</u> in the <u>Key</u> of <u>Set-Cookie</u>. This is the cookie with information including the cookie name, path, expires date and protocol <u>HttpOnly</u> for security.
 
     - step 4: Copy the cookie value.
