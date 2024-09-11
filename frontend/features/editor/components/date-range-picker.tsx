@@ -18,16 +18,24 @@ export function EditorDatePickerNode({}: React.HTMLAttributes<HTMLDivElement>) {
     to: addDays(new Date(2022, 0, 20), 20),
   });
 
-  const formattedDate = date?.from
-    ? date.to
-      ? `${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}`
-      : format(date.from, "LLL dd, y")
-    : "Pick a date";
+  const [value, setValue] = React.useState<string>("Pick a date");
+
+  const handleDateChange = (selectedDate: DateRange | undefined) => {
+    setDate(selectedDate);
+    if (selectedDate?.from) {
+      const formattedDate = selectedDate.to
+        ? `${format(selectedDate.from, "LLL dd, y")} - ${format(selectedDate.to, "LLL dd, y")}`
+        : format(selectedDate.from, "LLL dd, y");
+      setValue(formattedDate);
+    } else {
+      setValue("Pick a date");
+    }
+  };
 
   return (
     <Popover>
       <PopoverTrigger>
-        <EditorBaseNode type="date" value={formattedDate} icon={CalendarIcon}>
+        <EditorBaseNode type="date" value={value} icon={CalendarIcon}>
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date?.from ? (
             date.to ? (
@@ -49,7 +57,7 @@ export function EditorDatePickerNode({}: React.HTMLAttributes<HTMLDivElement>) {
           mode="range"
           defaultMonth={date?.from}
           selected={date}
-          onSelect={setDate}
+          onSelect={handleDateChange}
           numberOfMonths={2}
         />
       </PopoverContent>
