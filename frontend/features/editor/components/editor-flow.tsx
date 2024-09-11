@@ -70,8 +70,8 @@ export function EditorFlow() {
 
       const validPair1 = ["bucket", "measurement"];
       const validPair2 = ["field", "measurement"];
-      const validPair3 = ["filter", "field"];
-      const validPair4 = ["filter", "filter"];
+      const validPair3 = ["date", "field"];
+      const validPair4 = ["date", "date"];
 
       if (
         validPair1.includes(sourceNode.type as string) &&

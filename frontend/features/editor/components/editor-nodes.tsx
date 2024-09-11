@@ -21,9 +21,8 @@ import {
   RectangleEllipsis,
 } from "lucide-react";
 import { Check } from "lucide-react";
-import { Calendar as CalendarIcon } from "lucide-react";
 import * as React from "react";
-import { DatePickerWithRange } from "./date-range-picker";
+import { EditorDatePickerNode } from "./date-range-picker";
 
 export interface EditorBaseNodeProps {
   value: string;
@@ -35,7 +34,7 @@ export interface EditorBaseNodeProps {
   ariaExpanded?: boolean;
 }
 
-function EditorBaseNode({
+export function EditorBaseNode({
   type,
   value,
   icon: Icon,
@@ -184,89 +183,89 @@ export const FieldNode = () => {
   );
 };
 
-type EditorDatePickerNodeProps = {
-  type: string;
-  icon: React.ComponentType<any>;
-  leftHandle?: boolean;
-  rightHandle?: boolean;
-};
+// type EditorDatePickerNodeProps = {
+//   type: string;
+//   icon: React.ComponentType<any>;
+//   leftHandle?: boolean;
+//   rightHandle?: boolean;
+// };
 
-export function EditorDatePickerNode({
-  type,
-  icon: Icon,
-  leftHandle = true,
-  rightHandle = true,
-}: EditorDatePickerNodeProps) {
-  const [dateRange, setDateRange] = React.useState<string>("Pick a date");
+// export function EditorDatePickerNode({
+//   type,
+//   icon: Icon,
+//   leftHandle = true,
+//   rightHandle = true,
+// }: EditorDatePickerNodeProps) {
+//   const [dateRange, setDateRange] = React.useState<string>("Pick a date");
 
-  return (
-    <Button
-      asChild
-      variant="outline"
-      className="min-w-40 rounded-lg border px-2 py-7 shadow-md hover:bg-background"
-    >
-      <div className="relative flex items-center justify-between p-2">
-        {leftHandle ? (
-          <Handle
-            type="target"
-            position={Position.Left}
-            className="!-left-[2px] !h-4 !w-1 !min-w-0 !rounded-none !rounded-l-[2px] !border-none !bg-primary shadow-md"
-          />
-        ) : null}
+//   return (
+//     <Button
+//       asChild
+//       variant="outline"
+//       className="min-w-40 rounded-lg border px-2 py-7 shadow-md hover:bg-background"
+//     >
+//       <div className="relative flex items-center justify-between p-2">
+//         {leftHandle ? (
+//           <Handle
+//             type="target"
+//             position={Position.Left}
+//             className="!-left-[2px] !h-4 !w-1 !min-w-0 !rounded-none !rounded-l-[2px] !border-none !bg-primary shadow-md"
+//           />
+//         ) : null}
 
-        <div className="flex items-center space-x-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
-            {Icon && <Icon size={20} />}
-          </div>
-          <div className="flex flex-col pr-1">
-            <p className="text-start text-[10px] capitalize opacity-50">
-              {type}
-            </p>
-            <div className="date-picker-container">
-              <DatePickerWithRange
-                onChange={(range) => {
-                  if (range?.from && range?.to) {
-                    setDateRange(
-                      `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`,
-                    );
-                  } else if (range?.from) {
-                    setDateRange(range.from.toLocaleDateString());
-                  } else {
-                    setDateRange("Pick a date");
-                  }
-                }}
-                className="scale-[0.8]"
-              />
-            </div>
-          </div>
-        </div>
+//         <div className="flex items-center space-x-2">
+//           <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
+//             {Icon && <Icon size={20} />}
+//           </div>
+//           <div className="flex flex-col pr-1">
+//             <p className="text-start text-[10px] capitalize opacity-50">
+//               {type}
+//             </p>
+//             <div className="date-picker-container">
+//               <DatePickerWithRange
+//                 onChange={(range) => {
+//                   if (range?.from && range?.to) {
+//                     setDateRange(
+//                       `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`,
+//                     );
+//                   } else if (range?.from) {
+//                     setDateRange(range.from.toLocaleDateString());
+//                   } else {
+//                     setDateRange("Pick a date");
+//                   }
+//                 }}
+//                 className="scale-[0.8]"
+//               />
+//             </div>
+//           </div>
+//         </div>
 
-        {rightHandle ? (
-          <Handle
-            type="source"
-            position={Position.Right}
-            className="!-right-[2px] !h-4 !w-1 !min-w-0 !rounded-none !rounded-r-[2px] !border-none !bg-primary shadow-md"
-          />
-        ) : null}
-      </div>
-    </Button>
-  );
-}
+//         {rightHandle ? (
+//           <Handle
+//             type="source"
+//             position={Position.Right}
+//             className="!-right-[2px] !h-4 !w-1 !min-w-0 !rounded-none !rounded-r-[2px] !border-none !bg-primary shadow-md"
+//           />
+//         ) : null}
+//       </div>
+//     </Button>
+//   );
+// }
 
-export const FilterNode = () => {
-  return (
-    <EditorDatePickerNode
-      type="filter"
-      icon={CalendarIcon}
-      leftHandle={true}
-      rightHandle={true}
-    />
-  );
-};
+// export const FilterNode = () => {
+//   return (
+//     <EditorDatePickerNode
+//       type="filter"
+//       icon={CalendarIcon}
+//       leftHandle={true}
+//       rightHandle={true}
+//     />
+//   );
+// };
 
 export const nodeTypes = {
   bucket: BucketNode,
   measurement: MeasurementNode,
   field: FieldNode,
-  filter: FilterNode,
+  date: EditorDatePickerNode,
 } as any;
