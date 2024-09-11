@@ -17,31 +17,63 @@ class RetrieveBucketsView(generics.GenericAPIView):
                 "Content-Type": "application/json",
                 "Cookie": f"influxdb-oss-session={cookies}"
             }
-
             response_influxdb = requests.get(influx_url, headers=headers)
-
             if response_influxdb.status_code == 200:
                 response_data = response_influxdb.json()
+                logger.error(response_data)
                 buckets_name = [bucket["name"] for bucket in response_data["buckets"]]
-                return JsonResponse({"buckets": buckets_name})
-
-            elif response_influxdb.status_code == 401:
-                logger.error(f"Unauthorized access: {response_influxdb.text}")
-                return JsonResponse({"error": "Unauthorized access"}, status=401)
-
-            elif response_influxdb.status_code == 404:
-                logger.error(f"Resource not found: {response_influxdb.text}")
-                return JsonResponse({"error": "Resource not found"}, status=404)
-
-            elif response_influxdb.status_code == 500:
-                logger.error(f"Internal server error from external API: {response_influxdb.text}")
-                return JsonResponse({"error": "Server error"}, status=500)
-
+                response = JsonResponse({
+                    "buckets": buckets_name
+                })
+                return response
             else:
-                logger.error(f"Unexpected error from external API: {response_influxdb.status_code}, {response_influxdb.text}")
-                return JsonResponse({"error": "Unexpected error occurred"}, status=500)
-
+                return JsonResponse({
+                    "error": "External API returned an error",
+                    "status_code": response_influxdb.status_code,
+                    "response": response_influxdb.text
+                }, status=response_influxdb.status_code)
         except requests.exceptions.RequestException as e:
-            # Log the details of the exception
-            logger.error(f"Failed to connect to the external API: {str(e)}")
-            return JsonResponse({"error": "Failed to connect to the external API"}, status=500)
+            return JsonResponse({"error": "Failed to connect to the external API", "details": str(e)}, status=500)
+
+
+class RetrieveMeasurementsView(generics.GenericAPIView):
+    def post(self, request, bucket):        
+        influx_url = 'http://influxdb:8086/api/v2/buckets'
+        try:
+            time_start = request.data.get("time_start")
+            time_stop= request.data.get("time_stop")
+            cookies = request.COOKIES.get('influxdb-oss-session')
+            logger.error(cookies)
+            headers = {
+                "Accept": "Application/json",
+                "Content-Type": "application/json",
+                "Cookie": f"influxdb-oss-session={cookies}"
+            }
+
+            # tables = client.query_api().query(
+            #         f'from(bucket: \"{bucket}\") \
+            #             |> range(start: {time_start}, stop: {time_stop})'
+            #     )
+            # measurements_name = []
+            # for record in tables[0].records:
+            #     measurement = record.get_measurement()
+            #     if measurement not in measurements_name:
+            #         measurements_name.append(measurement)
+
+            response_influxdb = requests.get(influx_url, headers=headers)
+            if response_influxdb.status_code == 200:
+                response_data = response_influxdb.json()
+                logger.error(response_data)
+                buckets_name = [bucket["name"] for bucket in response_data["buckets"]]
+                response = JsonResponse({
+                    "measurements": measurements_name
+                })
+                return response
+            else:
+                return JsonResponse({
+                    "error": "External API returned an error",
+                    "status_code": response_influxdb.status_code,
+                    "response": response_influxdb.text
+                }, status=response_influxdb.status_code)
+        except requests.exceptions.RequestException as e:
+            return JsonResponse({"error": "Failed to connect to the external API", "details": str(e)}, status=500)
