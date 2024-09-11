@@ -18,10 +18,16 @@ export function EditorDatePickerNode({}: React.HTMLAttributes<HTMLDivElement>) {
     to: addDays(new Date(2022, 0, 20), 20),
   });
 
+  const formattedDate = date?.from
+    ? date.to
+      ? `${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}`
+      : format(date.from, "LLL dd, y")
+    : "Pick a date";
+
   return (
     <Popover>
       <PopoverTrigger>
-        <EditorBaseNode type="date" value="date" icon={CalendarIcon}>
+        <EditorBaseNode type="date" value={formattedDate} icon={CalendarIcon}>
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date?.from ? (
             date.to ? (
