@@ -42,11 +42,16 @@ class ExecuteQueryView(generics.GenericAPIView):
                     "details": response_data["message"]
                 }, status=response_org.status_code)
             orgs_data = response_data['orgs']
+            params = None
             for org in orgs_data:
                 if org['name'] == organization:
                     params = {
                         "orgID": org["id"]
                     }
+            if params is None:
+                return JsonResponse({
+                    "error": "Organization not found"
+                }, status=404)
             response_query = requests.post(f"{influxdb_url}/api/v2/query", headers=headers_query, params=params, data=query)
             if response_query.status_code != 200:
                 response_data = response_query.json()
