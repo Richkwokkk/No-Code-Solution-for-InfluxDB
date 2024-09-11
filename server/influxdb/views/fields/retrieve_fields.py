@@ -9,7 +9,7 @@ from django.http import JsonResponse
 
 
 class RetrieveFieldsView(generics.GenericAPIView):
-    def post(self, request, organization, bucket, measurement):        
+    def get(self, request, organization, bucket, measurement):        
         influxdb_url = 'http://influxdb:8086'
         try:
             time_start = request.data.get("time_start")
