@@ -1,24 +1,28 @@
 "use client";
 
+import * as React from "react";
+
+import { DateRange } from "react-day-picker";
+
+import { addDays, format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { addDays, format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import * as React from "react";
-import { DateRange } from "react-day-picker";
+
 import { EditorBaseNode } from "./editor-nodes";
 
 export function EditorDatePickerNode({}: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: new Date(2024, 0, 20),
+    to: addDays(new Date(2024, 0, 20), 20),
   });
 
-  const [value, setValue] = React.useState<string>("Pick a date");
+  const [value, setValue] = React.useState<string>("Pick a date range");
 
   const handleDateChange = (selectedDate: DateRange | undefined) => {
     setDate(selectedDate);
@@ -28,14 +32,14 @@ export function EditorDatePickerNode({}: React.HTMLAttributes<HTMLDivElement>) {
         : format(selectedDate.from, "LLL dd, y");
       setValue(formattedDate);
     } else {
-      setValue("Pick a date");
+      setValue("Pick a date range");
     }
   };
 
   return (
     <Popover>
       <PopoverTrigger>
-        <EditorBaseNode type="date" value={value} icon={CalendarIcon}>
+        <EditorBaseNode type="date range" value={value} icon={CalendarIcon}>
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date?.from ? (
             date.to ? (
@@ -47,7 +51,7 @@ export function EditorDatePickerNode({}: React.HTMLAttributes<HTMLDivElement>) {
               format(date.from, "LLL dd, y")
             )
           ) : (
-            <span>Pick a date</span>
+            <span>Pick a date range</span>
           )}
         </EditorBaseNode>
       </PopoverTrigger>

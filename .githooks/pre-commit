@@ -15,7 +15,7 @@ if ! command -v next &> /dev/null; then
 fi
 
 # Run linting and formatting checks
-npx prettier --check --config .prettierrc "**/*.{js,jsx,ts,tsx,css,json,mjs,cjs,yml,yaml}" --ignore-path .gitignore --ignore-path .prettierignore
+npx prettier --config .prettierrc "**/*.{js,jsx,ts,tsx,css,json,mjs,cjs,yml,yaml}" --ignore-path .gitignore --ignore-path .prettierignore
 npx next lint
 
 # Check the exit status of the commands

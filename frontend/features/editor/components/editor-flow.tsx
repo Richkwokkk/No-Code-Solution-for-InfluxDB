@@ -56,8 +56,7 @@ export function EditorFlow() {
 
   const showToastWarning = throttle(() => {
     toast.warning("Invalid connection", {
-      description:
-        "Please connect bucket ⇢ measurement ⇢ field ⇢ ValueThreshold",
+      description: "Please connect bucket ⇢ measurement ⇢ field ⇢ filter",
     });
   }, 1000);
 
@@ -72,34 +71,19 @@ export function EditorFlow() {
 
       if (!sourceNode || !targetNode) return false;
 
-      const validPair1 = ["bucket", "measurement"];
-      const validPair2 = ["field", "measurement"];
-      const validPair3 = ["date", "field"];
-      const validPair4 = ["date", "date"];
-
+      if (sourceNode.type === "bucket" && targetNode.type === "measurement")
+        return true;
+      if (sourceNode.type === "measurement" && targetNode.type === "field")
+        return true;
       if (
-        validPair1.includes(sourceNode.type as string) &&
-        validPair1.includes(targetNode.type as string)
+        sourceNode.type === "field" &&
+        ["valueThreshold", "dateRange"].includes(targetNode.type as string)
       )
         return true;
       if (
-        validPair2.includes(sourceNode.type as string) &&
-        validPair2.includes(targetNode.type as string)
+        ["valueThreshold", "dateRange"].includes(sourceNode.type as string) &&
+        ["valueThreshold", "dateRange"].includes(targetNode.type as string)
       )
-        return true;
-
-      if (
-        validPair3.includes(sourceNode.type as string) &&
-        validPair3.includes(targetNode.type as string)
-      )
-        return true;
-
-      if (
-        validPair4.includes(sourceNode.type as string) &&
-        validPair4.includes(targetNode.type as string)
-      )
-        return true;
-      if (sourceNode.type === "field" && targetNode.type === "valueThreshold")
         return true;
 
       throttleToastWarning();
