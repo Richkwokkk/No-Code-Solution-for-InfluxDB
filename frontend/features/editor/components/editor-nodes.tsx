@@ -6,11 +6,13 @@ import {
   Check,
   Cylinder,
   Grid,
+  Hash,
   type LucideIcon,
   RectangleEllipsis,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -19,6 +21,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -185,8 +188,137 @@ export const FieldNode = () => {
   );
 };
 
+export const ValueThresholdNode = () => {
+  const [open, setOpen] = React.useState(false);
+  const [minValue, setMinValue] = React.useState<string>("");
+  const [maxValue, setMaxValue] = React.useState<string>("");
+  const [isMinIncluded, setIsMinIncluded] = React.useState(false);
+  const [isMaxIncluded, setIsMaxIncluded] = React.useState(false);
+  const [error, setError] = React.useState("");
+
+  React.useEffect(() => {
+    if (
+      minValue.length &&
+      maxValue.length &&
+      parseFloat(minValue) > parseFloat(maxValue)
+    ) {
+      setError("Min value cannot be greater than max value");
+    } else {
+      setError("");
+    }
+  }, [maxValue, minValue]);
+
+  const handlePopoverClose = () => {
+    if (error) {
+      setMinValue("");
+      setMaxValue("");
+      setIsMinIncluded(false);
+      setIsMaxIncluded(false);
+      setError("");
+    }
+  };
+
+  const displayValue = () => {
+    if (!minValue.length && !maxValue.length) {
+      return "Pick a threshold";
+    }
+
+    if (parseFloat(minValue) > parseFloat(maxValue)) {
+      return "Pick a valid threshold";
+    }
+
+    const minSymbol = isMinIncluded ? "≤" : "<";
+    const maxSymbol = isMaxIncluded ? "≤" : "<";
+
+    if (minValue && maxValue) {
+      return `${minValue} ${minSymbol} value ${maxSymbol} ${maxValue}`;
+    } else if (minValue) {
+      return `${minValue} ${minSymbol} value`;
+    } else if (maxValue) {
+      return `value ${maxSymbol} ${maxValue}`;
+    }
+
+    return "";
+  };
+
+  return (
+    <Popover
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        if (!isOpen) handlePopoverClose();
+      }}
+    >
+      <PopoverTrigger asChild>
+        <div>
+          <EditorBaseNode
+            value={displayValue()}
+            type="Value Threshold"
+            icon={Hash}
+            ariaExpanded={open}
+          />
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0">
+        <div className="space-y-3 p-4">
+          <div className="flex space-x-4">
+            <Input
+              type="number"
+              placeholder="Min"
+              value={minValue}
+              onChange={(e) => setMinValue(e.target.value)}
+              className="w-1/2"
+            />
+            <div className="flex items-center space-x-1">
+              <Checkbox
+                id="min-included"
+                checked={isMinIncluded}
+                onCheckedChange={(checked: boolean) =>
+                  setIsMinIncluded(checked)
+                }
+              />
+              <label
+                htmlFor="min-included"
+                className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Included
+              </label>
+            </div>
+          </div>
+          <div className="flex space-x-4">
+            <Input
+              type="number"
+              placeholder="Max"
+              value={maxValue}
+              onChange={(e) => setMaxValue(e.target.value)}
+              className="w-1/2"
+            />
+            <div className="flex items-center space-x-1">
+              <Checkbox
+                id="max-included"
+                checked={isMaxIncluded}
+                onCheckedChange={(checked: boolean) =>
+                  setIsMaxIncluded(checked)
+                }
+              />
+              <label
+                htmlFor="max-included"
+                className="text-xs font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Included
+              </label>
+            </div>
+          </div>
+          {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 export const nodeTypes = {
   bucket: BucketNode,
   measurement: MeasurementNode,
   field: FieldNode,
+  valueThreshold: ValueThresholdNode,
 } as any;
