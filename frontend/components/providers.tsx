@@ -2,6 +2,8 @@
 
 import { QueryProvider } from "@/components/query-provider";
 
+import { AuthProvider } from "./auth-provider";
+
 interface ProvidersProps {
   children: React.ReactNode;
 }
@@ -9,9 +11,7 @@ interface ProvidersProps {
 export const Providers = ({ children }: ProvidersProps) => {
   return (
     <QueryProvider>
-      {/* <AuthProvider> */}
-      {children}
-      {/* </AuthProvider> */}
+      <AuthProvider>{children}</AuthProvider>
     </QueryProvider>
   );
 };
