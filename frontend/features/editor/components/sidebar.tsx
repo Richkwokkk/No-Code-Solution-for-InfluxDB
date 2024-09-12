@@ -44,8 +44,8 @@ export const Sidebar = () => {
                   sidebar?.isOpen === false ? "opacity-0" : "opacity-100",
                 )}
               >
-                <p className="text-[10px] opacity-50">{label}</p>
-                <p className="text-xs font-bold">{title}</p>
+                <p className="text-nowrap text-[10px] opacity-50">{label}</p>
+                <p className="text-nowrap text-xs font-bold">{title}</p>
               </div>
             </SidebarDraggable>
           );

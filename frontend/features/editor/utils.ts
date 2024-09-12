@@ -21,7 +21,7 @@ export const nodes: Record<NodeTypes, SidebarDraggable> = {
     icon: RectangleEllipsis,
   },
   valueThreshold: {
-    label: "Input Value",
+    label: "Filter",
     title: "Value Threshold",
     icon: Hash,
   },

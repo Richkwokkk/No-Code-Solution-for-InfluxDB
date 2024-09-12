@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -189,63 +190,55 @@ export const FieldNode = () => {
 
 export const ValueThresholdNode = () => {
   const [open, setOpen] = React.useState(false);
-  const [minValue, setMinValue] = React.useState("");
-  const [maxValue, setMaxValue] = React.useState("");
+  const [minValue, setMinValue] = React.useState<string>("");
+  const [maxValue, setMaxValue] = React.useState<string>("");
+  const [isMinIncluded, setIsMinIncluded] = React.useState(false);
+  const [isMaxIncluded, setIsMaxIncluded] = React.useState(false);
   const [error, setError] = React.useState("");
 
-  const handleInputChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const inputValue = e.target.value;
-      setter(inputValue);
-    };
-
-  const validateRange = React.useCallback(() => {
-    const min = parseFloat(minValue);
-    const max = parseFloat(maxValue);
-
-    if (minValue === "" && maxValue === "") {
-      setError("");
-      return;
-    }
-
-    if ((minValue !== "" && isNaN(min)) || (maxValue !== "" && isNaN(max))) {
-      setError("Please enter a valid number");
-      return;
-    }
-
-    if (minValue !== "" && maxValue !== "") {
-      if (min >= max) {
-        setError("Min value cannot be greater than or equal to max value");
-      } else {
-        setError("");
-      }
+  React.useEffect(() => {
+    if (
+      minValue.length &&
+      maxValue.length &&
+      parseFloat(minValue) > parseFloat(maxValue)
+    ) {
+      setError("Min value cannot be greater than max value");
     } else {
       setError("");
     }
-  }, [minValue, maxValue]);
-
-  React.useEffect(() => {
-    validateRange();
-  }, [validateRange]);
+  }, [maxValue, minValue]);
 
   const handlePopoverClose = () => {
     if (error) {
       setMinValue("");
       setMaxValue("");
+      setIsMinIncluded(false);
+      setIsMaxIncluded(false);
       setError("");
     }
   };
 
   const displayValue = () => {
-    if (minValue && maxValue) {
-      return `${minValue} - ${maxValue}`;
-    } else if (minValue) {
-      return `> ${minValue}`;
-    } else if (maxValue) {
-      return `< ${maxValue}`;
+    if (!minValue.length && !maxValue.length) {
+      return "Pick a threshold";
     }
-    return "Number Range";
+
+    if (parseFloat(minValue) > parseFloat(maxValue)) {
+      return "Pick a valid threshold";
+    }
+
+    const minSymbol = isMinIncluded ? "≤" : "<";
+    const maxSymbol = isMaxIncluded ? "≤" : "<";
+
+    if (minValue && maxValue) {
+      return `${minValue} ${minSymbol} value ${maxSymbol} ${maxValue}`;
+    } else if (minValue) {
+      return `${minValue} ${minSymbol} value`;
+    } else if (maxValue) {
+      return `value ${maxSymbol} ${maxValue}`;
+    }
+
+    return "";
   };
 
   return (
@@ -260,29 +253,61 @@ export const ValueThresholdNode = () => {
         <div>
           <EditorBaseNode
             value={displayValue()}
-            type="valueThreshold"
+            type="Value Threshold"
             icon={Hash}
             ariaExpanded={open}
           />
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-[250px] p-0">
-        <div className="space-y-2 p-4">
-          <div className="flex space-x-2">
+      <PopoverContent className="w-[200px] p-0">
+        <div className="space-y-3 p-4">
+          <div className="flex space-x-4">
             <Input
               type="number"
               placeholder="Min"
               value={minValue}
-              onChange={handleInputChange(setMinValue)}
+              onChange={(e) => setMinValue(e.target.value)}
               className="w-1/2"
             />
+            <div className="flex items-center space-x-1">
+              <Checkbox
+                id="min-included"
+                checked={isMinIncluded}
+                onCheckedChange={(checked: boolean) =>
+                  setIsMinIncluded(checked)
+                }
+              />
+              <label
+                htmlFor="min-included"
+                className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Included
+              </label>
+            </div>
+          </div>
+          <div className="flex space-x-4">
             <Input
               type="number"
               placeholder="Max"
               value={maxValue}
-              onChange={handleInputChange(setMaxValue)}
+              onChange={(e) => setMaxValue(e.target.value)}
               className="w-1/2"
             />
+            <div className="flex items-center space-x-1">
+              <Checkbox
+                id="max-included"
+                checked={isMaxIncluded}
+                onCheckedChange={(checked: boolean) =>
+                  setIsMaxIncluded(checked)
+                }
+              />
+              <label
+                htmlFor="max-included"
+                className="text-xs font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Included
+              </label>
+            </div>
           </div>
           {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
         </div>
