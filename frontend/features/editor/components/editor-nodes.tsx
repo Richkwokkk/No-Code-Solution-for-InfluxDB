@@ -6,6 +6,7 @@ import {
   Check,
   Cylinder,
   Grid,
+  Hash,
   type LucideIcon,
   RectangleEllipsis,
 } from "lucide-react";
@@ -19,6 +20,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -185,8 +187,113 @@ export const FieldNode = () => {
   );
 };
 
+export const ValueThresholdNode = () => {
+  const [open, setOpen] = React.useState(false);
+  const [minValue, setMinValue] = React.useState("");
+  const [maxValue, setMaxValue] = React.useState("");
+  const [error, setError] = React.useState("");
+
+  const handleInputChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const inputValue = e.target.value;
+      setter(inputValue);
+    };
+
+  const validateRange = React.useCallback(() => {
+    const min = parseFloat(minValue);
+    const max = parseFloat(maxValue);
+
+    if (minValue === "" && maxValue === "") {
+      setError("");
+      return;
+    }
+
+    if ((minValue !== "" && isNaN(min)) || (maxValue !== "" && isNaN(max))) {
+      setError("Please enter a valid number");
+      return;
+    }
+
+    if (minValue !== "" && maxValue !== "") {
+      if (min >= max) {
+        setError("Min value cannot be greater than or equal to max value");
+      } else {
+        setError("");
+      }
+    } else {
+      setError("");
+    }
+  }, [minValue, maxValue]);
+
+  React.useEffect(() => {
+    validateRange();
+  }, [validateRange]);
+
+  const handlePopoverClose = () => {
+    if (error) {
+      setMinValue("");
+      setMaxValue("");
+      setError("");
+    }
+  };
+
+  const displayValue = () => {
+    if (minValue && maxValue) {
+      return `${minValue} - ${maxValue}`;
+    } else if (minValue) {
+      return `> ${minValue}`;
+    } else if (maxValue) {
+      return `< ${maxValue}`;
+    }
+    return "Number Range";
+  };
+
+  return (
+    <Popover
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        if (!isOpen) handlePopoverClose();
+      }}
+    >
+      <PopoverTrigger asChild>
+        <div>
+          <EditorBaseNode
+            value={displayValue()}
+            type="valueThreshold"
+            icon={Hash}
+            ariaExpanded={open}
+          />
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="w-[250px] p-0">
+        <div className="space-y-2 p-4">
+          <div className="flex space-x-2">
+            <Input
+              type="number"
+              placeholder="Min"
+              value={minValue}
+              onChange={handleInputChange(setMinValue)}
+              className="w-1/2"
+            />
+            <Input
+              type="number"
+              placeholder="Max"
+              value={maxValue}
+              onChange={handleInputChange(setMaxValue)}
+              className="w-1/2"
+            />
+          </div>
+          {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 export const nodeTypes = {
   bucket: BucketNode,
   measurement: MeasurementNode,
   field: FieldNode,
+  valueThreshold: ValueThresholdNode,
 } as any;

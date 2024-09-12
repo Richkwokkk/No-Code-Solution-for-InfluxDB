@@ -56,7 +56,8 @@ export function EditorFlow() {
 
   const showToastWarning = throttle(() => {
     toast.warning("Invalid connection", {
-      description: "Please connect bucket ⇢ measurement ⇢ field",
+      description:
+        "Please connect bucket ⇢ measurement ⇢ field ⇢ ValueThreshold",
     });
   }, 1000);
 
@@ -74,6 +75,8 @@ export function EditorFlow() {
       if (sourceNode.type === "bucket" && targetNode.type === "measurement")
         return true;
       if (sourceNode.type === "measurement" && targetNode.type === "field")
+        return true;
+      if (sourceNode.type === "field" && targetNode.type === "valueThreshold")
         return true;
 
       throttleToastWarning();

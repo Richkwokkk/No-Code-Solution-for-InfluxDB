@@ -1,8 +1,8 @@
-import { Cylinder, Grid, RectangleEllipsis } from "lucide-react";
+import { Cylinder, Grid, RectangleEllipsis, Hash } from "lucide-react";
 
 import { type SidebarDraggable } from "@/features/editor/components/sidebar-draggable";
 
-export type NodeTypes = "bucket" | "measurement" | "field";
+export type NodeTypes = "bucket" | "measurement" | "field" | "valueThreshold";
 
 export const nodes: Record<NodeTypes, SidebarDraggable> = {
   bucket: {
@@ -19,5 +19,10 @@ export const nodes: Record<NodeTypes, SidebarDraggable> = {
     label: "Selector",
     title: "Field",
     icon: RectangleEllipsis,
+  },
+  valueThreshold: {
+    label: "Input Value",
+    title: "Value Threshold",
+    icon: Hash,
   },
 };
