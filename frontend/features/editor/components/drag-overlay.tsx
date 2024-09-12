@@ -1,5 +1,6 @@
-import { NodeTypes, nodes } from "@/features/editor/utils";
 import { DragOverlay, useDndContext } from "@dnd-kit/core";
+
+import { NodeTypes, nodes } from "@/features/editor/utils";
 
 export const DndDragOverlay = () => {
   const { active } = useDndContext();
@@ -11,7 +12,7 @@ export const DndDragOverlay = () => {
       {active ? (
         <div
           id="overlay"
-          className="flex w-[172px] cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-md"
+          className="flex w-[172px] cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-md transition-all ease-in-out"
         >
           <div className="text-editor-node-text flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
             <nodeInfo.icon size={20} />

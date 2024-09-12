@@ -1,5 +1,5 @@
-import { nodeTypes } from "@/features/editor/components/editor-nodes";
-import { throttle } from "@/lib/utils";
+import React, { useCallback } from "react";
+
 import {
   ReactFlow,
   MiniMap,
@@ -15,8 +15,11 @@ import {
   Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import React, { useCallback } from "react";
+
 import { toast } from "sonner";
+
+import { nodeTypes } from "@/features/editor/components/editor-nodes";
+import { throttle } from "@/lib/utils";
 
 const initialNodes: Node[] = [
   {
@@ -53,7 +56,8 @@ export function EditorFlow() {
 
   const showToastWarning = throttle(() => {
     toast.warning("Invalid connection", {
-      description: "Please connect bucket ⇢ measurement ⇢ field",
+      description:
+        "Please connect bucket ⇢ measurement ⇢ field ⇢ ValueThreshold",
     });
   }, 1000);
 
@@ -95,6 +99,8 @@ export function EditorFlow() {
         validPair4.includes(targetNode.type as string)
       )
         return true;
+      if (sourceNode.type === "field" && targetNode.type === "valueThreshold")
+        return true;
 
       throttleToastWarning();
       return false;
@@ -115,6 +121,10 @@ export function EditorFlow() {
         isValidConnection={isValidConnection}
         maxZoom={1}
         proOptions={{ hideAttribution: true }}
+        style={{
+          transitionDuration: "150",
+          transition: "ease-in-out",
+        }}
       >
         <Controls />
         <MiniMap />

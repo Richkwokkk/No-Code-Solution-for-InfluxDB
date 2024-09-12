@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Check if commitlint is installed globally
+if ! command -v commitlint &> /dev/null; then
+  echo "commitlint not found. Installing globally..."
+  npm install -g @commitlint/{config-conventional,cli}
+fi
+
+# Run commitlint
+commitlint --edit "$1"
+if [ $? -ne 0 ]; then
+  echo "Commit message does not meet the required format. Please fix it."
+  exit 1
+fi
+
+# This example catches duplicate Signed-off-by lines.
+test "" = "$(grep '^Signed-off-by: ' "$1" |
+	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
+	echo >&2 Duplicate Signed-off-by lines.
+	exit 1
+}

@@ -1,10 +1,11 @@
+import { LucideIcon } from "lucide-react";
+
 import { SidebarDraggable } from "@/features/editor/components/sidebar-draggable";
 import { SidebarToggle } from "@/features/editor/components/sidebar-toggle";
 import { useSidebarToggle } from "@/features/editor/hooks/use-sidebar-toggle";
 import { nodes } from "@/features/editor/utils";
 import { useStore } from "@/hooks/use-store";
 import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
 
 export type DraggableNode = {
   label: string;
@@ -32,19 +33,19 @@ export const Sidebar = () => {
               key={type}
               id={type}
               type={type}
-              className="flex w-full cursor-grab items-center space-x-2 rounded-lg border bg-white p-2 shadow-md"
+              className="flex w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-md transition-all ease-in-out hover:shadow-lg"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
                 <Icon size={20} />
               </div>
               <div
                 className={cn(
-                  "absolute flex flex-col items-start pl-10",
-                  sidebar?.isOpen === false ? "hidden" : "block",
+                  "hover: absolute flex flex-col items-start pl-10 transition-opacity ease-out",
+                  sidebar?.isOpen === false ? "opacity-0" : "opacity-100",
                 )}
               >
-                <p className="text-[10px] opacity-50">{label}</p>
-                <p className="text-xs font-bold">{title}</p>
+                <p className="text-nowrap text-[10px] opacity-50">{label}</p>
+                <p className="text-nowrap text-xs font-bold">{title}</p>
               </div>
             </SidebarDraggable>
           );
