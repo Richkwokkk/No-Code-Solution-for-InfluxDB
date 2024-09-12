@@ -22,11 +22,11 @@ export const Sidebar = () => {
     <aside
       className={cn(
         "z-20 flex h-full translate-x-0 flex-col border border-r transition-[width] ease-in-out",
-        sidebar?.isOpen === false ? "w-[92px]" : "w-60",
+        sidebar?.isOpen === false ? "w-28" : "w-64",
       )}
     >
       <SidebarToggle isOpen={sidebar?.isOpen} setIsOpen={sidebar?.setIsOpen} />
-      <div className="h-full w-full space-y-4 overflow-y-auto overflow-x-hidden bg-white p-4">
+      <div className="h-full w-full space-y-4 overflow-y-auto overflow-x-hidden bg-white px-6 py-4">
         {Object.entries(nodes).map(([type, { label, title, icon: Icon }]) => {
           return (
             <SidebarDraggable

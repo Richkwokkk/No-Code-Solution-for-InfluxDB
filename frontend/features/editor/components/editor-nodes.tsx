@@ -110,9 +110,7 @@ export function EditorComboboxNode({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger className="focus:outline-none">
         <EditorBaseNode
-          value={
-            value || `Select ${type.charAt(0).toUpperCase() + type.slice(1)}`
-          }
+          value={value || `Select a ${type}`}
           type={type}
           icon={icon}
           rightHandle={rightHandle}
@@ -305,7 +303,7 @@ export const ValueThresholdNode = () => {
               />
               <label
                 htmlFor="max-included"
-                className="text-xs font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Included
               </label>
