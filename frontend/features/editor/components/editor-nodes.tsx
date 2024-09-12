@@ -29,6 +29,8 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
+import { EditorDatePickerNode } from "./date-range-picker";
+
 export interface EditorBaseNodeProps {
   value: string;
   type: string;
@@ -39,7 +41,7 @@ export interface EditorBaseNodeProps {
   ariaExpanded?: boolean;
 }
 
-function EditorBaseNode({
+export function EditorBaseNode({
   type,
   value,
   icon: Icon,
@@ -320,5 +322,6 @@ export const nodeTypes = {
   bucket: BucketNode,
   measurement: MeasurementNode,
   field: FieldNode,
+  dateRange: EditorDatePickerNode,
   valueThreshold: ValueThresholdNode,
 } as any;
