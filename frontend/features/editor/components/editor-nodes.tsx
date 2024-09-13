@@ -312,7 +312,9 @@ export const ValueThresholdNode = () => {
               </label>
             </div>
           </div>
-          {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
+          {error && (
+            <p className="mt-1 text-xs font-medium text-destructive">{error}</p>
+          )}
         </div>
       </PopoverContent>
     </Popover>
