@@ -6,7 +6,7 @@ from django.http import JsonResponse
 
 
 class ExecuteQueryView(generics.GenericAPIView):
-    def get(self, request, organization):        
+    def post(self, request, organization):        
         influxdb_url = 'http://influxdb:8086'
         try:
             query = request.data.get("query")
