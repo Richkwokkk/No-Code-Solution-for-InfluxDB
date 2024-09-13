@@ -5,12 +5,23 @@
     "plugin:@tanstack/eslint-plugin-query/recommended",
     "plugin:storybook/recommended"
   ],
-  "plugins": ["unused-imports"],
+  "plugins": [
+    "no-relative-import-paths",
+    "unused-imports"
+  ],
   "rules": {
     "@typescript-eslint/no-unused-vars": "off",
-    "unused-imports/no-unused-imports": "warn",
+    "no-relative-import-paths/no-relative-import-paths": [
+      "error",
+      {
+        "allowSameFolder": false,
+        "rootDir": "frontend",
+        "prefix": "@"
+      }
+    ],
+    "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
-      "warn",
+      "error",
       {
         "vars": "all",
         "varsIgnorePattern": "^_",

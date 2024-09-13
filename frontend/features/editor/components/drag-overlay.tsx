@@ -14,7 +14,7 @@ export const DndDragOverlay = () => {
           id="overlay"
           className="flex w-[172px] cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-md transition-all ease-in-out"
         >
-          <div className="text-editor-node-text flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
+          <div className="text-editor-node-text flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
             <nodeInfo.icon size={20} />
           </div>
           <div className="flex flex-col pr-1 capitalize">
