@@ -2,7 +2,7 @@ import type { Preview } from "@storybook/react";
 import { ReactFlowProvider } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-import "../app/globals.css";
+import "@/app/globals.css";
 
 const preview: Preview = {
   decorators: [

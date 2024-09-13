@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -27,9 +26,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
+import { EditorDatePickerNode } from "@/features/editor/components/date-range-picker";
 import { cn } from "@/lib/utils";
-
-import { EditorDatePickerNode } from "./date-range-picker";
 
 export interface EditorBaseNodeProps {
   value: string;
@@ -66,7 +65,7 @@ export function EditorBaseNode({
           />
         ) : null}
         <div className="flex items-center space-x-2">
-          <div className="text-editor-node-text flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
+          <div className="text-editor-node-text flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
             <Icon size={20} />
           </div>
           <div className="flex flex-col pr-1">
@@ -118,7 +117,7 @@ export function EditorComboboxNode({
           ariaExpanded={open}
         />
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent align="start" className="w-[200px] p-0">
         <Command>
           <CommandInput
             placeholder={`Search ${type.charAt(0).toUpperCase() + type.slice(1)}...`}
@@ -196,17 +195,17 @@ export const ValueThresholdNode = () => {
   const [isMaxIncluded, setIsMaxIncluded] = React.useState(false);
   const [error, setError] = React.useState("");
 
-  React.useEffect(() => {
+  const validateRange = (minValue: string, maxValue: string) => {
     if (
       minValue.length &&
       maxValue.length &&
       parseFloat(minValue) > parseFloat(maxValue)
     ) {
-      setError("Min value cannot be greater than max value");
+      setError("Min value should be no greater than max value");
     } else {
       setError("");
     }
-  }, [maxValue, minValue]);
+  };
 
   const handlePopoverClose = () => {
     if (error) {
@@ -223,7 +222,7 @@ export const ValueThresholdNode = () => {
       return "Pick a threshold";
     }
 
-    if (parseFloat(minValue) > parseFloat(maxValue)) {
+    if (error) {
       return "Pick a valid threshold";
     }
 
@@ -249,7 +248,7 @@ export const ValueThresholdNode = () => {
         if (!isOpen) handlePopoverClose();
       }}
     >
-      <PopoverTrigger asChild>
+      <PopoverTrigger className="focus:outline-none" asChild>
         <div>
           <EditorBaseNode
             value={displayValue()}
@@ -259,7 +258,7 @@ export const ValueThresholdNode = () => {
           />
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent align="start" className="w-[230px] p-0">
         <div className="space-y-3 p-4">
           <div className="flex space-x-4">
             <Input
@@ -267,21 +266,23 @@ export const ValueThresholdNode = () => {
               placeholder="Min"
               value={minValue}
               onChange={(e) => setMinValue(e.target.value)}
-              className="w-1/2"
+              onBlur={() => validateRange(minValue, maxValue)}
+              className="w-3/5"
             />
-            <div className="flex items-center space-x-1">
-              <Checkbox
+            <div className="flex w-full items-center justify-between space-x-1">
+              <Switch
                 id="min-included"
                 checked={isMinIncluded}
                 onCheckedChange={(checked: boolean) =>
                   setIsMinIncluded(checked)
                 }
+                aria-readonly
               />
               <label
                 htmlFor="min-included"
                 className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Included
+                {isMinIncluded ? "Included" : "Excluded"}
               </label>
             </div>
           </div>
@@ -291,25 +292,29 @@ export const ValueThresholdNode = () => {
               placeholder="Max"
               value={maxValue}
               onChange={(e) => setMaxValue(e.target.value)}
-              className="w-1/2"
+              onBlur={() => validateRange(minValue, maxValue)}
+              className="w-3/5"
             />
-            <div className="flex items-center space-x-1">
-              <Checkbox
+            <div className="flex w-full items-center justify-between space-x-1">
+              <Switch
                 id="max-included"
                 checked={isMaxIncluded}
                 onCheckedChange={(checked: boolean) =>
                   setIsMaxIncluded(checked)
                 }
+                aria-readonly
               />
               <label
                 htmlFor="max-included"
                 className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Included
+                {isMaxIncluded ? "Included" : "Excluded"}
               </label>
             </div>
           </div>
-          {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+          {error && (
+            <p className="mt-1 text-xs font-medium text-destructive">{error}</p>
+          )}
         </div>
       </PopoverContent>
     </Popover>
@@ -322,4 +327,4 @@ export const nodeTypes = {
   field: FieldNode,
   dateRange: EditorDatePickerNode,
   valueThreshold: ValueThresholdNode,
-} as any;
+};

@@ -26,7 +26,7 @@ export const Sidebar = () => {
       )}
     >
       <SidebarToggle isOpen={sidebar?.isOpen} setIsOpen={sidebar?.setIsOpen} />
-      <div className="h-full w-full space-y-4 overflow-y-auto overflow-x-hidden bg-white px-6 py-4">
+      <div className="h-full w-full space-y-4 overflow-y-auto overflow-x-hidden bg-background px-6 py-4">
         {Object.entries(nodes).map(([type, { label, title, icon: Icon }]) => {
           return (
             <SidebarDraggable
@@ -35,7 +35,7 @@ export const Sidebar = () => {
               type={type}
               className="flex w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-md transition-all ease-in-out hover:shadow-lg"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
                 <Icon size={20} />
               </div>
               <div
