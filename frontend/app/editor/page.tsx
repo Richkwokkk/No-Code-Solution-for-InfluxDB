@@ -17,38 +17,6 @@ import { Sidebar } from "@/features/editor/components/sidebar";
 import { Visualization } from "@/features/editor/components/visualization";
 import { useEditorToggle } from "@/features/editor/hooks/use-editor-toggle";
 
-// export default function EditorPage() {
-//   return (
-//     <ReactFlowProvider>
-//       <DndContext>
-//         <div className="flex h-screen w-screen flex-col">
-//           <EditorHeader />
-//           <div className="flex h-full w-full">
-//             <Sidebar />
-//             <ResizablePanelGroup direction="horizontal" className="flex-1">
-//               <ResizablePanel defaultSize={50}>
-//                 <ResizablePanelGroup direction="vertical">
-//                   <ResizablePanel defaultSize={50}>
-//                     <EditorFlow />
-//                   </ResizablePanel>
-//                   <ResizableHandle />
-//                   <ResizablePanel defaultSize={50}>
-//                     <Visualization />
-//                   </ResizablePanel>
-//                 </ResizablePanelGroup>
-//               </ResizablePanel>
-//               <ResizableHandle />
-//               <ResizablePanel defaultSize={50}>
-//                 <CodeEditor />
-//               </ResizablePanel>
-//             </ResizablePanelGroup>
-//           </div>
-//         </div>
-//       </DndContext>
-//     </ReactFlowProvider>
-//   );
-// }
-
 export default function EditorPage() {
   const editor = useStore(useEditorToggle, (state) => state);
   const { fitView } = useReactFlow();
