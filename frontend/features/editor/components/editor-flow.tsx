@@ -104,6 +104,7 @@ export function EditorFlow() {
         connectionLineType={ConnectionLineType.Bezier}
         isValidConnection={isValidConnection}
         maxZoom={1}
+        fitView
         proOptions={{ hideAttribution: true }}
         style={{
           transitionDuration: "150",
