@@ -11,8 +11,8 @@ class CheckAuthenticationView(generics.GenericAPIView):
             headers = {
                 "Cookie": f"influxdb-oss-session={cookies}"
             }
-            response = requests.post(f'{influxdb_url}/api/v2/me', headers=headers)
-            if response.status_code != 204:
+            response = requests.get(f'{influxdb_url}/api/v2/me', headers=headers)
+            if response.status_code != 200:
                 response_data = response.json()
                 return JsonResponse({
                     "error": "InfluxDB API returned an error",
