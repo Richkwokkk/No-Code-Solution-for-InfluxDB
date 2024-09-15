@@ -56,7 +56,7 @@ export function EditorFlow() {
 
   const showToastWarning = throttle(() => {
     toast.warning("Invalid connection", {
-      description: "Please connect bucket ⇢ measurement ⇢ field",
+      description: "Please connect bucket ⇢ measurement ⇢ field ⇢ filter",
     });
   }, 1000);
 
@@ -74,6 +74,16 @@ export function EditorFlow() {
       if (sourceNode.type === "bucket" && targetNode.type === "measurement")
         return true;
       if (sourceNode.type === "measurement" && targetNode.type === "field")
+        return true;
+      if (
+        sourceNode.type === "field" &&
+        ["valueThreshold", "dateRange"].includes(targetNode.type as string)
+      )
+        return true;
+      if (
+        ["valueThreshold", "dateRange"].includes(sourceNode.type as string) &&
+        ["valueThreshold", "dateRange"].includes(targetNode.type as string)
+      )
         return true;
 
       throttleToastWarning();
@@ -94,6 +104,7 @@ export function EditorFlow() {
         connectionLineType={ConnectionLineType.Bezier}
         isValidConnection={isValidConnection}
         maxZoom={1}
+        fitView
         proOptions={{ hideAttribution: true }}
         style={{
           transitionDuration: "150",

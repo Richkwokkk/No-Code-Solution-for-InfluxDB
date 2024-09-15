@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 
 import { describe, it, expect, vi } from "vitest";
 
-import LoginPage from "./page";
+import LoginPage from "@/app/(auth)/login/page";
 
 // Mock the LoginCard component
 vi.mock("@/features/auth/components/login-card", () => ({

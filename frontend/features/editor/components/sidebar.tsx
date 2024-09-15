@@ -22,11 +22,11 @@ export const Sidebar = () => {
     <aside
       className={cn(
         "z-20 flex h-full translate-x-0 flex-col border border-r transition-[width] ease-in-out",
-        sidebar?.isOpen === false ? "w-[92px]" : "w-60",
+        sidebar?.isOpen === false ? "w-28" : "w-64",
       )}
     >
       <SidebarToggle isOpen={sidebar?.isOpen} setIsOpen={sidebar?.setIsOpen} />
-      <div className="h-full w-full space-y-4 overflow-y-auto overflow-x-hidden bg-white p-4">
+      <div className="h-full w-full space-y-4 overflow-y-auto overflow-x-hidden bg-background px-6 py-4">
         {Object.entries(nodes).map(([type, { label, title, icon: Icon }]) => {
           return (
             <SidebarDraggable
@@ -35,7 +35,7 @@ export const Sidebar = () => {
               type={type}
               className="flex w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-md transition-all ease-in-out hover:shadow-lg"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
                 <Icon size={20} />
               </div>
               <div
@@ -44,8 +44,8 @@ export const Sidebar = () => {
                   sidebar?.isOpen === false ? "opacity-0" : "opacity-100",
                 )}
               >
-                <p className="text-[10px] opacity-50">{label}</p>
-                <p className="text-xs font-bold">{title}</p>
+                <p className="text-nowrap text-[10px] opacity-50">{label}</p>
+                <p className="text-nowrap text-xs font-bold">{title}</p>
               </div>
             </SidebarDraggable>
           );

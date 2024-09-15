@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 
 import { describe, it, expect } from "vitest";
 
-import Page from "./page";
+import Page from "@/app/editor/page";
 
 describe("Editor Page", () => {
   it("renders the Editor Page text", () => {
