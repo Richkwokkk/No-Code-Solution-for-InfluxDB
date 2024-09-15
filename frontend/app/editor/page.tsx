@@ -1,7 +1,5 @@
 "use client";
 
-import { useReactFlow } from "@xyflow/react";
-
 import { useStore } from "zustand";
 
 import {
@@ -9,21 +7,21 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { CodeEditor } from "@/features/editor/components/code-editor";
-import { DndContext } from "@/features/editor/components/dnd-context";
-import { EditorFlow } from "@/features/editor/components/editor-flow";
-import { EditorHeader } from "@/features/editor/components/editor-header";
-import { Sidebar } from "@/features/editor/components/sidebar";
-import { Visualization } from "@/features/editor/components/visualization";
-import { useEditorToggle } from "@/features/editor/hooks/use-editor-toggle";
+import { ChartContainer } from "@/features/charts/components/chart-container";
+import { CodeEditor } from "@/features/code/components/code-editor";
+import { Flow } from "@/features/flow/components/flow";
+import { Header } from "@/features/flow/components/header";
+import { Sidebar } from "@/features/flow/components/sidebar/sidebar";
+import { SidebarDndContext } from "@/features/flow/components/sidebar/sidebar-dnd-context";
+import { useEditorToggle } from "@/features/flow/hooks/use-editor-toggle";
 
 export default function EditorPage() {
   const editor = useStore(useEditorToggle, (state) => state);
-  const { fitView } = useReactFlow();
+
   return (
-    <DndContext>
+    <SidebarDndContext>
       <div className="flex h-screen w-screen flex-col">
-        <EditorHeader />
+        <Header />
         <div className="flex h-full w-full">
           <Sidebar />
           <ResizablePanelGroup
@@ -34,17 +32,17 @@ export default function EditorPage() {
             <ResizablePanel defaultSize={70} minSize={20}>
               <ResizablePanelGroup autoSaveId="group-2" direction="horizontal">
                 <ResizablePanel defaultSize={50} minSize={20}>
-                  <EditorFlow />
+                  <Flow />
                 </ResizablePanel>
-                <ResizableHandle onDragging={(_dragging) => fitView()} />
+                <ResizableHandle />
                 <ResizablePanel defaultSize={50} minSize={20}>
-                  <Visualization />
+                  <ChartContainer />
                 </ResizablePanel>
               </ResizablePanelGroup>
             </ResizablePanel>
             {editor.isOpen && (
               <>
-                <ResizableHandle onDragging={(_dragging) => fitView()} />
+                <ResizableHandle />
                 <ResizablePanel defaultSize={30} minSize={10}>
                   <CodeEditor />
                 </ResizablePanel>
@@ -53,6 +51,6 @@ export default function EditorPage() {
           </ResizablePanelGroup>
         </div>
       </div>
-    </DndContext>
+    </SidebarDndContext>
   );
 }

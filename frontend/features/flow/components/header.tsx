@@ -2,9 +2,9 @@ import Link from "next/link";
 import { useStore } from "zustand";
 
 import { Button } from "@/components/ui/button";
-import { useEditorToggle } from "@/features/editor/hooks/use-editor-toggle";
+import { useEditorToggle } from "@/features/flow/hooks/use-editor-toggle";
 
-export const EditorHeader = () => {
+export const Header = () => {
   const editor = useStore(useEditorToggle, (state) => state);
   return (
     <header className="z-50 flex w-screen items-center justify-between border bg-background px-6 py-3 shadow-md">
