@@ -16,17 +16,21 @@ export type DraggableNode = {
 export const Sidebar = () => {
   const sidebar = useStore(useSidebarToggle, (state) => state);
 
-  if (!sidebar) return null;
-
   return (
     <aside
       className={cn(
-        "z-20 flex h-full translate-x-0 flex-col border border-r transition-[width] ease-in-out",
-        sidebar?.isOpen === false ? "w-28" : "w-64",
+        "z-20 flex h-full translate-x-0 flex-col border-r transition-[width] ease-in-out",
+        sidebar?.isOpen === false ? "w-[92px]" : "w-52",
       )}
     >
-      <SidebarToggle isOpen={sidebar?.isOpen} setIsOpen={sidebar?.setIsOpen} />
-      <div className="h-full w-full space-y-4 overflow-y-auto overflow-x-hidden bg-background px-6 py-4">
+      <div className="flex h-fit w-full items-center justify-center pt-4">
+        <h1 className="text-sm font-bold">Nodes</h1>
+        <SidebarToggle
+          isOpen={sidebar?.isOpen}
+          setIsOpen={sidebar?.setIsOpen}
+        />
+      </div>
+      <div className="h-full w-full space-y-4 overflow-y-auto overflow-x-hidden bg-background p-4">
         {Object.entries(sidebarNodes).map(
           ([type, { label, title, icon: Icon }]) => {
             return (
@@ -34,7 +38,7 @@ export const Sidebar = () => {
                 key={type}
                 id={type}
                 type={type}
-                className="flex w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-md transition-all ease-in-out hover:shadow-lg"
+                className="flex w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:shadow-md"
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
                   <Icon size={20} />
