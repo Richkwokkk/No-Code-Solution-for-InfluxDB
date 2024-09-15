@@ -1,5 +1,7 @@
 import { Node } from "@xyflow/react";
 
+import short from "short-uuid";
+
 import { NodeType } from "@/features/flow/types";
 
 export const FLOW_KEY = "influx-flow";
@@ -8,11 +10,13 @@ const EDITOR_API_PATH = "influxdb";
 
 export const EDITOR_ENDPOINTS = {
   getBuckets: `${EDITOR_API_PATH}/buckets` as const,
+  getMeasurements: ({ org, bucket }: { org: string; bucket: string }) =>
+    `${EDITOR_API_PATH}/${org}/${bucket}/measurements`,
 };
 
 export const initialNodes: Node[] = [
   {
-    id: "BUCKET" as NodeType,
+    id: short.generate(),
     type: "BUCKET" as NodeType,
     deletable: false,
     position: {

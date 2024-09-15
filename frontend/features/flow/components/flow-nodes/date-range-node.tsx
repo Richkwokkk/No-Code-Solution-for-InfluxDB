@@ -4,6 +4,12 @@ import * as React from "react";
 
 import { DateRange } from "react-day-picker";
 
+import {
+  useHandleConnections,
+  useNodesData,
+  useReactFlow,
+} from "@xyflow/react";
+
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
@@ -15,11 +21,23 @@ import {
 } from "@/components/ui/popover";
 import { BaseNode } from "@/features/flow/components/flow-nodes/base-node";
 import { NODE_TITLES } from "@/features/flow/constants";
+import { NodeType } from "@/features/flow/types";
 
-export function DateRangeNode({}: React.HTMLAttributes<HTMLDivElement>) {
+export type DateRangeNodeProps = { id: string };
+
+export function DateRangeNode({ id }: DateRangeNodeProps) {
+  const { updateNodeData } = useReactFlow();
+
+  const bucketConnections = useHandleConnections({
+    type: "target",
+    id: "BUCKET" as NodeType,
+  });
+  const bucket = useNodesData(bucketConnections?.[0]?.source)?.data;
+  console.log({ bucket });
+
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2024, 0, 20),
-    to: addDays(new Date(2024, 0, 20), 20),
+    from: new Date(2022, 0, 1),
+    to: addDays(new Date(2024, 0, 1), 1),
   });
 
   const [value, setValue] = React.useState<string>("Pick a date range");
@@ -31,6 +49,17 @@ export function DateRangeNode({}: React.HTMLAttributes<HTMLDivElement>) {
         ? `${format(selectedDate.from, "LLL dd, y")} - ${format(selectedDate.to, "LLL dd, y")}`
         : format(selectedDate.from, "LLL dd, y");
       setValue(formattedDate);
+
+      // update date range node data with its source bucket node data
+      if (selectedDate.to) {
+        updateNodeData(id, {
+          ...bucket,
+          dateRange: {
+            time_start: format(selectedDate.from, "yyyy-MM-dd'T'HH:mm:ss'Z'"),
+            time_stop: format(selectedDate.to, "yyyy-MM-dd'T'HH:mm:ss'Z'"),
+          },
+        });
+      }
     } else {
       setValue("Pick a date range");
     }
@@ -43,6 +72,7 @@ export function DateRangeNode({}: React.HTMLAttributes<HTMLDivElement>) {
           title={NODE_TITLES.DATE_RANGE}
           value={value}
           icon={CalendarIcon}
+          leftHandleId="BUCKET"
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date?.from ? (

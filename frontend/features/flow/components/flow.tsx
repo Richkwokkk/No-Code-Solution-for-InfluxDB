@@ -19,7 +19,10 @@ import "@xyflow/react/dist/style.css";
 
 import { toast } from "sonner";
 
-import { BucketNode } from "@/features/flow/components/flow-nodes/bucket-node";
+import {
+  BucketNode,
+  BucketNodeProps,
+} from "@/features/flow/components/flow-nodes/bucket-node";
 import { DateRangeNode } from "@/features/flow/components/flow-nodes/date-range-node";
 import { FieldNode } from "@/features/flow/components/flow-nodes/field-node";
 import { MeasurementNode } from "@/features/flow/components/flow-nodes/measurement-node";
@@ -29,7 +32,7 @@ import { NodeType } from "@/features/flow/types";
 import { throttle } from "@/lib/utils";
 
 type ReactFlowNodeTypes = {
-  [_t in NodeType]: React.FC;
+  [_t in NodeType]: React.FC<BucketNodeProps>;
 };
 
 export const nodeTypes: ReactFlowNodeTypes = {
@@ -54,7 +57,7 @@ export function Flow() {
         addEdge(
           {
             ...params,
-            type: "bezier",
+            type: "default",
             animated: true,
           },
           eds,

@@ -3,6 +3,7 @@ import { Handle, Position } from "@xyflow/react";
 import { LucideIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { NodeType } from "@/features/flow/types";
 
 export interface BaseNodeProps {
   value: string;
@@ -11,6 +12,8 @@ export interface BaseNodeProps {
   children?: React.ReactNode;
   leftHandle?: boolean;
   rightHandle?: boolean;
+  leftHandleId?: NodeType;
+  rightHandleId?: NodeType;
   ariaExpanded?: boolean;
 }
 
@@ -20,6 +23,8 @@ export function BaseNode({
   icon: Icon,
   leftHandle = true,
   rightHandle = true,
+  leftHandleId,
+  rightHandleId,
   ariaExpanded = false,
 }: BaseNodeProps) {
   return (
@@ -33,7 +38,7 @@ export function BaseNode({
         {leftHandle ? (
           <Handle
             type="target"
-            id="node-source"
+            id={leftHandleId}
             position={Position.Left}
             className="!-left-[2px] !h-4 !w-1 !min-w-0 !rounded-none !rounded-l-[2px] !border-none !bg-primary shadow-md"
           />
@@ -52,7 +57,7 @@ export function BaseNode({
         {rightHandle ? (
           <Handle
             type="source"
-            id="node-target"
+            id={rightHandleId}
             position={Position.Right}
             className="!-right-[2px] !h-4 !w-1 !min-w-0 !rounded-none !rounded-r-[2px] !border-none !bg-primary shadow-md"
           />
