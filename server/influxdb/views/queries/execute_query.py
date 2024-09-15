@@ -1,4 +1,7 @@
 import json
+import csv
+from io import StringIO
+from collections import defaultdict
 
 import requests
 from rest_framework import generics
@@ -59,8 +62,15 @@ class ExecuteQueryView(generics.GenericAPIView):
                     "error": "InfluxDB API returned an error",
                     "details": response_data["message"]
                 }, status=response_query.status_code)
+            csv_content = response_query.text
+            csv_file = StringIO(csv_content)
+            reader = csv.DictReader(csv_file)
+            tables = defaultdict(list)
+            for row in reader:
+                key = row['table']
+                tables[key].append(row)
             return JsonResponse({
-                "result": response_query.text
+                "result": tables
             })
         except requests.exceptions.RequestException as e:
             return JsonResponse({
