@@ -1,5 +1,9 @@
 "use client";
 
+import { useRef } from "react";
+
+import { ImperativePanelHandle } from "react-resizable-panels";
+
 import { useStore } from "zustand";
 
 import {
@@ -17,6 +21,22 @@ import { useEditorToggle } from "@/features/flow/hooks/use-editor-toggle";
 
 export default function EditorPage() {
   const editor = useStore(useEditorToggle, (state) => state);
+  const dndPanelRef = useRef<ImperativePanelHandle>(null);
+  const codePanelRef = useRef<ImperativePanelHandle>(null);
+
+  const resetCodePanelSize = () => {
+    const codePanel = codePanelRef.current;
+    if (codePanel) {
+      codePanel.resize(30);
+    }
+  };
+
+  const resetDndPanelSize = () => {
+    const dndPanel = dndPanelRef.current;
+    if (dndPanel) {
+      dndPanel.resize(50);
+    }
+  };
 
   return (
     <SidebarDndContext>
@@ -31,10 +51,10 @@ export default function EditorPage() {
           >
             <ResizablePanel defaultSize={70} minSize={20}>
               <ResizablePanelGroup autoSaveId="group-2" direction="horizontal">
-                <ResizablePanel defaultSize={50} minSize={20}>
+                <ResizablePanel ref={dndPanelRef} defaultSize={50} minSize={20}>
                   <Flow />
                 </ResizablePanel>
-                <ResizableHandle />
+                <ResizableHandle onDoubleClickCapture={resetDndPanelSize} />
                 <ResizablePanel defaultSize={50} minSize={20}>
                   <ChartContainer />
                 </ResizablePanel>
@@ -42,8 +62,12 @@ export default function EditorPage() {
             </ResizablePanel>
             {editor.isOpen && (
               <>
-                <ResizableHandle />
-                <ResizablePanel defaultSize={30} minSize={10}>
+                <ResizableHandle onDoubleClickCapture={resetCodePanelSize} />
+                <ResizablePanel
+                  ref={codePanelRef}
+                  defaultSize={30}
+                  minSize={10}
+                >
                   <CodeEditor />
                 </ResizablePanel>
               </>

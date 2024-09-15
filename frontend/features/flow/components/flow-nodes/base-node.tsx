@@ -27,7 +27,7 @@ export function BaseNode({
       asChild
       variant="outline"
       aria-expanded={ariaExpanded}
-      className="min-w-40 rounded-lg border px-2 py-7 shadow-md transition-colors hover:bg-primary-foreground"
+      className="min-w-40 rounded-lg border px-2 py-7 shadow-sm transition-colors hover:cursor-grab hover:bg-primary-foreground active:cursor-grabbing"
     >
       <div className="relative flex items-center justify-between p-2">
         {leftHandle ? (

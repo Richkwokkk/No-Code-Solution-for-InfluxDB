@@ -13,7 +13,7 @@ export const SidebarDragOverlay = () => {
       {active ? (
         <div
           id="overlay"
-          className="flex w-[172px] cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-md transition-all ease-in-out"
+          className="flex w-[172px] cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-md"
         >
           <div className="text-editor-node-text flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
             <nodeInfo.icon size={20} />

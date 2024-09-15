@@ -16,7 +16,7 @@ import {
 import { BaseNode } from "@/features/flow/components/flow-nodes/base-node";
 import { NODE_TITLES } from "@/features/flow/constants";
 
-export function EditorDatePickerNode({}: React.HTMLAttributes<HTMLDivElement>) {
+export function DateRangeNode({}: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(2024, 0, 20),
     to: addDays(new Date(2024, 0, 20), 20),

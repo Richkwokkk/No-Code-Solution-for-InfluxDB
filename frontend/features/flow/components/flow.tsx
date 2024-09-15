@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import * as React from "react";
 
 import {
   ReactFlow,
@@ -11,48 +11,44 @@ import {
   useEdgesState,
   addEdge,
   Connection,
-  Node,
   Edge,
+  ReactFlowInstance,
+  useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
 import { toast } from "sonner";
 
 import { BucketNode } from "@/features/flow/components/flow-nodes/bucket-node";
-import { EditorDatePickerNode } from "@/features/flow/components/flow-nodes/date-range-node";
+import { DateRangeNode } from "@/features/flow/components/flow-nodes/date-range-node";
 import { FieldNode } from "@/features/flow/components/flow-nodes/field-node";
 import { MeasurementNode } from "@/features/flow/components/flow-nodes/measurement-node";
 import { ValueThresholdNode } from "@/features/flow/components/flow-nodes/value-threshold-node";
+import { FLOW_KEY, initialNodes } from "@/features/flow/constants";
 import { NodeType } from "@/features/flow/types";
 import { throttle } from "@/lib/utils";
 
-type ReactFlowNodeTypes = { [_t in NodeType]: React.FC };
+type ReactFlowNodeTypes = {
+  [_t in NodeType]: React.FC;
+};
+
 export const nodeTypes: ReactFlowNodeTypes = {
   BUCKET: BucketNode,
   MEASUREMENT: MeasurementNode,
   FIELD: FieldNode,
-  DATE_RANGE: EditorDatePickerNode,
+  DATE_RANGE: DateRangeNode,
   VALUE_THRESHOLD: ValueThresholdNode,
 };
 
-const initialNodes: Node[] = [
-  {
-    id: "BUCKET" as NodeType,
-    type: "BUCKET" as NodeType,
-    deletable: false,
-    position: {
-      x: 400,
-      y: 300,
-    },
-    data: {},
-  },
-];
-
 export function Flow() {
-  const [nodes, _, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [rfInstance, setRfInstance] = React.useState<ReactFlowInstance | null>(
+    null,
+  );
+  const { setViewport } = useReactFlow();
 
-  const onConnect = useCallback(
+  const onConnect = React.useCallback(
     (params: Connection) => {
       setEdges((eds) =>
         addEdge(
@@ -70,15 +66,16 @@ export function Flow() {
 
   const showToastWarning = throttle(() => {
     toast.warning("Invalid connection", {
-      description: "Please connect bucket ⇢ measurement ⇢ field ⇢ filter",
+      description:
+        "Please connect bucket ⇢ date range ⇢ measurement ⇢ field ⇢ value threshold",
     });
   }, 1000);
 
-  const throttleToastWarning = useCallback(showToastWarning, [
+  const throttleToastWarning = React.useCallback(showToastWarning, [
     showToastWarning,
   ]);
 
-  const isValidConnection = useCallback(
+  const isValidConnection = React.useCallback(
     (connection: Edge | Connection) => {
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
@@ -86,6 +83,12 @@ export function Flow() {
       const targetType = targetNode?.type as NodeType;
 
       if (!sourceNode || !targetNode) return false;
+
+      if (
+        (sourceType === "DATE_RANGE" && targetType === "DATE_RANGE") ||
+        (sourceType === "VALUE_THRESHOLD" && targetType === "VALUE_THRESHOLD")
+      )
+        return false;
 
       if (sourceType === "BUCKET" && targetType === "DATE_RANGE") return true;
       if (sourceType === "DATE_RANGE" && targetType === "MEASUREMENT")
@@ -100,24 +103,57 @@ export function Flow() {
     [nodes, throttleToastWarning],
   );
 
+  const saveRfInstance = React.useCallback(() => {
+    if (rfInstance) {
+      const flow = rfInstance.toObject();
+      localStorage.setItem(FLOW_KEY, JSON.stringify(flow));
+    }
+  }, [rfInstance]);
+
+  const restoreFlow = React.useCallback(() => {
+    const restore = async () => {
+      let flow = null;
+      try {
+        flow = JSON.parse(localStorage.getItem(FLOW_KEY) || "");
+      } catch (error) {
+        flow = null;
+      }
+
+      if (flow) {
+        const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+        setNodes(flow.nodes || []);
+        setEdges(flow.edges || []);
+        setViewport({ x, y, zoom });
+      }
+    };
+    restore();
+  }, [setEdges, setNodes, setViewport]);
+
+  // restore flow at initial render
+  React.useEffect(restoreFlow, [restoreFlow]);
+
   return (
     <main className="h-full w-full">
       <ReactFlow
         nodeTypes={nodeTypes}
         nodes={nodes}
         edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
+        onNodesChange={(nodes) => {
+          onNodesChange(nodes);
+          saveRfInstance();
+        }}
+        onEdgesChange={(edges) => {
+          onEdgesChange(edges);
+          saveRfInstance();
+        }}
         onConnect={onConnect}
+        onInit={setRfInstance}
+        onMoveEnd={saveRfInstance}
         connectionLineType={ConnectionLineType.Bezier}
         isValidConnection={isValidConnection}
         maxZoom={1}
         fitView
         proOptions={{ hideAttribution: true }}
-        style={{
-          transitionDuration: "150",
-          transition: "ease-in-out",
-        }}
       >
         <Controls />
         <MiniMap />
