@@ -18,13 +18,27 @@ import "@xyflow/react/dist/style.css";
 
 import { toast } from "sonner";
 
-import { nodeTypes } from "@/features/editor/components/editor-nodes";
+import { BucketNode } from "@/features/flow/components/flow-nodes/bucket-node";
+import { EditorDatePickerNode } from "@/features/flow/components/flow-nodes/date-range-node";
+import { FieldNode } from "@/features/flow/components/flow-nodes/field-node";
+import { MeasurementNode } from "@/features/flow/components/flow-nodes/measurement-node";
+import { ValueThresholdNode } from "@/features/flow/components/flow-nodes/value-threshold-node";
+import { NodeType } from "@/features/flow/types";
 import { throttle } from "@/lib/utils";
+
+type ReactFlowNodeTypes = { [_t in NodeType]: React.FC };
+export const nodeTypes: ReactFlowNodeTypes = {
+  BUCKET: BucketNode,
+  MEASUREMENT: MeasurementNode,
+  FIELD: FieldNode,
+  DATE_RANGE: EditorDatePickerNode,
+  VALUE_THRESHOLD: ValueThresholdNode,
+};
 
 const initialNodes: Node[] = [
   {
-    id: "bucket",
-    type: "bucket",
+    id: "BUCKET" as NodeType,
+    type: "BUCKET" as NodeType,
     deletable: false,
     position: {
       x: 400,
@@ -34,7 +48,7 @@ const initialNodes: Node[] = [
   },
 ];
 
-export function EditorFlow() {
+export function Flow() {
   const [nodes, _, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
@@ -68,22 +82,16 @@ export function EditorFlow() {
     (connection: Edge | Connection) => {
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
+      const sourceType = sourceNode?.type as NodeType;
+      const targetType = targetNode?.type as NodeType;
 
       if (!sourceNode || !targetNode) return false;
 
-      if (sourceNode.type === "bucket" && targetNode.type === "measurement")
+      if (sourceType === "BUCKET" && targetType === "DATE_RANGE") return true;
+      if (sourceType === "DATE_RANGE" && targetType === "MEASUREMENT")
         return true;
-      if (sourceNode.type === "measurement" && targetNode.type === "field")
-        return true;
-      if (
-        sourceNode.type === "field" &&
-        ["valueThreshold", "dateRange"].includes(targetNode.type as string)
-      )
-        return true;
-      if (
-        ["valueThreshold", "dateRange"].includes(sourceNode.type as string) &&
-        ["valueThreshold", "dateRange"].includes(targetNode.type as string)
-      )
+      if (sourceType === "MEASUREMENT" && targetType === "FIELD") return true;
+      if (sourceType === "FIELD" && targetType === "VALUE_THRESHOLD")
         return true;
 
       throttleToastWarning();

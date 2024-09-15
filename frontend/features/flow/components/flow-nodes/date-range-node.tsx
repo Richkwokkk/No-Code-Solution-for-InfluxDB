@@ -13,7 +13,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { EditorBaseNode } from "@/features/editor/components/editor-nodes";
+import { BaseNode } from "@/features/flow/components/flow-nodes/base-node";
+import { NODE_TITLES } from "@/features/flow/constants";
 
 export function EditorDatePickerNode({}: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
@@ -38,7 +39,11 @@ export function EditorDatePickerNode({}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <Popover>
       <PopoverTrigger className="focus:outline-none">
-        <EditorBaseNode type="date range" value={value} icon={CalendarIcon}>
+        <BaseNode
+          title={NODE_TITLES.DATE_RANGE}
+          value={value}
+          icon={CalendarIcon}
+        >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date?.from ? (
             date.to ? (
@@ -52,7 +57,7 @@ export function EditorDatePickerNode({}: React.HTMLAttributes<HTMLDivElement>) {
           ) : (
             <span>Pick a date range</span>
           )}
-        </EditorBaseNode>
+        </BaseNode>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
