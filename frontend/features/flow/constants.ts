@@ -3,7 +3,6 @@ import { Node } from "@xyflow/react";
 import { NodeType } from "@/features/flow/types";
 
 export const FLOW_KEY = "influx-flow";
-export const RESET_FLOW_KEY = "reset-influx-flow";
 
 const EDITOR_API_PATH = "influxdb";
 
