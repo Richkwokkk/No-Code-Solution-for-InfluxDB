@@ -1,11 +1,16 @@
+import { useReactFlow } from "@xyflow/react";
+
 import Link from "next/link";
 import { useStore } from "zustand";
 
 import { Button } from "@/components/ui/button";
+import { initialNodes } from "@/features/flow/constants";
 import { useEditorToggle } from "@/features/flow/hooks/use-editor-toggle";
 
 export const Header = () => {
   const editor = useStore(useEditorToggle, (state) => state);
+  const { fitView, setNodes } = useReactFlow();
+
   return (
     <header className="z-50 flex w-screen items-center justify-between border bg-background px-6 py-3">
       <div className="flex w-full items-center justify-between">
@@ -22,7 +27,13 @@ export const Header = () => {
               {editor.isOpen ? "hide" : "show"} code
             </span>
           </Button>
-          <Button variant="outline">
+          <Button
+            variant="outline"
+            onClick={async () => {
+              setNodes(initialNodes);
+              setTimeout(fitView);
+            }}
+          >
             <span className="text-sm font-bold capitalize">reset</span>
           </Button>
           <Button variant="default">

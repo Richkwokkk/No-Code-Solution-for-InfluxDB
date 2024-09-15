@@ -21,6 +21,11 @@ export const sidebarNodes: Record<NodeType, SidebarDraggable> = {
     title: NODE_TITLES.BUCKET,
     icon: Cylinder,
   },
+  DATE_RANGE: {
+    label: NODE_LABELS.FILTER,
+    title: NODE_TITLES.DATE_RANGE,
+    icon: CalendarIcon,
+  },
   MEASUREMENT: {
     label: NODE_LABELS.SELECTOR,
     title: NODE_TITLES.MEASUREMENT,
@@ -30,11 +35,6 @@ export const sidebarNodes: Record<NodeType, SidebarDraggable> = {
     label: NODE_LABELS.SELECTOR,
     title: NODE_TITLES.FIELD,
     icon: RectangleEllipsis,
-  },
-  DATE_RANGE: {
-    label: NODE_LABELS.FILTER,
-    title: NODE_TITLES.DATE_RANGE,
-    icon: CalendarIcon,
   },
   VALUE_THRESHOLD: {
     label: NODE_LABELS.FILTER,
