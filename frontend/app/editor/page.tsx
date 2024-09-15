@@ -2,13 +2,13 @@
 
 import { useReactFlow } from "@xyflow/react";
 
+import { useStore } from "zustand";
+
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "components/ui/resizable";
-import { useStore } from "zustand";
-
+} from "@/components/ui/resizable";
 import { CodeEditor } from "@/features/editor/components/code-editor";
 import { DndContext } from "@/features/editor/components/dnd-context";
 import { EditorFlow } from "@/features/editor/components/editor-flow";
@@ -44,7 +44,7 @@ export default function EditorPage() {
             </ResizablePanel>
             {editor.isOpen && (
               <>
-                <ResizableHandle />
+                <ResizableHandle onDragging={(_dragging) => fitView()} />
                 <ResizablePanel defaultSize={30} minSize={10}>
                   <CodeEditor />
                 </ResizablePanel>
