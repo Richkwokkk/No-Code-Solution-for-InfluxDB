@@ -13,14 +13,20 @@ export const Header = () => {
           <h1 className="text-lg font-bold">Visual Flux</h1>
         </Link>
         <div className="flex space-x-2">
-          <Button variant="outline" onClick={() => editor.setIsOpen?.()}>
-            <span className="text-sm font-bold">Show Code</span>
+          <Button
+            variant="outline"
+            onClick={() => editor.setIsOpen?.()}
+            className="flex min-w-[112px] justify-center"
+          >
+            <span className="text-sm font-bold capitalize">
+              {editor.isOpen ? "hide" : "show"} code
+            </span>
           </Button>
           <Button variant="outline">
-            <span className="text-sm font-bold">Reset</span>
+            <span className="text-sm font-bold capitalize">reset</span>
           </Button>
           <Button variant="default">
-            <span className="text-sm font-bold">Execute Query</span>
+            <span className="text-sm font-bold capitalize">execute query</span>
           </Button>
         </div>
       </div>
