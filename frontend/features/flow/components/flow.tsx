@@ -154,10 +154,6 @@ export function Flow() {
         maxZoom={1}
         fitView
         proOptions={{ hideAttribution: true }}
-        style={{
-          transitionDuration: "150",
-          transition: "ease-in-out",
-        }}
       >
         <Controls />
         <MiniMap />
