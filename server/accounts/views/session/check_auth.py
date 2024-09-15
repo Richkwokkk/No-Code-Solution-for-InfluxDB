@@ -3,30 +3,24 @@ from rest_framework import generics
 from django.http import JsonResponse
 
 
-class LoginView(generics.GenericAPIView):
-    def post(self, request):
+class CheckAuthenticationView(generics.GenericAPIView):
+    def get(self, request):
         influxdb_url = 'http://influxdb:8086'
         try:
-            username = request.data.get("username")
-            password = request.data.get("password")
-            response = requests.post(f'{influxdb_url}/api/v2/signin', auth=(username, password))
+            cookies = request.COOKIES.get('login-session')
+            headers = {
+                "Cookie": f"influxdb-oss-session={cookies}"
+            }
+            response = requests.post(f'{influxdb_url}/api/v2/me', headers=headers)
             if response.status_code != 204:
                 response_data = response.json()
                 return JsonResponse({
                     "error": "InfluxDB API returned an error",
                     "details": response_data["message"]
                 }, status=response.status_code)
-            cookies_dict = requests.utils.dict_from_cookiejar(response.cookies)
             response = JsonResponse({
-                'message': 'Sign-in successful',
+                'message': 'Login authenticated',
             })
-            response.set_cookie(
-                key='login-session', 
-                value=cookies_dict.get('influxdb-oss-session'),
-                domain="localhost",
-                httponly=True,
-                samesite="Strict",
-            )
             return response
         except requests.exceptions.RequestException as e:
             return JsonResponse({
