@@ -9,7 +9,7 @@ interface EditorLayoutProps {
 const EditorLayout = function ({ children }: EditorLayoutProps) {
   return (
     <ReactFlowProvider>
-      <div className="h-screen w-screen bg-muted">{children}</div>
+      <div className="h-screen w-screen bg-background">{children}</div>
     </ReactFlowProvider>
   );
 };

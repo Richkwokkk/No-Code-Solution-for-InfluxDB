@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { BucketNode } from "@/features/editor/components/editor-nodes";
+import { BucketNode } from "@/features/flow/components/flow-nodes/bucket-node";
 
 const meta: Meta<typeof BucketNode> = {
   title: "Editor/ComboboxNode",
