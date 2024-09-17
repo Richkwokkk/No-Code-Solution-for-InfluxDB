@@ -9,8 +9,8 @@ from json.decoder import JSONDecodeError
 logger = logging.getLogger(__name__)
 
 class RetrieveBucketsView(generics.GenericAPIView):
-    INFLUXDB_URL = settings.INFLUXDB_URL
-    TIMEOUT = 10  # seconds
+    INFLUXDB_URL = 'http://influxdb:8086'
+    TIMEOUT = 10
 
     def get(self, request):
         try:
