@@ -1,5 +1,11 @@
 import { Node } from "@xyflow/react";
 
+import { Cylinder } from "lucide-react";
+
+import {
+  NODE_LABELS,
+  NODE_TITLES,
+} from "@/features/flow/components/sidebar/constants";
 import { NodeType } from "@/features/flow/types";
 
 export const FLOW_KEY = "influx-flow";
@@ -19,17 +25,13 @@ export const initialNodes: Node[] = [
       x: 400,
       y: 300,
     },
-    data: {},
+    data: {
+      label: NODE_LABELS.SELECTOR,
+      title: NODE_TITLES.BUCKET,
+      icon: Cylinder,
+    },
   },
 ];
-
-export const NODE_TITLES = {
-  BUCKET: "bucket" as const,
-  MEASUREMENT: "measurement" as const,
-  FIELD: "field" as const,
-  VALUE_THRESHOLD: "value threshold" as const,
-  DATE_RANGE: "date range" as const,
-};
 
 export const EDITOR_QUERY_KEYS = {
   BUCKETS: ["buckets"] as const,

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { BaseNode } from "@/features/flow/components/flow-nodes/base-node";
-import { NODE_TITLES } from "@/features/flow/constants";
+import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
 
 interface ValueThresholdState {
   minValue: string;

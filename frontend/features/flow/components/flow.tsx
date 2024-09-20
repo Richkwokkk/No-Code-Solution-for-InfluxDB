@@ -2,7 +2,6 @@ import * as React from "react";
 
 import {
   ReactFlow,
-  MiniMap,
   Controls,
   Background,
   useNodesState,
@@ -104,17 +103,17 @@ export function Flow() {
   );
 
   const saveRfInstance = React.useCallback(() => {
-    if (rfInstance) {
+    if (rfInstance && nodes && edges) {
       const flow = rfInstance.toObject();
       localStorage.setItem(FLOW_KEY, JSON.stringify(flow));
     }
-  }, [rfInstance]);
+  }, [edges, nodes, rfInstance]);
 
   const restoreFlow = React.useCallback(() => {
     const restore = async () => {
       let flow = null;
       try {
-        flow = JSON.parse(localStorage.getItem(FLOW_KEY) || "");
+        flow = JSON.parse((await localStorage.getItem(FLOW_KEY)) || "");
       } catch (error) {
         flow = null;
       }
@@ -129,8 +128,8 @@ export function Flow() {
     restore();
   }, [setEdges, setNodes, setViewport]);
 
-  // restore flow at initial render
   React.useEffect(restoreFlow, [restoreFlow]);
+  React.useEffect(saveRfInstance, [saveRfInstance]);
 
   return (
     <main className="h-full w-full">
@@ -138,14 +137,8 @@ export function Flow() {
         nodeTypes={nodeTypes}
         nodes={nodes}
         edges={edges}
-        onNodesChange={(nodes) => {
-          onNodesChange(nodes);
-          saveRfInstance();
-        }}
-        onEdgesChange={(edges) => {
-          onEdgesChange(edges);
-          saveRfInstance();
-        }}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onInit={setRfInstance}
         onMoveEnd={saveRfInstance}
@@ -156,7 +149,6 @@ export function Flow() {
         proOptions={{ hideAttribution: true }}
       >
         <Controls />
-        <MiniMap />
         <Background
           variant={BackgroundVariant.Dots}
           gap={12}

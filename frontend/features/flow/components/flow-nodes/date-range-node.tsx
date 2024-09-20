@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { BaseNode } from "@/features/flow/components/flow-nodes/base-node";
-import { NODE_TITLES } from "@/features/flow/constants";
+import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
 
 export function DateRangeNode({}: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
