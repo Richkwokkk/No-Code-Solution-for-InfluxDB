@@ -12,38 +12,73 @@ import { Switch } from "@/components/ui/switch";
 import { BaseNode } from "@/features/flow/components/flow-nodes/base-node";
 import { NODE_TITLES } from "@/features/flow/constants";
 
+interface ValueThresholdState {
+  minValue: string;
+  maxValue: string;
+  isMinIncluded: boolean;
+  isMaxIncluded: boolean;
+}
+
 export const ValueThresholdNode = () => {
   const [open, setOpen] = React.useState(false);
-  const [minValue, setMinValue] = React.useState<string>("");
-  const [maxValue, setMaxValue] = React.useState<string>("");
-  const [isMinIncluded, setIsMinIncluded] = React.useState(false);
-  const [isMaxIncluded, setIsMaxIncluded] = React.useState(false);
+  const [state, setState] = React.useState<ValueThresholdState>({
+    minValue: "",
+    maxValue: "",
+    isMinIncluded: false,
+    isMaxIncluded: false,
+  });
   const [error, setError] = React.useState("");
 
-  const validateRange = (minValue: string, maxValue: string) => {
-    if (
-      minValue.length &&
-      maxValue.length &&
-      parseFloat(minValue) > parseFloat(maxValue)
-    ) {
-      setError("Min value should be no greater than max value");
-    } else {
-      setError("");
-    }
+  const validateRange = React.useCallback(
+    (currentState: ValueThresholdState): string => {
+      const { minValue, maxValue, isMinIncluded, isMaxIncluded } = currentState;
+      const minNum = parseFloat(minValue);
+      const maxNum = parseFloat(maxValue);
+
+      if (isNaN(minNum) || isNaN(maxNum)) {
+        return "";
+      }
+
+      const areBothIncluded = isMaxIncluded && isMinIncluded;
+      const invalidWhenBothIncluded = areBothIncluded && minNum > maxNum;
+      const invalidWhenEitherExcluded = !areBothIncluded && minNum >= maxNum;
+
+      if (invalidWhenBothIncluded) {
+        return "Min value must be ≤ max value when both are included";
+      }
+      if (invalidWhenEitherExcluded) {
+        return "Min value must be < max value if either is excluded";
+      }
+      return "";
+    },
+    [],
+  );
+
+  React.useEffect(() => {
+    const newError = validateRange(state);
+    setError(newError);
+  }, [state, validateRange]);
+
+  const handleStateChange = (updates: Partial<ValueThresholdState>) => {
+    setState((prevState) => ({ ...prevState, ...updates }));
   };
 
   const handlePopoverClose = () => {
     if (error) {
-      setMinValue("");
-      setMaxValue("");
-      setIsMinIncluded(false);
-      setIsMaxIncluded(false);
+      setState({
+        minValue: "",
+        maxValue: "",
+        isMinIncluded: false,
+        isMaxIncluded: false,
+      });
       setError("");
     }
   };
 
   const displayValue = () => {
-    if (!minValue.length && !maxValue.length) {
+    const { minValue, maxValue, isMinIncluded, isMaxIncluded } = state;
+
+    if (!minValue && !maxValue) {
       return "Pick a threshold";
     }
 
@@ -89,17 +124,16 @@ export const ValueThresholdNode = () => {
             <Input
               type="number"
               placeholder="Min"
-              value={minValue}
-              onChange={(e) => setMinValue(e.target.value)}
-              onBlur={() => validateRange(minValue, maxValue)}
+              value={state.minValue}
+              onChange={(e) => handleStateChange({ minValue: e.target.value })}
               className="w-3/5"
             />
             <div className="flex w-full items-center justify-between space-x-1">
               <Switch
                 id="min-included"
-                checked={isMinIncluded}
+                checked={state.isMinIncluded}
                 onCheckedChange={(checked: boolean) =>
-                  setIsMinIncluded(checked)
+                  handleStateChange({ isMinIncluded: checked })
                 }
                 aria-readonly
               />
@@ -107,7 +141,7 @@ export const ValueThresholdNode = () => {
                 htmlFor="min-included"
                 className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                {isMinIncluded ? "Included" : "Excluded"}
+                {state.isMinIncluded ? "Included" : "Excluded"}
               </label>
             </div>
           </div>
@@ -115,17 +149,16 @@ export const ValueThresholdNode = () => {
             <Input
               type="number"
               placeholder="Max"
-              value={maxValue}
-              onChange={(e) => setMaxValue(e.target.value)}
-              onBlur={() => validateRange(minValue, maxValue)}
+              value={state.maxValue}
+              onChange={(e) => handleStateChange({ maxValue: e.target.value })}
               className="w-3/5"
             />
             <div className="flex w-full items-center justify-between space-x-1">
               <Switch
                 id="max-included"
-                checked={isMaxIncluded}
+                checked={state.isMaxIncluded}
                 onCheckedChange={(checked: boolean) =>
-                  setIsMaxIncluded(checked)
+                  handleStateChange({ isMaxIncluded: checked })
                 }
                 aria-readonly
               />
@@ -133,7 +166,7 @@ export const ValueThresholdNode = () => {
                 htmlFor="max-included"
                 className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                {isMaxIncluded ? "Included" : "Excluded"}
+                {state.isMaxIncluded ? "Included" : "Excluded"}
               </label>
             </div>
           </div>
