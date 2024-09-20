@@ -6,6 +6,7 @@ import { DndContext } from "@/features/editor/components/dnd-context";
 import { EditorFlow } from "@/features/editor/components/editor-flow";
 import { EditorHeader } from "@/features/editor/components/editor-header";
 import { Sidebar } from "@/features/editor/components/sidebar";
+import CodeEditor from "@/features/editor/components/code-editor";
 
 export default function EditorPage() {
   return (
@@ -17,6 +18,7 @@ export default function EditorPage() {
             <Sidebar />
             <EditorFlow />
           </div>
+          <CodeEditor />
         </div>
       </DndContext>
     </ReactFlowProvider>
