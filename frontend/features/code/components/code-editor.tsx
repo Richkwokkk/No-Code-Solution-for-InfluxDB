@@ -4,20 +4,19 @@ import { Editor, type Monaco } from "@monaco-editor/react";
 
 import { useTheme } from "next-themes";
 
+import { DARK_THEME, LIGHT_THEME } from "@/features/code/constants";
 import { useIsDarkMode } from "@/hooks/use-is-dark-mode";
 import { setupEditor } from "@/lib/monaco";
 
 export const CodeEditor = () => {
   const isDark = useIsDarkMode();
-  const [theme, setTheme] = React.useState(
-    isDark ? "vitesse-dark" : "vitesse-light",
-  );
+  const [theme, setTheme] = React.useState(isDark ? DARK_THEME : LIGHT_THEME);
 
   const { theme: nextTheme, systemTheme } = useTheme();
 
   React.useEffect(() => {
     const currentTheme = nextTheme === "system" ? systemTheme : nextTheme;
-    setTheme(currentTheme === "dark" ? "vitesse-dark" : "vitesse-light");
+    setTheme(currentTheme === "dark" ? DARK_THEME : LIGHT_THEME);
   }, [nextTheme, systemTheme]);
 
   const beforeMount = React.useCallback(

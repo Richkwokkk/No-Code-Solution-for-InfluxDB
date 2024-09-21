@@ -1,6 +1,7 @@
 import AsyncLock from "async-lock";
 import { createHighlighter, type Highlighter } from "shiki";
 
+import { DARK_THEME, LIGHT_THEME } from "@/features/code/constants";
 import grammar from "@/lib/flux.tmLanguage.json";
 
 let highlighter: Highlighter | null = null;
@@ -10,7 +11,7 @@ export async function getHighlighter() {
   return highlighterLock.acquire("highlighter", async () => {
     if (!highlighter) {
       highlighter = await createHighlighter({
-        themes: ["vitesse-light", "vitesse-dark"],
+        themes: [DARK_THEME, LIGHT_THEME],
         langs: [grammar as any],
       });
     }
