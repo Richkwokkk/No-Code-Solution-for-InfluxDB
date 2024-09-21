@@ -5,20 +5,21 @@ import { useReactFlow } from "@xyflow/react";
 
 import short from "short-uuid";
 
-import { DndDragOverlay } from "@/features/editor/components/drag-overlay";
-import { nodes, NodeTypes } from "@/features/editor/utils";
+import { sidebarNodes } from "@/features/flow/components/sidebar/constants";
+import { SidebarDragOverlay } from "@/features/flow/components/sidebar/sidebar-drag-overlay";
+import { NodeType } from "@/features/flow/types";
 
 interface DndContextProps {
   children: React.ReactNode;
 }
 
-export const DndContext = ({ children }: DndContextProps) => {
+export const SidebarDndContext = ({ children }: DndContextProps) => {
   const ctxId = useId();
   const { setNodes, screenToFlowPosition } = useReactFlow();
 
   const onDragEnd = useCallback(
     ({ active }: DragEndEvent) => {
-      const type = active.data.current?.type as NodeTypes;
+      const type = active.data.current?.type as NodeType;
       if (!type) return;
 
       const el = document.getElementById("overlay")!;
@@ -33,7 +34,7 @@ export const DndContext = ({ children }: DndContextProps) => {
         id: short.generate(),
         type,
         position,
-        data: nodes[type],
+        data: sidebarNodes[type],
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -43,7 +44,7 @@ export const DndContext = ({ children }: DndContextProps) => {
 
   return (
     <DndKitContext id={ctxId} onDragEnd={onDragEnd}>
-      <DndDragOverlay />
+      <SidebarDragOverlay />
       {children}
     </DndKitContext>
   );
