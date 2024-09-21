@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function isDarkMode() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
 export const throttle = <T extends (..._args: any[]) => void>(
   func: T,
   wait: number,
