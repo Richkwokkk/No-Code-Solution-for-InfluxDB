@@ -1,13 +1,36 @@
 import * as React from "react";
 
-import { Editor } from "@monaco-editor/react";
+import { Editor, type Monaco } from "@monaco-editor/react";
 
+import { useTheme } from "next-themes";
+
+import { useIsDarkMode } from "@/hooks/use-is-dark-mode";
 import { setupEditor } from "@/lib/monaco";
 
 export const CodeEditor = () => {
+  const isDark = useIsDarkMode();
+  const [theme, setTheme] = React.useState(
+    isDark ? "vitesse-dark" : "vitesse-light",
+  );
+
+  const { theme: nextTheme, systemTheme } = useTheme();
+
+  React.useEffect(() => {
+    const currentTheme = nextTheme === "system" ? systemTheme : nextTheme;
+    setTheme(currentTheme === "dark" ? "vitesse-dark" : "vitesse-light");
+  }, [nextTheme, systemTheme]);
+
+  const beforeMount = React.useCallback(
+    async (monaco: Monaco) => {
+      await setupEditor(monaco, isDark);
+    },
+    [isDark],
+  );
+
   return (
     <Editor
-      beforeMount={setupEditor}
+      beforeMount={beforeMount}
+      theme={theme}
       loading={<div>Loading code editor...</div>}
       height="100%"
       defaultLanguage="flux"
@@ -16,7 +39,6 @@ export const CodeEditor = () => {
   |> filter(fn: (r) => r._measurement == "example-measurement")
   |> mean()
   |> yield(name: "_results")`}
-      onChange={() => {}}
       options={{
         readOnly: true,
         readOnlyMessage: {

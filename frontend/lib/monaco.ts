@@ -3,14 +3,13 @@ import { shikiToMonaco } from "@shikijs/monaco";
 
 import languageConfig from "@/lib/language-configuration.json";
 import { getHighlighter } from "@/lib/shiki";
-import { isDarkMode } from "@/lib/utils";
 
-export function setupEditor(monaco: Monaco) {
+export async function setupEditor(monaco: Monaco, isDark: boolean) {
   monaco.languages.register({ id: "flux" });
   monaco.languages.setLanguageConfiguration("flux", languageConfig as any);
 
-  (async () => {
-    const highlighter = await getHighlighter(isDarkMode());
-    shikiToMonaco(highlighter!, monaco);
-  })();
+  const highlighter = await getHighlighter();
+  const theme = isDark ? "vitesse-dark" : "vitesse-light";
+  await shikiToMonaco(highlighter!, monaco);
+  monaco.editor.setTheme(theme);
 }
