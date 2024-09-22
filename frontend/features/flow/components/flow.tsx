@@ -132,7 +132,7 @@ export function Flow() {
   React.useEffect(saveRfInstance, [saveRfInstance]);
 
   return (
-    <main className="h-full w-full">
+    <section className="h-full w-full">
       <ReactFlow
         nodeTypes={nodeTypes}
         nodes={nodes}
@@ -156,6 +156,6 @@ export function Flow() {
           className="bg-muted"
         />
       </ReactFlow>
-    </main>
+    </section>
   );
 }

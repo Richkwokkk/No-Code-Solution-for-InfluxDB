@@ -42,17 +42,20 @@ export const CodeEditor = () => {
       value={DEFAULT_CODE}
       options={{
         readOnly: true,
-        readOnlyMessage: {
-          value: READ_ONLY_MESSAGE,
-        },
-        fontFamily: CODE_FONT_FAMILY,
         fontLigatures: true,
         fontSize: 16,
         lineHeight: 32,
-        padding: { top: 26 },
         lineNumbers: "off",
-        minimap: { enabled: false },
         scrollBeyondLastLine: false,
+        smoothScrolling: true,
+        cursorBlinking: "smooth",
+        hideCursorInOverviewRuler: true,
+        renderLineHighlight: "none",
+        fontFamily: CODE_FONT_FAMILY,
+        padding: { top: 26 },
+        minimap: { enabled: false },
+        guides: { indentation: false },
+        readOnlyMessage: { value: READ_ONLY_MESSAGE },
       }}
     />
   );

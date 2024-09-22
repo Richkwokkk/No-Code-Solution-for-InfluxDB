@@ -12,4 +12,4 @@ export const DEFAULT_CODE = `from(bucket: "example-bucket")
 export const READ_ONLY_MESSAGE =
   "You can only modify the code through drag and drop";
 
-export const CODE_FONT_FAMILY = "Fira Code";
+export const CODE_FONT_FAMILY = "Fira Code, Consolas, monospace";
