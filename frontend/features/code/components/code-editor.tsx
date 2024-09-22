@@ -4,7 +4,11 @@ import { Editor, type Monaco } from "@monaco-editor/react";
 
 import { useTheme } from "next-themes";
 
-import { DARK_THEME, LIGHT_THEME } from "@/features/code/constants";
+import {
+  DARK_THEME,
+  DEFAULT_CODE,
+  LIGHT_THEME,
+} from "@/features/code/constants";
 import { useIsDarkMode } from "@/hooks/use-is-dark-mode";
 import { setupEditor } from "@/lib/monaco";
 
@@ -33,11 +37,7 @@ export const CodeEditor = () => {
       loading={<div>Loading code editor...</div>}
       height="100%"
       defaultLanguage="flux"
-      value={`from(bucket: "example-bucket")
-  |> range(start: -1d)
-  |> filter(fn: (r) => r._measurement == "example-measurement")
-  |> mean()
-  |> yield(name: "_results")`}
+      value={DEFAULT_CODE}
       options={{
         readOnly: true,
         readOnlyMessage: {
