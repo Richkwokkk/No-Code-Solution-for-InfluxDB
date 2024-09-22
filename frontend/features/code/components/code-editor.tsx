@@ -5,9 +5,11 @@ import { Editor, type Monaco } from "@monaco-editor/react";
 import { useTheme } from "next-themes";
 
 import {
+  CODE_FONT_FAMILY,
   DARK_THEME,
   DEFAULT_CODE,
   LIGHT_THEME,
+  READ_ONLY_MESSAGE,
 } from "@/features/code/constants";
 import { useIsDarkMode } from "@/hooks/use-is-dark-mode";
 import { setupEditor } from "@/lib/monaco";
@@ -41,9 +43,9 @@ export const CodeEditor = () => {
       options={{
         readOnly: true,
         readOnlyMessage: {
-          value: "You can only modify the code through drag and drop",
+          value: READ_ONLY_MESSAGE,
         },
-        fontFamily: "Fira Code",
+        fontFamily: CODE_FONT_FAMILY,
         fontLigatures: true,
         fontSize: 16,
         lineHeight: 32,
