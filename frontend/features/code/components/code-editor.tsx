@@ -5,13 +5,14 @@ import { Editor, type Monaco } from "@monaco-editor/react";
 import { useTheme } from "next-themes";
 
 import {
-  CODE_FONT_FAMILY,
+  CODE_EDITOR_FONT_FAMILY,
+  DEFAULT_CODE_VALUE,
   DARK_THEME,
-  DEFAULT_CODE,
   LIGHT_THEME,
   READ_ONLY_MESSAGE,
 } from "@/features/code/constants";
 import { useIsDarkMode } from "@/hooks/use-is-dark-mode";
+import { firaCode } from "@/lib/fonts";
 import { setupEditor } from "@/lib/monaco";
 
 export const CodeEditor = () => {
@@ -36,10 +37,14 @@ export const CodeEditor = () => {
     <Editor
       beforeMount={beforeMount}
       theme={theme}
-      loading={<div>Loading code editor...</div>}
+      loading={
+        <div className={`${firaCode.variable} font-mono`}>
+          Loading code editor...
+        </div>
+      }
       height="100%"
       defaultLanguage="flux"
-      value={DEFAULT_CODE}
+      value={DEFAULT_CODE_VALUE}
       options={{
         readOnly: true,
         fontLigatures: true,
@@ -51,7 +56,7 @@ export const CodeEditor = () => {
         cursorBlinking: "smooth",
         hideCursorInOverviewRuler: true,
         renderLineHighlight: "none",
-        fontFamily: CODE_FONT_FAMILY,
+        fontFamily: CODE_EDITOR_FONT_FAMILY,
         padding: { top: 26 },
         minimap: { enabled: false },
         guides: { indentation: false },
