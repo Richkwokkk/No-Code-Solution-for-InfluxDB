@@ -30,6 +30,23 @@ export const SidebarDndContext = ({ children }: DndContextProps) => {
         y: clientRect.top,
       });
 
+      // Get the sidebar element and its boundaries
+      const flow = document.querySelector(".flow");
+      if (flow) {
+        const flowRect = flow.getBoundingClientRect();
+
+        // Check if the drop position is within the flow
+        if (
+          clientRect.left <= flowRect.left ||
+          clientRect.right >= flowRect.right ||
+          clientRect.top <= flowRect.top ||
+          clientRect.bottom >= flowRect.bottom
+        ) {
+          // Drop is inside the flow, do not add the node
+          return;
+        }
+      }
+
       const newNode = {
         id: short.generate(),
         type,
