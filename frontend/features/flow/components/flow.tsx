@@ -3,9 +3,7 @@ import * as React from "react";
 import {
   ReactFlow,
   Controls,
-  Background,
   useNodesState,
-  BackgroundVariant,
   ConnectionLineType,
   useEdgesState,
   addEdge,
@@ -13,6 +11,8 @@ import {
   Edge,
   ReactFlowInstance,
   useReactFlow,
+  Background,
+  BackgroundVariant,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -132,7 +132,7 @@ export function Flow() {
   React.useEffect(saveRfInstance, [saveRfInstance]);
 
   return (
-    <section className="h-full w-full">
+    <section className="flow h-full w-full">
       <ReactFlow
         nodeTypes={nodeTypes}
         nodes={nodes}
@@ -149,12 +149,7 @@ export function Flow() {
         proOptions={{ hideAttribution: true }}
       >
         <Controls />
-        <Background
-          variant={BackgroundVariant.Dots}
-          gap={12}
-          size={1}
-          className="bg-muted"
-        />
+        <Background variant={BackgroundVariant.Dots} />
       </ReactFlow>
     </section>
   );
