@@ -1,86 +1,166 @@
-from django.test import TestCase
-from django.urls import reverse
-from unittest.mock import patch, Mock
-from influxdb_client.client.exceptions import ApiException
-import requests
+import json
+from unittest.mock import patch, MagicMock
+from django.test import TestCase, RequestFactory
+from django.http import JsonResponse
+from requests.exceptions import RequestException, Timeout
+from .views import RetrieveBucketsView
+import os
+import parameterized
 
 class RetrieveBucketsViewTests(TestCase):
-    
-    def setUp(self):
-        self.url = reverse('buckets')
-        self.valid_token = 'Token valid_token_value'
-        self.headers = {"Authorization": self.valid_token}
+    # Constants for API URL and cookie values
+    API_URL = '/api/buckets/'
+    VALID_COOKIE = 'valid_cookie'
+    INVALID_COOKIE = 'invalid_cookie'
 
-    @patch('influxdb_client.InfluxDBClient')
-    def test_successful_response(self, mock_influx_client):
-        # Mock the InfluxDB client and the find_buckets response
-        mock_client_instance = mock_influx_client.return_value.__enter__.return_value
-        mock_client_instance.buckets_api.return_value.find_buckets.return_value.buckets = [
-            Mock(name='Bucket1'), Mock(name='Bucket2')
-        ]
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.factory = RequestFactory()
+        cls.view = RetrieveBucketsView.as_view()
+
+    def setUp(self):
+        # Create a new request for each test
+        self.request = self.factory.get(self.API_URL)
+
+    def set_cookie(self, cookie):
+        # Helper method to set the login-session cookie
+        self.request.COOKIES['login-session'] = cookie
+
+    def test_successful_retrieval(self):
+        # Test successful retrieval of buckets
+        self.set_cookie(self.VALID_COOKIE)
         
-        response = self.client.get(self.url, **self.headers)
+        mock_response = MagicMock(status_code=200)
+        mock_response.json.return_value = {
+            "buckets": [{"name": "bucket1"}, {"name": "bucket2"}]
+        }
+        
+        with patch('requests.get', return_value=mock_response):
+            response = self.view(self.request)
         
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {"buckets": ["Bucket1", "Bucket2"]})
+        self.assertEqual(json.loads(response.content), {"buckets": ["bucket1", "bucket2"]})
 
-    @patch('influxdb_client.InfluxDBClient')
-    def test_unauthorized_access(self, mock_influx_client):
-        # Simulate a 401 Unauthorized error from the InfluxDB API
-        mock_client_instance = mock_influx_client.return_value.__enter__.return_value
-        mock_client_instance.buckets_api.return_value.find_buckets.side_effect = ApiException(status=401)
-        
-        response = self.client.get(self.url, **self.headers)
+    def test_missing_cookie(self):
+        # Test response when authentication cookie is missing
+        response = self.view(self.request)
         
         self.assertEqual(response.status_code, 401)
-        self.assertJSONEqual(response.content, {"error": "Unauthorized access"})
+        self.assertEqual(json.loads(response.content), {"error": "Unauthorized: Missing authentication token"})
 
-    @patch('influxdb_client.InfluxDBClient')
-    def test_bucket_not_found(self, mock_influx_client):
-        # Simulate a 404 Not Found error from the InfluxDB API
-        mock_client_instance = mock_influx_client.return_value.__enter__.return_value
-        mock_client_instance.buckets_api.return_value.find_buckets.side_effect = ApiException(status=404)
+    def test_invalid_cookie(self):
+        # Test response when an invalid cookie is provided
+        self.set_cookie(self.INVALID_COOKIE)
         
-        response = self.client.get(self.url, **self.headers)
+        mock_response = MagicMock(status_code=401)
         
-        self.assertEqual(response.status_code, 404)
-        self.assertJSONEqual(response.content, {"error": "Resource not found"})
-
-    @patch('influxdb_client.InfluxDBClient')
-    def test_internal_server_error(self, mock_influx_client):
-        # Simulate a 500 Internal Server Error from the InfluxDB API
-        mock_client_instance = mock_influx_client.return_value.__enter__.return_value
-        mock_client_instance.buckets_api.return_value.find_buckets.side_effect = ApiException(status=500)
-        
-        response = self.client.get(self.url, **self.headers)
-        
-        self.assertEqual(response.status_code, 500)
-        self.assertJSONEqual(response.content, {"error": "Server error"})
-
-    @patch('requests.get')
-    def test_network_failure(self, mock_get):
-        # Simulate a network failure when trying to connect to InfluxDB
-        mock_get.side_effect = requests.exceptions.RequestException
-        
-        response = self.client.get(self.url, **self.headers)
-        
-        self.assertEqual(response.status_code, 500)
-        self.assertJSONEqual(response.content, {"error": "Server error"})
-
-    @patch('influxdb_client.InfluxDBClient')
-    def test_unexpected_data_format(self, mock_influx_client):
-        # Simulate an unexpected data format returned by the InfluxDB API
-        mock_client_instance = mock_influx_client.return_value.__enter__.return_value
-        mock_client_instance.buckets_api.return_value.find_buckets.return_value.buckets = None
-        
-        response = self.client.get(self.url, **self.headers)
-        
-        self.assertEqual(response.status_code, 500)
-        self.assertJSONEqual(response.content, {"error": "Unexpected error"})
-
-    def test_missing_authorization_header(self):
-        # Test missing or malformed Authorization header
-        response = self.client.get(self.url)
+        with patch('requests.get', return_value=mock_response):
+            response = self.view(self.request)
         
         self.assertEqual(response.status_code, 401)
-        self.assertJSONEqual(response.content, {"error": "Unauthorized access"})
+        self.assertEqual(json.loads(response.content), {"error": "Unauthorized: Invalid or insufficient permissions"})
+
+    def test_empty_bucket_list(self):
+        # Test response when the bucket list is empty
+        self.set_cookie(self.VALID_COOKIE)
+        
+        mock_response = MagicMock(status_code=200)
+        mock_response.json.return_value = {"buckets": []}
+        
+        with patch('requests.get', return_value=mock_response):
+            response = self.view(self.request)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content), {"buckets": []})
+
+    @patch('requests.get', side_effect=RequestException("Connection failed"))
+    def test_influxdb_unavailable(self, mock_get):
+        # Test response when InfluxDB is unavailable
+        self.set_cookie(self.VALID_COOKIE)
+        response = self.view(self.request)
+        
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(json.loads(response.content), {"error": "Failed to connect to the server"})
+
+    @patch('requests.get', side_effect=Timeout("Request timed out"))
+    def test_timeout(self, mock_get):
+        # Test response when the request times out
+        self.set_cookie(self.VALID_COOKIE)
+        response = self.view(self.request)
+        
+        self.assertEqual(response.status_code, 504)
+        self.assertEqual(json.loads(response.content), {"error": "Request timed out"})
+
+    def test_malformed_response(self):
+        # Test handling of malformed JSON response
+        self.set_cookie(self.VALID_COOKIE)
+        
+        mock_response = MagicMock(status_code=200)
+        mock_response.json.side_effect = json.JSONDecodeError("Malformed JSON", "", 0)
+        
+        with patch('requests.get', return_value=mock_response):
+            response = self.view(self.request)
+        
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(json.loads(response.content), {"error": "Invalid response format"})
+
+    @parameterized.expand([
+        (418, "I'm a teapot"),
+        (500, "Internal Server Error"),
+        (503, "Service Unavailable"),
+    ])
+    def test_unexpected_status_code(self, status_code, error_message):
+        # Test handling of unexpected HTTP status codes
+        self.set_cookie(self.VALID_COOKIE)
+        
+        mock_response = MagicMock(status_code=status_code, text=error_message)
+        
+        with patch('requests.get', return_value=mock_response):
+            response = self.view(self.request)
+        
+        self.assertEqual(response.status_code, status_code)
+        self.assertEqual(json.loads(response.content), {"error": error_message})
+
+    def test_large_bucket_list(self):
+        # Test handling of a large number of buckets
+        self.set_cookie(self.VALID_COOKIE)
+        
+        large_bucket_list = [{"name": f"bucket{i}"} for i in range(1000)]
+        mock_response = MagicMock(status_code=200)
+        mock_response.json.return_value = {"buckets": large_bucket_list}
+        
+        with patch('requests.get', return_value=mock_response):
+            response = self.view(self.request)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content)["buckets"]), 1000)
+
+    def test_special_characters_in_bucket_name(self):
+        # Test handling of special characters in bucket names
+        self.set_cookie(self.VALID_COOKIE)
+        
+        special_buckets = [{"name": "bucket!@#$%^&*()"}]
+        mock_response = MagicMock(status_code=200)
+        mock_response.json.return_value = {"buckets": special_buckets}
+        
+        with patch('requests.get', return_value=mock_response):
+            response = self.view(self.request)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content), {"buckets": ["bucket!@#$%^&*()"]})
+
+    @patch.dict(os.environ, {'INFLUXDB_URL': 'http://custom-influxdb:9999'})
+    def test_custom_influxdb_url(self):
+        # Test using a custom InfluxDB URL from environment variable
+        self.set_cookie(self.VALID_COOKIE)
+        
+        with patch('requests.get') as mock_get:
+            mock_get.return_value = MagicMock(status_code=200, json=lambda: {"buckets": []})
+            self.view(self.request)
+            
+            mock_get.assert_called_once_with(
+                "http://custom-influxdb:9999/api/v2/buckets",
+                headers=mock_get.call_args[1]['headers'],
+                timeout=10
+            )
