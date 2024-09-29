@@ -7,8 +7,15 @@ import {
 } from "lucide-react";
 
 import { SidebarDraggable } from "@/features/flow/components/sidebar/sidebar-draggable";
-import { NODE_TITLES } from "@/features/flow/constants";
 import { NodeType } from "@/features/flow/types";
+
+export const NODE_TITLES = {
+  BUCKET: "bucket" as const,
+  MEASUREMENT: "measurement" as const,
+  FIELD: "field" as const,
+  VALUE_THRESHOLD: "value threshold" as const,
+  DATE_RANGE: "date range" as const,
+};
 
 export const NODE_LABELS = {
   SELECTOR: "selector" as const,

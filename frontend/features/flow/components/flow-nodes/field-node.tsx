@@ -1,7 +1,7 @@
 import { RectangleEllipsis } from "lucide-react";
 
 import { ComboboxNode } from "@/features/flow/components/flow-nodes/combobox-node";
-import { NODE_TITLES } from "@/features/flow/constants";
+import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
 
 export const FieldNode = () => {
   return (
