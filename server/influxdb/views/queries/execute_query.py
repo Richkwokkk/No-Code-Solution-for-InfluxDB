@@ -9,11 +9,13 @@ from django.http import JsonResponse
 
 
 class ExecuteQueryView(generics.GenericAPIView):
-    def post(self, request, organization):        
+    def post(self, request):        
         influxdb_url = 'http://influxdb:8086'
         try:
-            query = request.data.get("query")
             cookies = request.COOKIES.get('login-session')
+            organization = request.query_params.get('organization')
+            query = request.data.get("query")
+            
             headers_check = {
                 "Cookie": f"influxdb-oss-session={cookies}",
                 "Accept": "application/json",
@@ -24,13 +26,15 @@ class ExecuteQueryView(generics.GenericAPIView):
                 "type": "flux"
             }
             # Check query format
-            response_check = requests.post(f"{influxdb_url}/api/v2/query/analyze", headers=headers_check, data=json.dumps(data))
+            response_check = requests.post(
+                f"{influxdb_url}/api/v2/query/analyze", 
+                headers=headers_check, 
+                data=json.dumps(data))
             if response_check.status_code != 200:
                 response_data = response_check.json()
-                return JsonResponse({
-                    "error": "InfluxDB API returned an error",
-                    "details": response_data["message"]
-                }, status=response_check.status_code)
+                return JsonResponse(
+                    {"error": "InfluxDB API returned an error", "details": response_data["message"]}, 
+                    status=response_check.status_code)
             # Execute query
             headers_query = {
                 "Cookie": f"influxdb-oss-session={cookies}",
@@ -52,16 +56,17 @@ class ExecuteQueryView(generics.GenericAPIView):
                         "orgID": org["id"]
                     }
             if params is None:
-                return JsonResponse({
-                    "error": "Organization not found"
-                }, status=404)
-            response_query = requests.post(f"{influxdb_url}/api/v2/query", headers=headers_query, params=params, data=query)
+                return JsonResponse({"error": "Organization not found"}, status=404)
+            response_query = requests.post(
+                f"{influxdb_url}/api/v2/query", 
+                headers=headers_query, 
+                params=params, 
+                data=query)
             if response_query.status_code != 200:
                 response_data = response_query.json()
-                return JsonResponse({
-                    "error": "InfluxDB API returned an error",
-                    "details": response_data["message"]
-                }, status=response_query.status_code)
+                return JsonResponse(
+                    {"error": "InfluxDB API returned an error", "details": response_data["message"]}, 
+                    status=response_query.status_code)
             csv_content = response_query.text
             csv_file = StringIO(csv_content)
             reader = csv.DictReader(csv_file)
@@ -73,7 +78,6 @@ class ExecuteQueryView(generics.GenericAPIView):
                 "result": tables
             })
         except requests.exceptions.RequestException as e:
-            return JsonResponse({
-                "error": "Failed to connect to the server", 
-                "details": str(e)
-                }, status=500)
+            return JsonResponse(
+                {"error": "Failed to connect to the server", "details": str(e)}, 
+                status=500)

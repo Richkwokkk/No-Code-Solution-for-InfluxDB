@@ -9,20 +9,22 @@ from django.http import JsonResponse
 
 
 class RetrieveMeasurementsView(generics.GenericAPIView):
-    def get(self, request, organization, bucket):        
+    def get(self, request):        
         influxdb_url = 'http://influxdb:8086'
         try:
-            time_start = request.data.get("time_start")
-            time_stop = request.data.get("time_stop")
-
             cookies = request.COOKIES.get('login-session')
+            organization = request.query_params.get('organization')
+            bucket = request.query_params.get('bucket')
+            time_start = request.query_params.get('time-start')
+            time_stop = request.query_params.get('time-stop')
+
+            # Get organization ID
             headers = {
                 "Cookie": f"influxdb-oss-session={cookies}",
                 "Accept": "application/csv",
                 "Content-Type": "application/vnd.flux"
             }
-            
-            response_org = requests.get(f"{influxdb_url}/api/v2/orgs", headers=headers)
+            response_org = requests.get(f"{influxdb_url}/api/v2/orgs", headers=headers)   
             response_data = response_org.json()
             if response_org.status_code != 200:
                 return JsonResponse({
@@ -33,23 +35,25 @@ class RetrieveMeasurementsView(generics.GenericAPIView):
             params = None
             for org in orgs_data:
                 if org['name'] == organization:
-                    params = {
-                        "orgID": org["id"]
-                    }
+                    params = {"orgID": org["id"]}
                     break
             if params is None:
                 return JsonResponse({
                     "error": "Organization not found"
                 }, status=404)
+            
+            # Get measurements
             data = f'from(bucket: "{bucket}") |> range(start: {time_start}, stop: {time_stop})'
-            response_query = requests.post(f"{influxdb_url}/api/v2/query", headers=headers, params=params, data=data)
+            response_query = requests.post(
+                f"{influxdb_url}/api/v2/query", 
+                headers=headers, 
+                params=params, 
+                data=data)
             if response_query.status_code != 200:
                 response_data = response_query.json()
-                return JsonResponse({
-                    "error": "InfluxDB API returned an error",
-                    "details": response_data["message"]
-                }, status=response_query.status_code)
-
+                return JsonResponse(
+                    {"error": "InfluxDB API returned an error", "details": response_data["message"]}, 
+                    status=response_query.status_code)
             csv_content = response_query.text
             csv_file = StringIO(csv_content)
             reader = csv.DictReader(csv_file)
@@ -62,13 +66,9 @@ class RetrieveMeasurementsView(generics.GenericAPIView):
                 flattened_data.extend(value_list)
             df = pd.DataFrame(flattened_data)
             measurements = df['_measurement'].unique().tolist()
-
-            response = JsonResponse({
-                "measurements": measurements
-            })
+            response = JsonResponse({"measurements": measurements})
             return response
         except requests.exceptions.RequestException as e:
-            return JsonResponse({
-                "error": "Failed to connect to the server", 
-                "details": str(e)
-                }, status=500)
+            return JsonResponse(
+                {"error": "Failed to connect to the server", "details": str(e)}, 
+                status=500)
