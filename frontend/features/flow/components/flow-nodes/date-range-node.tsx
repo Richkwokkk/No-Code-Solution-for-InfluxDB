@@ -20,7 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { BaseNode } from "@/features/flow/components/flow-nodes/base-node";
-import { NODE_TITLES } from "@/features/flow/constants";
+import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
 import { NodeType } from "@/features/flow/types";
 
 export type DateRangeNodeProps = { id: string };
