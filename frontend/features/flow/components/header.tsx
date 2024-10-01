@@ -9,7 +9,7 @@ import { useEditorToggle } from "@/features/flow/hooks/use-editor-toggle";
 
 export const Header = () => {
   const editor = useStore(useEditorToggle, (state) => state);
-  const { fitView, setNodes } = useReactFlow();
+  const { fitView, setNodes, updateNodeData } = useReactFlow();
 
   return (
     <header className="z-50 flex w-screen items-center justify-between border bg-background px-6 py-3">
@@ -31,6 +31,9 @@ export const Header = () => {
             variant="outline"
             onClick={async () => {
               setNodes(initialNodes);
+              updateNodeData(initialNodes[0].id, {
+                value: undefined,
+              });
               setTimeout(fitView);
             }}
           >

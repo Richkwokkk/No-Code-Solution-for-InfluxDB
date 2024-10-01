@@ -4,29 +4,31 @@ import { NodeData } from "@/features/flow/components/flow-nodes";
 import { EDITOR_ENDPOINTS, EDITOR_QUERY_KEYS } from "@/features/flow/constants";
 import { apiClient } from "@/lib/api-client";
 
-export type GetMeasurementsResponse = {
-  measurements: string[] | undefined;
+export type GetFieldsResponse = {
+  fields: string[];
 };
 
-export function useMeasurements({
+export function useFields({
   bucket,
   timeStart,
   timeStop,
-}: NodeData["result"]): UseQueryResult<GetMeasurementsResponse, Error> {
+  measurement,
+}: NodeData["result"]): UseQueryResult<GetFieldsResponse, Error> {
   const org = "ATSYS";
   return useQuery({
     queryKey: [
-      ...EDITOR_QUERY_KEYS.MEASUREMENTS,
+      ...EDITOR_QUERY_KEYS.FIELDS,
       org,
       bucket,
       timeStart,
       timeStop,
+      measurement,
     ],
     queryFn: async () => {
-      if (!bucket || !timeStart || !timeStop) return [];
+      if (!timeStart || !timeStop || !bucket || !measurement) return [];
 
-      const response = await apiClient.get<GetMeasurementsResponse>(
-        `${EDITOR_ENDPOINTS.getMeasurements}?bucket=${bucket}&organization=${org}&time-start=${timeStart}&time-stop=${timeStop}`,
+      const response = await apiClient.get<GetFieldsResponse>(
+        `${EDITOR_ENDPOINTS.getFields}?bucket=${bucket}&organization=${org}&time-start=${timeStart}&time-stop=${timeStop}&measurement=${measurement}`,
       );
 
       if (!response.ok) {

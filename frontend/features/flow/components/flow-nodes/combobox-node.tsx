@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useNodesData, useReactFlow } from "@xyflow/react";
+
 import { Check } from "lucide-react";
 
 import {
@@ -31,10 +33,13 @@ type ComboNodeProps = Pick<
   | "leftHandleId"
 > & {
   selections?: string[];
-  onSelectNodeOption?: ((_value: string) => void) | undefined;
+  onSelectNodeOption?: ((_value: string | undefined) => void) | undefined;
+  initialValue?: string;
+  id: string;
 };
 
 export function ComboboxNode({
+  id,
   title: type,
   icon,
   selections,
@@ -45,7 +50,15 @@ export function ComboboxNode({
   onSelectNodeOption,
 }: ComboNodeProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const { updateNodeData } = useReactFlow();
+  const nodeData = useNodesData(id);
+  const value = nodeData?.data?.value as string | undefined;
+
+  React.useEffect(() => {
+    if (!selections) {
+      updateNodeData(id, { bucket: "" });
+    }
+  }, [id, selections, updateNodeData]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -74,8 +87,12 @@ export function ComboboxNode({
                   key={selection}
                   value={selection}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    onSelectNodeOption?.(currentValue);
+                    updateNodeData(id, {
+                      value: currentValue === value ? "" : currentValue,
+                    });
+                    onSelectNodeOption?.(
+                      currentValue === value ? undefined : currentValue,
+                    );
                     setOpen(false);
                   }}
                 >

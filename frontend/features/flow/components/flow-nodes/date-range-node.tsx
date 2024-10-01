@@ -20,49 +20,82 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { BaseNode } from "@/features/flow/components/flow-nodes/base-node";
+import {
+  NodeProps,
+  NodeType,
+  NodeData,
+} from "@/features/flow/components/flow-nodes/type";
 import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
-import { NodeType } from "@/features/flow/types";
 
-export type DateRangeNodeProps = { id: string };
-
-export function DateRangeNode({ id }: DateRangeNodeProps) {
+export function DateRangeNode({ id }: NodeProps) {
   const { updateNodeData } = useReactFlow();
+  const nodeData = useNodesData(id)?.data as NodeData;
+  const { value } = nodeData;
 
   const bucketConnections = useHandleConnections({
     type: "target",
     id: "BUCKET" as NodeType,
   });
-  const bucket = useNodesData(bucketConnections?.[0]?.source)?.data;
-  console.log({ bucket });
+  const bucketData = useNodesData(bucketConnections?.[0]?.source)
+    ?.data as NodeData;
 
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 1),
-    to: addDays(new Date(2024, 0, 1), 1),
-  });
+  const parseDateRange = (value: string): DateRange | undefined => {
+    const [fromStr, toStr] = value.split(" - ");
+    const from = new Date(fromStr);
+    const to = new Date(toStr);
+    return { from, to };
+  };
 
-  const [value, setValue] = React.useState<string>("Pick a date range");
+  const initialDateRange =
+    value && value !== "Pick a date range"
+      ? parseDateRange(value)
+      : {
+          from: new Date(2022, 0, 1),
+          to: addDays(new Date(2024, 0, 1), 1),
+        };
 
-  const handleDateChange = (selectedDate: DateRange | undefined) => {
-    setDate(selectedDate);
-    if (selectedDate?.from) {
-      const formattedDate = selectedDate.to
-        ? `${format(selectedDate.from, "LLL dd, y")} - ${format(selectedDate.to, "LLL dd, y")}`
-        : format(selectedDate.from, "LLL dd, y");
-      setValue(formattedDate);
+  const [date, setDate] = React.useState<DateRange | undefined>(
+    initialDateRange,
+  );
 
-      // update date range node data with its source bucket node data
-      if (selectedDate.to) {
+  React.useEffect(() => {
+    if (date?.from) {
+      const formattedDate = date.to
+        ? `${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}`
+        : format(date.from, "LLL dd, y");
+      updateNodeData(id, {
+        value: formattedDate,
+        result: {
+          ...bucketData?.result,
+          timeStart: format(date.from, "yyyy-MM-dd'T'HH'%3A'mm'%3A'ss'Z'"),
+          timeStop: undefined,
+        },
+      });
+
+      if (date?.to) {
         updateNodeData(id, {
-          ...bucket,
-          dateRange: {
-            time_start: format(selectedDate.from, "yyyy-MM-dd'T'HH:mm:ss'Z'"),
-            time_stop: format(selectedDate.to, "yyyy-MM-dd'T'HH:mm:ss'Z'"),
+          value: formattedDate,
+          result: {
+            ...bucketData?.result,
+            timeStart: format(date.from, "yyyy-MM-dd'T'HH'%3A'mm'%3A'ss'Z'"),
+            timeStop: format(date.to, "yyyy-MM-dd'T'HH'%3A'mm'%3A'ss'Z'"),
           },
         });
       }
     } else {
-      setValue("Pick a date range");
+      updateNodeData(id, {
+        value: "Pick a date range",
+        result: {
+          ...bucketData?.result,
+          timeStart: undefined,
+          timeStop: undefined,
+        },
+      });
     }
+  }, [bucketData, date, id, updateNodeData]);
+
+  const handleDateChange = (selectedDate: DateRange | undefined) => {
+    setDate(selectedDate);
   };
 
   return (
@@ -70,9 +103,12 @@ export function DateRangeNode({ id }: DateRangeNodeProps) {
       <PopoverTrigger className="focus:outline-none">
         <BaseNode
           title={NODE_TITLES.DATE_RANGE}
-          value={value}
+          value={value ?? "Pick a date range"}
           icon={CalendarIcon}
           leftHandleId="BUCKET"
+          rightHandleId="DATE_RANGE"
+          leftHandle
+          rightHandle
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date?.from ? (

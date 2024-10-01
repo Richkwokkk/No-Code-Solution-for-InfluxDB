@@ -3,11 +3,11 @@ import { Node } from "@xyflow/react";
 import { Cylinder } from "lucide-react";
 import short from "short-uuid";
 
+import { NodeType } from "@/features/flow/components/flow-nodes";
 import {
   NODE_LABELS,
   NODE_TITLES,
 } from "@/features/flow/components/sidebar/constants";
-import { NodeType } from "@/features/flow/types";
 
 export const FLOW_KEY = "influx-flow";
 
@@ -15,8 +15,8 @@ const EDITOR_API_PATH = "influxdb";
 
 export const EDITOR_ENDPOINTS = {
   getBuckets: `${EDITOR_API_PATH}/buckets` as const,
-  getMeasurements: ({ org, bucket }: { org: string; bucket: string }) =>
-    `${EDITOR_API_PATH}/${org}/${bucket}/measurements`,
+  getMeasurements: `${EDITOR_API_PATH}/measurements` as const,
+  getFields: `${EDITOR_API_PATH}/fields` as const,
 };
 
 export const initialNodes: Node[] = [
@@ -39,4 +39,5 @@ export const initialNodes: Node[] = [
 export const EDITOR_QUERY_KEYS = {
   BUCKETS: ["buckets"] as const,
   MEASUREMENTS: ["measurements"] as const,
+  FIELDS: ["fields"] as const,
 };

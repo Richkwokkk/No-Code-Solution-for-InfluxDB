@@ -3,7 +3,7 @@ import { Handle, Position } from "@xyflow/react";
 import { LucideIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { NodeType } from "@/features/flow/types";
+import { NodeType } from "@/features/flow/components/flow-nodes/type";
 
 export interface BaseNodeProps {
   value: string;
@@ -21,8 +21,8 @@ export function BaseNode({
   title,
   value,
   icon: Icon,
-  leftHandle = true,
-  rightHandle = true,
+  leftHandle = false,
+  rightHandle = false,
   leftHandleId,
   rightHandleId,
   ariaExpanded = false,
