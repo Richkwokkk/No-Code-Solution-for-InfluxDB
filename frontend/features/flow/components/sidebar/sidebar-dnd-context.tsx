@@ -5,9 +5,9 @@ import { useReactFlow } from "@xyflow/react";
 
 import short from "short-uuid";
 
+import { NodeType } from "@/features/flow/components/flow-nodes/type";
 import { sidebarNodes } from "@/features/flow/components/sidebar/constants";
 import { SidebarDragOverlay } from "@/features/flow/components/sidebar/sidebar-drag-overlay";
-import { NodeType } from "@/features/flow/types";
 
 interface DndContextProps {
   children: React.ReactNode;

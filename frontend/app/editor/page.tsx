@@ -15,7 +15,7 @@ import { ChartContainer } from "@/features/charts/components/chart-container";
 import { CodeEditor } from "@/features/code/components/code-editor";
 import { Flow } from "@/features/flow/components/flow";
 import { Header } from "@/features/flow/components/header";
-import { Sidebar } from "@/features/flow/components/sidebar/sidebar";
+import { Sidebar } from "@/features/flow/components/sidebar";
 import { SidebarDndContext } from "@/features/flow/components/sidebar/sidebar-dnd-context";
 import { useEditorToggle } from "@/features/flow/hooks/use-editor-toggle";
 

@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useNodesData, useReactFlow } from "@xyflow/react";
+
 import { Check } from "lucide-react";
 
 import {
@@ -23,20 +25,40 @@ import { cn } from "@/lib/utils";
 
 type ComboNodeProps = Pick<
   BaseNodeProps,
-  "title" | "icon" | "rightHandle" | "leftHandle"
+  | "title"
+  | "icon"
+  | "rightHandle"
+  | "leftHandle"
+  | "rightHandleId"
+  | "leftHandleId"
 > & {
   selections?: string[];
+  onSelectNodeOption?: ((_value: string | undefined) => void) | undefined;
+  initialValue?: string;
+  id: string;
 };
 
 export function ComboboxNode({
+  id,
   title: type,
   icon,
   selections,
   rightHandle,
   leftHandle,
+  rightHandleId,
+  leftHandleId,
+  onSelectNodeOption,
 }: ComboNodeProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const { updateNodeData } = useReactFlow();
+  const nodeData = useNodesData(id);
+  const value = nodeData?.data?.value as string | undefined;
+
+  React.useEffect(() => {
+    if (!selections) {
+      updateNodeData(id, { bucket: "" });
+    }
+  }, [id, selections, updateNodeData]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -47,6 +69,8 @@ export function ComboboxNode({
           icon={icon}
           rightHandle={rightHandle}
           leftHandle={leftHandle}
+          rightHandleId={rightHandleId}
+          leftHandleId={leftHandleId}
           ariaExpanded={open}
         />
       </PopoverTrigger>
@@ -63,7 +87,12 @@ export function ComboboxNode({
                   key={selection}
                   value={selection}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    updateNodeData(id, {
+                      value: currentValue === value ? "" : currentValue,
+                    });
+                    onSelectNodeOption?.(
+                      currentValue === value ? undefined : currentValue,
+                    );
                     setOpen(false);
                   }}
                 >

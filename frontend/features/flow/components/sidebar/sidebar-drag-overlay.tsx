@@ -1,7 +1,7 @@
 import { DragOverlay, useDndContext } from "@dnd-kit/core";
 
+import { NodeType } from "@/features/flow/components/flow-nodes/type";
 import { sidebarNodes } from "@/features/flow/components/sidebar/constants";
-import { NodeType } from "@/features/flow/types";
 
 export const SidebarDragOverlay = () => {
   const { active } = useDndContext();
