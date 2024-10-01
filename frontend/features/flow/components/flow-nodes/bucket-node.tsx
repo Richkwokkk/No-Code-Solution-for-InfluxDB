@@ -20,8 +20,8 @@ export const BucketNode = ({ id }: NodeProps) => {
       title={NODE_TITLES.BUCKET}
       icon={Cylinder}
       selections={data?.buckets}
-      rightHandle
-      rightHandleId="BUCKET"
+      underHandle
+      underHandleId="BUCKET"
       onSelectNodeOption={handleSelectBucket}
     />
   );

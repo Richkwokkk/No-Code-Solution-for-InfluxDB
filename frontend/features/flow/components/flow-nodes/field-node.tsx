@@ -4,7 +4,7 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-import { Grid } from "lucide-react";
+import { RectangleEllipsis } from "lucide-react";
 import { toast } from "sonner";
 
 import { ComboboxNode } from "@/features/flow/components/flow-nodes/combobox-node";
@@ -44,12 +44,12 @@ export const FieldNode = ({ id }: NodeProps) => {
     <ComboboxNode
       id={id}
       title={NODE_TITLES.FIELD}
-      icon={Grid}
+      icon={RectangleEllipsis}
       selections={data?.fields}
-      leftHandleId="MEASUREMENT"
-      rightHandleId="FIELD"
-      leftHandle
-      rightHandle
+      upHandleId="MEASUREMENT"
+      underHandleId="FIELD"
+      upHandle
+      underHandle
       onSelectNodeOption={handleSelectField}
     />
   );

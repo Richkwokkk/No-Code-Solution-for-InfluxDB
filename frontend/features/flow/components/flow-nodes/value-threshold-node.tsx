@@ -115,6 +115,8 @@ export const ValueThresholdNode = () => {
             title={NODE_TITLES.VALUE_THRESHOLD}
             icon={Hash}
             ariaExpanded={open}
+            upHandle
+            underHandle
           />
         </div>
       </PopoverTrigger>

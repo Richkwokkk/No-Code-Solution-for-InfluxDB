@@ -105,10 +105,10 @@ export function DateRangeNode({ id }: NodeProps) {
           title={NODE_TITLES.DATE_RANGE}
           value={value ?? "Pick a date range"}
           icon={CalendarIcon}
-          leftHandleId="BUCKET"
-          rightHandleId="DATE_RANGE"
-          leftHandle
-          rightHandle
+          upHandleId="BUCKET"
+          underHandleId="DATE_RANGE"
+          upHandle
+          underHandle
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date?.from ? (
