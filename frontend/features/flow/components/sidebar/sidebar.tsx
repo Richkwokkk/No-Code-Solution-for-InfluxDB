@@ -36,7 +36,7 @@ export const Sidebar = () => {
           setIsOpen={sidebar?.setIsOpen}
         />
       </div>
-      <div className="h-full w-full space-y-4 overflow-y-auto overflow-x-hidden bg-background p-4">
+      <div className="flex h-full w-full flex-col space-y-4 overflow-y-auto overflow-x-hidden bg-background p-4">
         {Object.entries(sidebarNodes).map(
           ([type, { label, title, icon: Icon }]) => {
             return (
