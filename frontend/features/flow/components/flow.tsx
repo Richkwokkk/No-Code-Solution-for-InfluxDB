@@ -56,7 +56,9 @@ export function Flow() {
         addEdge(
           {
             ...params,
-            type: "smoothstep",
+            style: {
+              strokeWidth: "2px",
+            },
             animated: true,
           },
           eds,
@@ -145,7 +147,7 @@ export function Flow() {
         onConnect={onConnect}
         onInit={setRfInstance}
         onMoveEnd={saveRfInstance}
-        connectionLineType={ConnectionLineType.SmoothStep}
+        connectionLineType={ConnectionLineType.Bezier}
         isValidConnection={isValidConnection}
         maxZoom={1}
         proOptions={{ hideAttribution: true }}

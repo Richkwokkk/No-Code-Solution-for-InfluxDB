@@ -46,10 +46,10 @@ export const MeasurementNode = ({ id }: NodeProps) => {
       title={NODE_TITLES.MEASUREMENT}
       icon={Grid}
       selections={data?.measurements}
-      leftHandleId="DATE_RANGE"
-      rightHandleId="MEASUREMENT"
-      leftHandle
-      rightHandle
+      upHandleId="DATE_RANGE"
+      underHandleId="MEASUREMENT"
+      upHandle
+      underHandle
       onSelectNodeOption={handleSelectMeasurement}
     />
   );

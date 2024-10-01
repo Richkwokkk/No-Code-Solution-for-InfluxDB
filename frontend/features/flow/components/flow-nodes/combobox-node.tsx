@@ -25,12 +25,7 @@ import { cn } from "@/lib/utils";
 
 type ComboNodeProps = Pick<
   BaseNodeProps,
-  | "title"
-  | "icon"
-  | "rightHandle"
-  | "leftHandle"
-  | "rightHandleId"
-  | "leftHandleId"
+  "title" | "icon" | "upHandle" | "underHandle" | "underHandleId" | "upHandleId"
 > & {
   selections?: string[];
   onSelectNodeOption?: ((_value: string | undefined) => void) | undefined;
@@ -43,10 +38,10 @@ export function ComboboxNode({
   title: type,
   icon,
   selections,
-  rightHandle,
-  leftHandle,
-  rightHandleId,
-  leftHandleId,
+  underHandle,
+  upHandle,
+  underHandleId,
+  upHandleId,
   onSelectNodeOption,
 }: ComboNodeProps) {
   const [open, setOpen] = React.useState(false);
@@ -67,10 +62,10 @@ export function ComboboxNode({
           value={value || `Select a ${type}`}
           title={type}
           icon={icon}
-          rightHandle={rightHandle}
-          leftHandle={leftHandle}
-          rightHandleId={rightHandleId}
-          leftHandleId={leftHandleId}
+          underHandle={underHandle}
+          upHandle={upHandle}
+          underHandleId={underHandleId}
+          upHandleId={upHandleId}
           ariaExpanded={open}
         />
       </PopoverTrigger>
