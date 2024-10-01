@@ -1,5 +1,11 @@
 import { LucideIcon } from "lucide-react";
 
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { sidebarNodes } from "@/features/flow/components/sidebar/constants";
 import { SidebarDraggable } from "@/features/flow/components/sidebar/sidebar-draggable";
 import { SidebarToggle } from "@/features/flow/components/sidebar/sidebar-toggle";
@@ -34,29 +40,47 @@ export const Sidebar = () => {
         {Object.entries(sidebarNodes).map(
           ([type, { label, title, icon: Icon }]) => {
             return (
-              <SidebarDraggable
-                key={type}
-                id={type}
-                type={type}
-                className="flex h-14 w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:shadow-md"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
-                  <Icon size={20} />
-                </div>
-                <div
-                  className={cn(
-                    "absolute flex flex-col items-start pl-10 transition-opacity duration-75 ease-out",
-                    sidebar?.isOpen === false ? "opacity-0" : "opacity-100",
-                  )}
-                >
-                  <p className="text-nowrap text-[10px] capitalize opacity-50">
-                    {label}
-                  </p>
-                  <p className="text-nowrap text-xs font-bold capitalize">
-                    {title}
-                  </p>
-                </div>
-              </SidebarDraggable>
+              <>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <SidebarDraggable
+                        key={type}
+                        id={type}
+                        type={type}
+                        className="flex h-14 w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:shadow-md"
+                      >
+                        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
+                          <Icon size={20} />
+                        </div>
+                        <div
+                          className={cn(
+                            "absolute flex flex-col items-start pl-10 transition-opacity duration-75 ease-out",
+                            sidebar?.isOpen ? "opacity-100" : "opacity-0",
+                          )}
+                        >
+                          <p className="text-nowrap text-[10px] capitalize opacity-50">
+                            {label}
+                          </p>
+                          <p className="text-nowrap text-xs font-bold capitalize">
+                            {title}
+                          </p>
+                        </div>
+                      </SidebarDraggable>
+                    </TooltipTrigger>
+                    {!sidebar?.isOpen ? (
+                      <TooltipContent
+                        side="right"
+                        align="start"
+                        sideOffset={10}
+                        alignOffset={-5}
+                      >
+                        <p className="font-semibold">{title}</p>
+                      </TooltipContent>
+                    ) : null}
+                  </Tooltip>
+                </TooltipProvider>
+              </>
             );
           },
         )}
