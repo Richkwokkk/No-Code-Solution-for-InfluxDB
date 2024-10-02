@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   useHandleConnections,
   useNodesData,
@@ -24,8 +26,17 @@ export const MeasurementNode = ({ id }: NodeProps) => {
   });
   const dateRangeNodeData = useNodesData(dateRangeConnections?.[0]?.source);
 
-  const previousNodeData =
-    (dateRangeNodeData?.data.result as NodeData["result"]) || {};
+  const previousNodeData = React.useMemo(
+    () => (dateRangeNodeData?.data.result as NodeData["result"]) || {},
+    [dateRangeNodeData],
+  );
+
+  React.useEffect(() => {
+    updateNodeData(id, {
+      value: undefined,
+      result: { ...previousNodeData, measurement: undefined },
+    });
+  }, [previousNodeData, id, updateNodeData]);
 
   const { data, error } = useMeasurements(previousNodeData);
 
