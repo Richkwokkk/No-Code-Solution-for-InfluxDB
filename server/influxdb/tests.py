@@ -7,6 +7,8 @@ from .views import RetrieveBucketsView
 import os
 import parameterized
 
+
+# this test code is just for trial and can be modified
 class RetrieveBucketsViewTests(TestCase):
     # Constants for API URL and cookie values
     API_URL = '/api/buckets/'
