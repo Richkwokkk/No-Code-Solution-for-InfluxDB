@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
-    "types": ["vitest/globals"],
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "types": [
+      "vitest/globals"
+    ],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,7 +25,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -29,6 +37,8 @@
     ".next/types/**/*.ts",
     "vitest.config.mts"
   ],
-  "exclude": ["node_modules"],
+  "exclude": [
+    "node_modules"
+  ],
   "extends": "./tsconfig.paths.json"
 }

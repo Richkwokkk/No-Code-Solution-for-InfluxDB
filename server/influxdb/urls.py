@@ -10,8 +10,7 @@ from .views import (
 
 urlpatterns = [
     path("buckets", RetrieveBucketsView.as_view()),
-    path("<str:organization>/<str:bucket>/measurements", RetrieveMeasurementsView.as_view()),
-    path("<str:organization>/<str:bucket>/measurements", RetrieveMeasurementsView.as_view()),
-    path("<str:organization>/<str:bucket>/<str:measurement>/fields", RetrieveFieldsView.as_view()),
-    path("<str:organization>/query", ExecuteQueryView.as_view()),
+    path("measurements", RetrieveMeasurementsView.as_view()),
+    path("fields", RetrieveFieldsView.as_view()),
+    path("query", ExecuteQueryView.as_view()),
 ]
