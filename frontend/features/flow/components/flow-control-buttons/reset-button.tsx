@@ -1,8 +1,7 @@
 import * as React from "react";
 
-import { useReactFlow } from "@xyflow/react";
-
-import { RotateCcw } from "lucide-react";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { ControlButton, useReactFlow } from "@xyflow/react";
 
 import {
   AlertDialog,
@@ -15,20 +14,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { initialNodes } from "@/features/flow/constants";
 
-export function ResetConfirmationAlert() {
+export function ResetButton() {
   const { fitView, setNodes, updateNodeData } = useReactFlow();
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">
-          <span className="text-sm font-bold capitalize">
-            <RotateCcw size={16} />
-          </span>
-        </Button>
+        <ControlButton title="Reset">
+          <ReloadIcon />
+        </ControlButton>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

@@ -1,8 +1,6 @@
 import * as React from "react";
 
-import { useReactFlow } from "@xyflow/react";
-
-import { AlignCenterVertical, Code, CodeXml, Play } from "lucide-react";
+import { Code, CodeXml, Play } from "lucide-react";
 import Link from "next/link";
 import { useStore } from "zustand";
 
@@ -13,26 +11,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ResetConfirmationAlert } from "@/features/flow/components/header/reset-alert";
 import { useEditorToggle } from "@/features/flow/hooks/use-editor-toggle";
-import { getLayoutedElements } from "@/lib/dagre";
 
 export const Header = () => {
   const editor = useStore(useEditorToggle, (state) => state);
-  const { fitView, setNodes, setEdges, getNodes, getEdges } = useReactFlow();
-
-  const onLayout = React.useCallback(
-    (direction: "TB" | "LR") => {
-      const nodes = getNodes();
-      const edges = getEdges();
-      const layouted = getLayoutedElements(nodes, edges, { direction });
-
-      setNodes([...layouted.nodes]);
-      setEdges([...layouted.edges]);
-      setTimeout(fitView);
-    },
-    [getNodes, getEdges, setNodes, setEdges, fitView],
-  );
 
   return (
     <header className="z-50 flex w-screen items-center justify-between border bg-background px-6 py-3">
@@ -43,29 +25,11 @@ export const Header = () => {
         <div className="flex space-x-2">
           <TooltipProvider delayDuration={0}>
             <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    onLayout("TB");
-                    setTimeout(fitView);
-                  }}
-                >
-                  <AlignCenterVertical size={16} />
-                </Button>
-              </TooltipTrigger>
+              <TooltipTrigger></TooltipTrigger>
               <TooltipContent align="center">
                 <span className="text-sm font-bold capitalize">
                   Auto Layout
                 </span>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger>
-                <ResetConfirmationAlert />
-              </TooltipTrigger>
-              <TooltipContent align="center">
-                <span className="text-sm font-bold capitalize">Reset All</span>
               </TooltipContent>
             </Tooltip>
             <Tooltip>

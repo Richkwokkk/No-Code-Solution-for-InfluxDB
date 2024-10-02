@@ -120,7 +120,7 @@ export const ValueThresholdNode = () => {
           />
         </div>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-[230px] p-0">
+      <PopoverContent align="center" className="w-[230px] p-0">
         <div className="space-y-3 p-4">
           <div className="flex space-x-4">
             <Input
