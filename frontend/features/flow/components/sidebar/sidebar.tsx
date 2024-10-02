@@ -41,7 +41,7 @@ export const Sidebar = () => {
           ([type, { label, title, icon: Icon }]) => {
             return (
               <>
-                <TooltipProvider>
+                <TooltipProvider delayDuration={0}>
                   <Tooltip>
                     <TooltipTrigger>
                       <SidebarDraggable
@@ -75,7 +75,7 @@ export const Sidebar = () => {
                         sideOffset={10}
                         alignOffset={-5}
                       >
-                        <p className="font-semibold">{title}</p>
+                        <p className="font-semibold capitalize">{title}</p>
                       </TooltipContent>
                     ) : null}
                   </Tooltip>
