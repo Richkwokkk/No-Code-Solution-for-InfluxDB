@@ -21,20 +21,20 @@ import { useEditorToggle } from "@/features/flow/hooks/use-editor-toggle";
 
 export default function EditorPage() {
   const editor = useStore(useEditorToggle, (state) => state);
-  const dndPanelRef = useRef<ImperativePanelHandle>(null);
-  const codePanelRef = useRef<ImperativePanelHandle>(null);
+  const leftPanelRef = useRef<ImperativePanelHandle>(null);
+  const upperPanelRef = useRef<ImperativePanelHandle>(null);
 
-  const resetCodePanelSize = () => {
-    const codePanel = codePanelRef.current;
-    if (codePanel) {
-      codePanel.resize(30);
+  const resetVerticalPanelSize = () => {
+    const upperPanel = upperPanelRef.current;
+    if (upperPanel) {
+      upperPanel.resize(70);
     }
   };
 
-  const resetDndPanelSize = () => {
-    const dndPanel = dndPanelRef.current;
-    if (dndPanel) {
-      dndPanel.resize(50);
+  const resetHorizontalPanelSize = () => {
+    const leftPanel = leftPanelRef.current;
+    if (leftPanel) {
+      leftPanel.resize(50);
     }
   };
 
@@ -44,34 +44,32 @@ export default function EditorPage() {
         <Header />
         <div className="flex h-full w-full">
           <Sidebar />
-          <ResizablePanelGroup
-            autoSaveId="group-1"
-            direction="vertical"
-            className="flex-1"
-          >
-            <ResizablePanel defaultSize={70} minSize={20}>
-              <ResizablePanelGroup autoSaveId="group-2" direction="horizontal">
-                <ResizablePanel ref={dndPanelRef} defaultSize={50} minSize={20}>
+          <ResizablePanelGroup direction="vertical" className="flex-1">
+            <ResizablePanel ref={upperPanelRef} defaultSize={70} minSize={20}>
+              <ResizablePanelGroup direction="horizontal">
+                <ResizablePanel
+                  ref={leftPanelRef}
+                  defaultSize={50}
+                  minSize={20}
+                >
                   <Flow />
                 </ResizablePanel>
-                <ResizableHandle onDoubleClickCapture={resetDndPanelSize} />
-                <ResizablePanel defaultSize={50} minSize={20}>
-                  <ChartContainer />
-                </ResizablePanel>
+                {editor.isOpen && (
+                  <>
+                    <ResizableHandle
+                      onDoubleClickCapture={resetHorizontalPanelSize}
+                    />
+                    <ResizablePanel defaultSize={50} minSize={20}>
+                      <CodeEditor />
+                    </ResizablePanel>
+                  </>
+                )}
               </ResizablePanelGroup>
             </ResizablePanel>
-            {editor.isOpen && (
-              <>
-                <ResizableHandle onDoubleClickCapture={resetCodePanelSize} />
-                <ResizablePanel
-                  ref={codePanelRef}
-                  defaultSize={30}
-                  minSize={10}
-                >
-                  <CodeEditor />
-                </ResizablePanel>
-              </>
-            )}
+            <ResizableHandle onDoubleClickCapture={resetVerticalPanelSize} />
+            <ResizablePanel defaultSize={30} minSize={20}>
+              <ChartContainer />
+            </ResizablePanel>
           </ResizablePanelGroup>
         </div>
       </div>
