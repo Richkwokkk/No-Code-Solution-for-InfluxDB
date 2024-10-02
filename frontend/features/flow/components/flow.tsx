@@ -19,6 +19,10 @@ import "@xyflow/react/dist/style.css";
 import { toast } from "sonner";
 
 import {
+  AlignButton,
+  ResetButton,
+} from "@/features/flow/components/flow-control-buttons";
+import {
   BucketNode,
   DateRangeNode,
   FieldNode,
@@ -152,7 +156,10 @@ export function Flow() {
         maxZoom={1}
         proOptions={{ hideAttribution: true }}
       >
-        <Controls />
+        <Controls>
+          <AlignButton />
+          <ResetButton />
+        </Controls>
         <Background variant={BackgroundVariant.Dots} />
       </ReactFlow>
     </section>

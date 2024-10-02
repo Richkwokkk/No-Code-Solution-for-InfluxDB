@@ -69,7 +69,7 @@ export function ComboboxNode({
           ariaExpanded={open}
         />
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-[200px] p-0">
+      <PopoverContent align="center" className="w-[200px] p-0">
         <Command>
           <CommandInput
             placeholder={`Search ${type.charAt(0).toUpperCase() + type.slice(1)}...`}
