@@ -24,16 +24,7 @@ export function ResetConfirmationAlert() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          variant="outline"
-          onClick={() => {
-            setNodes(initialNodes);
-            updateNodeData(initialNodes[0].id, {
-              value: undefined,
-            });
-            setTimeout(fitView);
-          }}
-        >
+        <Button variant="outline">
           <span className="text-sm font-bold capitalize">
             <RotateCcw size={16} />
           </span>
@@ -49,7 +40,17 @@ export function ResetConfirmationAlert() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Reset</AlertDialogAction>
+          <AlertDialogAction
+            onClick={() => {
+              setNodes(initialNodes);
+              updateNodeData(initialNodes[0].id, {
+                value: undefined,
+              });
+              setTimeout(fitView);
+            }}
+          >
+            Reset
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
