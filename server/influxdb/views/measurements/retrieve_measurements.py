@@ -64,6 +64,8 @@ class RetrieveMeasurementsView(generics.GenericAPIView):
             flattened_data = []
             for key, value_list in tables.items():
                 flattened_data.extend(value_list)
+            if len(flattened_data) == 0:
+                return JsonResponse({"measurements": []})
             df = pd.DataFrame(flattened_data)
             measurements = df['_measurement'].unique().tolist()
             response = JsonResponse({"measurements": measurements})
