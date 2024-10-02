@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import {
   useHandleConnections,
   useNodesData,
@@ -24,8 +26,17 @@ export const FieldNode = ({ id }: NodeProps) => {
   });
   const measurementNodeData = useNodesData(measurementConnections?.[0]?.source);
 
-  const previousNodeData =
-    (measurementNodeData?.data.result as NodeData["result"]) || {};
+  const previousNodeData = React.useMemo(
+    () => (measurementNodeData?.data.result as NodeData["result"]) || {},
+    [measurementNodeData],
+  );
+
+  React.useEffect(() => {
+    updateNodeData(id, {
+      value: undefined,
+      result: { ...previousNodeData, field: undefined },
+    });
+  }, [previousNodeData, id, updateNodeData]);
 
   const { data, error } = useFields(previousNodeData);
 
