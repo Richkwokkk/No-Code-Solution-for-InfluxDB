@@ -10,8 +10,8 @@ import parameterized
 class RetrieveBucketsViewTests(TestCase):
     # Constants for API URL and cookie values
     API_URL = '/api/buckets/'
-    VALID_COOKIE = 'valid_cookie'
-    INVALID_COOKIE = 'invalid_cookie'
+    # VALID_COOKIE = 'valid_cookie'
+    # INVALID_COOKIE = 'invalid_cookie'
 
     @classmethod
     def setUpClass(cls):
