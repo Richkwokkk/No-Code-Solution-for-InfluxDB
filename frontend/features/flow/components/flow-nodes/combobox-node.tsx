@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useNodesData, useReactFlow } from "@xyflow/react";
+
 import { Check } from "lucide-react";
 
 import {
@@ -23,20 +25,35 @@ import { cn } from "@/lib/utils";
 
 type ComboNodeProps = Pick<
   BaseNodeProps,
-  "title" | "icon" | "rightHandle" | "leftHandle"
+  "title" | "icon" | "upHandle" | "underHandle" | "underHandleId" | "upHandleId"
 > & {
   selections?: string[];
+  onSelectNodeOption?: ((_value: string | undefined) => void) | undefined;
+  initialValue?: string;
+  id: string;
 };
 
 export function ComboboxNode({
+  id,
   title: type,
   icon,
   selections,
-  rightHandle,
-  leftHandle,
+  underHandle,
+  upHandle,
+  underHandleId,
+  upHandleId,
+  onSelectNodeOption,
 }: ComboNodeProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const { updateNodeData } = useReactFlow();
+  const nodeData = useNodesData(id);
+  const value = nodeData?.data?.value as string | undefined;
+
+  React.useEffect(() => {
+    if (!selections) {
+      updateNodeData(id, { bucket: "" });
+    }
+  }, [id, selections, updateNodeData]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -45,12 +62,14 @@ export function ComboboxNode({
           value={value || `Select a ${type}`}
           title={type}
           icon={icon}
-          rightHandle={rightHandle}
-          leftHandle={leftHandle}
+          underHandle={underHandle}
+          upHandle={upHandle}
+          underHandleId={underHandleId}
+          upHandleId={upHandleId}
           ariaExpanded={open}
         />
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-[200px] p-0">
+      <PopoverContent align="center" className="w-[200px] p-0">
         <Command>
           <CommandInput
             placeholder={`Search ${type.charAt(0).toUpperCase() + type.slice(1)}...`}
@@ -63,7 +82,12 @@ export function ComboboxNode({
                   key={selection}
                   value={selection}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    updateNodeData(id, {
+                      value: currentValue === value ? "" : currentValue,
+                    });
+                    onSelectNodeOption?.(
+                      currentValue === value ? undefined : currentValue,
+                    );
                     setOpen(false);
                   }}
                 >

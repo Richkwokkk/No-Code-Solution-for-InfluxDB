@@ -18,17 +18,24 @@ import "@xyflow/react/dist/style.css";
 
 import { toast } from "sonner";
 
-import { BucketNode } from "@/features/flow/components/flow-nodes/bucket-node";
-import { DateRangeNode } from "@/features/flow/components/flow-nodes/date-range-node";
-import { FieldNode } from "@/features/flow/components/flow-nodes/field-node";
-import { MeasurementNode } from "@/features/flow/components/flow-nodes/measurement-node";
-import { ValueThresholdNode } from "@/features/flow/components/flow-nodes/value-threshold-node";
+import {
+  AlignButton,
+  ResetButton,
+} from "@/features/flow/components/flow-control-buttons";
+import {
+  BucketNode,
+  DateRangeNode,
+  FieldNode,
+  MeasurementNode,
+  ValueThresholdNode,
+  type NodeProps,
+  type NodeType,
+} from "@/features/flow/components/flow-nodes";
 import { FLOW_KEY, initialNodes } from "@/features/flow/constants";
-import { NodeType } from "@/features/flow/types";
 import { throttle } from "@/lib/utils";
 
 type ReactFlowNodeTypes = {
-  [_t in NodeType]: React.FC;
+  [_t in NodeType]: React.FC<NodeProps>;
 };
 
 export const nodeTypes: ReactFlowNodeTypes = {
@@ -53,7 +60,9 @@ export function Flow() {
         addEdge(
           {
             ...params,
-            type: "bezier",
+            style: {
+              strokeWidth: "2px",
+            },
             animated: true,
           },
           eds,
@@ -145,10 +154,12 @@ export function Flow() {
         connectionLineType={ConnectionLineType.Bezier}
         isValidConnection={isValidConnection}
         maxZoom={1}
-        fitView
         proOptions={{ hideAttribution: true }}
       >
-        <Controls />
+        <Controls>
+          <AlignButton />
+          <ResetButton />
+        </Controls>
         <Background variant={BackgroundVariant.Dots} />
       </ReactFlow>
     </section>

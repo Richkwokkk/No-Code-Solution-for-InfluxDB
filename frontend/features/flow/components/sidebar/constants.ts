@@ -6,8 +6,8 @@ import {
   RectangleEllipsis,
 } from "lucide-react";
 
+import { NodeType } from "@/features/flow/components/flow-nodes";
 import { SidebarDraggable } from "@/features/flow/components/sidebar/sidebar-draggable";
-import { NodeType } from "@/features/flow/types";
 
 export const NODE_TITLES = {
   BUCKET: "bucket" as const,

@@ -1,24 +1,26 @@
-import { useCallback, useId } from "react";
+import * as React from "react";
 
 import { DndContext as DndKitContext, DragEndEvent } from "@dnd-kit/core";
 import { useReactFlow } from "@xyflow/react";
 
 import short from "short-uuid";
 
+import { NodeType } from "@/features/flow/components/flow-nodes/type";
 import { sidebarNodes } from "@/features/flow/components/sidebar/constants";
 import { SidebarDragOverlay } from "@/features/flow/components/sidebar/sidebar-drag-overlay";
-import { NodeType } from "@/features/flow/types";
 
 interface DndContextProps {
   children: React.ReactNode;
 }
 
 export const SidebarDndContext = ({ children }: DndContextProps) => {
-  const ctxId = useId();
+  const ctxId = React.useId();
   const { setNodes, screenToFlowPosition } = useReactFlow();
+  const [isDragComplete, setIsDragComplete] = React.useState(false);
 
-  const onDragEnd = useCallback(
+  const onDragEnd = React.useCallback(
     ({ active }: DragEndEvent) => {
+      setIsDragComplete(false);
       const type = active.data.current?.type as NodeType;
       if (!type) return;
 
@@ -55,13 +57,14 @@ export const SidebarDndContext = ({ children }: DndContextProps) => {
       };
 
       setNodes((nds) => nds.concat(newNode));
+      setIsDragComplete(true);
     },
     [screenToFlowPosition, setNodes],
   );
 
   return (
     <DndKitContext id={ctxId} onDragEnd={onDragEnd}>
-      <SidebarDragOverlay />
+      <SidebarDragOverlay isDragComplete={isDragComplete} />
       {children}
     </DndKitContext>
   );
