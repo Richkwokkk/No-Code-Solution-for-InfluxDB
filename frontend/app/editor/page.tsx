@@ -17,10 +17,14 @@ import { Flow } from "@/features/flow/components/flow";
 import { Header } from "@/features/flow/components/header";
 import { Sidebar } from "@/features/flow/components/sidebar";
 import { SidebarDndContext } from "@/features/flow/components/sidebar/sidebar-dnd-context";
-import { useEditorToggle } from "@/features/flow/hooks/use-editor-toggle";
+import { useToggle } from "@/features/flow/hooks/use-toggle";
 
 export default function EditorPage() {
-  const editor = useStore(useEditorToggle, (state) => state);
+  const { isCodeEditorOpen, isFlowOpen, isVisualizationOpen } = useStore(
+    useToggle,
+    (state) => state,
+  );
+  const shouldRenderUpperPanel = isFlowOpen || isCodeEditorOpen;
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const upperPanelRef = useRef<ImperativePanelHandle>(null);
 
@@ -44,32 +48,69 @@ export default function EditorPage() {
         <Header />
         <div className="flex h-full w-full">
           <Sidebar />
-          <ResizablePanelGroup direction="vertical" className="flex-1">
-            <ResizablePanel ref={upperPanelRef} defaultSize={70} minSize={20}>
-              <ResizablePanelGroup direction="horizontal">
+          <ResizablePanelGroup
+            autoSaveId="vertical-panel-group"
+            direction="vertical"
+            className="flex-1"
+          >
+            {shouldRenderUpperPanel ? (
+              <ResizablePanel
+                order={1}
+                id="upper-panel"
+                ref={upperPanelRef}
+                defaultSize={70}
+                minSize={20}
+              >
+                <ResizablePanelGroup
+                  autoSaveId="horizontal-panel-group"
+                  direction="horizontal"
+                >
+                  {isFlowOpen ? (
+                    <ResizablePanel
+                      order={2}
+                      id="flow-panel"
+                      ref={leftPanelRef}
+                      defaultSize={50}
+                      minSize={20}
+                    >
+                      <Flow />
+                    </ResizablePanel>
+                  ) : null}
+
+                  {isCodeEditorOpen ? (
+                    <>
+                      <ResizableHandle
+                        onDoubleClickCapture={resetHorizontalPanelSize}
+                      />
+                      <ResizablePanel
+                        order={3}
+                        id="code-panel"
+                        defaultSize={50}
+                        minSize={20}
+                      >
+                        <CodeEditor />
+                      </ResizablePanel>
+                    </>
+                  ) : null}
+                </ResizablePanelGroup>
+              </ResizablePanel>
+            ) : null}
+
+            {isVisualizationOpen ? (
+              <>
+                <ResizableHandle
+                  onDoubleClickCapture={resetVerticalPanelSize}
+                />
                 <ResizablePanel
-                  ref={leftPanelRef}
-                  defaultSize={50}
+                  order={4}
+                  id="visualization-panel"
+                  defaultSize={30}
                   minSize={20}
                 >
-                  <Flow />
+                  <ChartContainer />
                 </ResizablePanel>
-                {editor.isOpen && (
-                  <>
-                    <ResizableHandle
-                      onDoubleClickCapture={resetHorizontalPanelSize}
-                    />
-                    <ResizablePanel defaultSize={50} minSize={20}>
-                      <CodeEditor />
-                    </ResizablePanel>
-                  </>
-                )}
-              </ResizablePanelGroup>
-            </ResizablePanel>
-            <ResizableHandle onDoubleClickCapture={resetVerticalPanelSize} />
-            <ResizablePanel defaultSize={30} minSize={20}>
-              <ChartContainer />
-            </ResizablePanel>
+              </>
+            ) : null}
           </ResizablePanelGroup>
         </div>
       </div>

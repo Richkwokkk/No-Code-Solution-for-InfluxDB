@@ -1,6 +1,11 @@
 import * as React from "react";
 
-import { Code, CodeXml, Play } from "lucide-react";
+import {
+  ChartNoAxesCombinedIcon,
+  PlayIcon,
+  SquareTerminalIcon,
+  WorkflowIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useStore } from "zustand";
 
@@ -11,13 +16,20 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useEditorToggle } from "@/features/flow/hooks/use-editor-toggle";
+import { useToggle } from "@/features/flow/hooks/use-toggle";
 
 export const Header = () => {
-  const editor = useStore(useEditorToggle, (state) => state);
+  const {
+    isCodeEditorOpen,
+    isFlowOpen,
+    isVisualizationOpen,
+    toggleCodeEditor,
+    toggleFlow,
+    toggleVisualization,
+  } = useStore(useToggle, (state) => state);
 
   return (
-    <header className="z-50 flex w-screen items-center justify-between border bg-background px-6 py-3">
+    <header className="z-50 flex h-10 w-screen items-center justify-between border bg-background px-8 py-6">
       <div className="flex w-full items-center justify-between">
         <Link href="/">
           <h1 className="text-lg font-bold">Visual Flux</h1>
@@ -25,33 +37,63 @@ export const Header = () => {
         <div className="flex space-x-2">
           <TooltipProvider delayDuration={0}>
             <Tooltip>
-              <TooltipTrigger></TooltipTrigger>
+              <TooltipTrigger>
+                <Button
+                  variant="outline"
+                  onClick={() => toggleFlow?.()}
+                  className="h-8 w-8 p-0"
+                >
+                  <WorkflowIcon size={16} />
+                </Button>
+              </TooltipTrigger>
               <TooltipContent align="center">
-                <span className="text-sm font-bold capitalize">
-                  Auto Layout
+                <span className="text-[10px] font-bold capitalize">
+                  {isFlowOpen ? "Close" : "Open"} Flow Panel
                 </span>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger>
-                <Button variant="outline" onClick={() => editor.setIsOpen?.()}>
-                  {editor.isOpen ? <CodeXml size={16} /> : <Code size={16} />}
+                <Button
+                  variant="outline"
+                  onClick={() => toggleVisualization?.()}
+                  className="h-8 w-8 p-0"
+                >
+                  <ChartNoAxesCombinedIcon size={16} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="center">
-                <span className="text-sm font-bold capitalize">
-                  {editor.isOpen ? "Close" : "Open"} Code Editor
+                <span className="text-[10px] font-bold capitalize">
+                  {isVisualizationOpen ? "Close" : "Open"} Visualization Panel
                 </span>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger>
-                <Button variant="default">
-                  <Play size={16} />
+                <Button
+                  variant="outline"
+                  onClick={() => toggleCodeEditor?.()}
+                  className="h-8 w-8 p-0"
+                >
+                  <SquareTerminalIcon size={16} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="center">
-                <span className="text-sm font-bold capitalize">Run Query</span>
+                <span className="text-[10px] font-bold capitalize">
+                  {isCodeEditorOpen ? "Close" : "Open"} Code Editor
+                </span>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button variant="default" className="h-8 w-8 p-0">
+                  <PlayIcon size={16} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent align="center">
+                <span className="text-[10px] font-bold capitalize">
+                  Run Query
+                </span>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
