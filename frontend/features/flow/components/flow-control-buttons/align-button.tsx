@@ -22,6 +22,7 @@ export function AlignButton() {
   );
   return (
     <ControlButton
+      title="Align"
       onClick={() => {
         onLayout("TB");
         setTimeout(fitView);

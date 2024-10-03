@@ -1,19 +1,40 @@
 import { DragOverlay, useDndContext } from "@dnd-kit/core";
+import { defaultDropAnimationSideEffects } from "@dnd-kit/core";
 
 import { NodeType } from "@/features/flow/components/flow-nodes/type";
 import { sidebarNodes } from "@/features/flow/components/sidebar/constants";
 
-export const SidebarDragOverlay = () => {
+export const SidebarDragOverlay = ({
+  isDragComplete,
+}: {
+  isDragComplete: boolean;
+}) => {
   const { active } = useDndContext();
   const type = active?.data.current?.type as NodeType;
   const nodeInfo = sidebarNodes[type];
 
   return (
-    <DragOverlay dropAnimation={null}>
+    <DragOverlay
+      dropAnimation={
+        isDragComplete
+          ? null
+          : {
+              duration: 100,
+              easing: "ease-out",
+              sideEffects: defaultDropAnimationSideEffects({
+                styles: {
+                  active: {
+                    opacity: "1",
+                  },
+                },
+              }),
+            }
+      }
+    >
       {active ? (
         <div
           id="overlay"
-          className="flex w-[172px] cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-md"
+          className="flex h-14 w-[175px] cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-md transition-all duration-300 ease-out"
         >
           <div className="text-editor-node-text flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
             <nodeInfo.icon size={20} />

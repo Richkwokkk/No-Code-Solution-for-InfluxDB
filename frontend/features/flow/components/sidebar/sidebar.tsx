@@ -1,4 +1,5 @@
 import { LucideIcon } from "lucide-react";
+import { useStore } from "zustand";
 
 import {
   TooltipProvider,
@@ -10,7 +11,6 @@ import { sidebarNodes } from "@/features/flow/components/sidebar/constants";
 import { SidebarDraggable } from "@/features/flow/components/sidebar/sidebar-draggable";
 import { SidebarToggle } from "@/features/flow/components/sidebar/sidebar-toggle";
 import { useSidebarToggle } from "@/features/flow/hooks/use-sidebar-toggle";
-import { useStore } from "@/hooks/use-store";
 import { cn } from "@/lib/utils";
 
 export type DraggableNode = {
