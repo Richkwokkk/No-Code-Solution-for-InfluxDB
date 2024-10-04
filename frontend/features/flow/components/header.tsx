@@ -37,7 +37,7 @@ export const Header = () => {
         <div className="flex space-x-2">
           <TooltipProvider delayDuration={0}>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   variant="outline"
                   onClick={() => toggleFlow?.()}
@@ -53,7 +53,7 @@ export const Header = () => {
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   variant="outline"
                   onClick={() => toggleVisualization?.()}
@@ -71,7 +71,7 @@ export const Header = () => {
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   variant="outline"
                   onClick={() => toggleCodeEditor?.()}
@@ -89,7 +89,7 @@ export const Header = () => {
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button variant="default" className="h-8 w-8 p-0">
                   <PlayIcon size={16} />
                 </Button>
