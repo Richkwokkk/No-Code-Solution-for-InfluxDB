@@ -23,6 +23,7 @@ export const BucketNode = ({ id }: NodeProps) => {
       underHandle
       underHandleId="BUCKET"
       onSelectNodeOption={handleSelectBucket}
+      isPreviousNodeValueChanged={false}
     />
   );
 };

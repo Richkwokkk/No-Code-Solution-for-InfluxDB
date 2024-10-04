@@ -31,13 +31,6 @@ export const FieldNode = ({ id }: NodeProps) => {
     [measurementNodeData],
   );
 
-  React.useEffect(() => {
-    updateNodeData(id, {
-      value: undefined,
-      result: { ...previousNodeData, field: undefined },
-    });
-  }, [previousNodeData, id, updateNodeData]);
-
   const { data, error } = useFields(previousNodeData);
 
   if (error) {
@@ -51,6 +44,23 @@ export const FieldNode = ({ id }: NodeProps) => {
     });
   };
 
+  const [isPreviousNodeValueChanged, setIsPreviousNodeValueChanged] =
+    React.useState(false);
+  const previousMeasurementRef = React.useRef(previousNodeData.measurement);
+
+  React.useEffect(() => {
+    if (previousNodeData.measurement !== previousMeasurementRef.current) {
+      previousMeasurementRef.current = previousNodeData.measurement;
+      setIsPreviousNodeValueChanged(true);
+    }
+  }, [previousNodeData]);
+
+  React.useEffect(() => {
+    if (isPreviousNodeValueChanged) {
+      setIsPreviousNodeValueChanged(false);
+    }
+  }, [isPreviousNodeValueChanged]);
+
   return (
     <ComboboxNode
       id={id}
@@ -62,6 +72,7 @@ export const FieldNode = ({ id }: NodeProps) => {
       upHandle
       underHandle
       onSelectNodeOption={handleSelectField}
+      isPreviousNodeValueChanged={isPreviousNodeValueChanged}
     />
   );
 };
