@@ -46,11 +46,11 @@ export const FieldNode = ({ id }: NodeProps) => {
 
   const [isPreviousNodeValueChanged, setIsPreviousNodeValueChanged] =
     React.useState(false);
-  const previousMeasurementRef = React.useRef(previousNodeData.measurement);
+  const previousMeasurementRef = React.useRef(previousNodeData?.measurement);
 
   React.useEffect(() => {
-    if (previousNodeData.measurement !== previousMeasurementRef.current) {
-      previousMeasurementRef.current = previousNodeData.measurement;
+    if (previousNodeData?.measurement !== previousMeasurementRef.current) {
+      previousMeasurementRef.current = previousNodeData?.measurement;
       setIsPreviousNodeValueChanged(true);
     }
   }, [previousNodeData]);
