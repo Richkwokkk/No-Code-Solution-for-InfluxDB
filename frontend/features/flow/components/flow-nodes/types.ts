@@ -12,6 +12,8 @@ export type NodeData = {
     timeStop: string;
     measurement?: string;
     field?: string;
-    valueThreshold?: string;
+    thresholdValue: number | undefined;
+    isThresholdIncluded: boolean | undefined;
+    thresholdType: "max" | "min" | undefined;
   };
 };
