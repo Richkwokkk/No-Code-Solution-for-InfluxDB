@@ -60,7 +60,7 @@ export const Sidebar = () => {
                     side="right"
                     align="start"
                     sideOffset={5}
-                    alignOffset={-5}
+                    alignOffset={-3}
                     className="text-[10px] font-semibold capitalize"
                   >
                     <p className="font-semibold capitalize">{title}</p>

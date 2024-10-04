@@ -21,11 +21,11 @@ export function ResetButton() {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <ControlButton title="Reset">
+      <ControlButton title="Reset">
+        <AlertDialogTrigger asChild>
           <ReloadIcon />
-        </ControlButton>
-      </AlertDialogTrigger>
+        </AlertDialogTrigger>
+      </ControlButton>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
