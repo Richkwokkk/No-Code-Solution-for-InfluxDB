@@ -41,6 +41,9 @@ export function ResetButton() {
               setNodes(initialNodes);
               updateNodeData(initialNodes[0].id, {
                 value: undefined,
+                result: {
+                  bucket: undefined,
+                },
               });
               setTimeout(fitView);
             }}

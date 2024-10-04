@@ -31,6 +31,7 @@ type ComboNodeProps = Pick<
   onSelectNodeOption?: ((_value: string | undefined) => void) | undefined;
   initialValue?: string;
   id: string;
+  isPreviousNodeValueChanged: boolean;
 };
 
 export function ComboboxNode({
@@ -43,17 +44,22 @@ export function ComboboxNode({
   underHandleId,
   upHandleId,
   onSelectNodeOption,
+  isPreviousNodeValueChanged,
 }: ComboNodeProps) {
   const [open, setOpen] = React.useState(false);
   const { updateNodeData } = useReactFlow();
   const nodeData = useNodesData(id);
   const value = nodeData?.data?.value as string | undefined;
+  const result = nodeData?.data?.result as Record<string, any> | undefined;
 
   React.useEffect(() => {
-    if (!selections) {
-      updateNodeData(id, { bucket: "" });
+    if (isPreviousNodeValueChanged && result?.[type] !== undefined) {
+      updateNodeData(id, {
+        value: undefined,
+        result: { ...result, [type]: undefined },
+      });
     }
-  }, [id, selections, updateNodeData]);
+  }, [id, isPreviousNodeValueChanged, result, type, updateNodeData]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
