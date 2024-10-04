@@ -31,6 +31,7 @@ type ComboNodeProps = Pick<
   onSelectNodeOption?: ((_value: string | undefined) => void) | undefined;
   initialValue?: string;
   id: string;
+  isPreviousNodeValueChanged: boolean;
 };
 
 export function ComboboxNode({
@@ -43,17 +44,22 @@ export function ComboboxNode({
   underHandleId,
   upHandleId,
   onSelectNodeOption,
+  isPreviousNodeValueChanged,
 }: ComboNodeProps) {
   const [open, setOpen] = React.useState(false);
   const { updateNodeData } = useReactFlow();
   const nodeData = useNodesData(id);
   const value = nodeData?.data?.value as string | undefined;
+  const result = nodeData?.data?.result as Record<string, any> | undefined;
 
   React.useEffect(() => {
-    if (!selections) {
-      updateNodeData(id, { bucket: "" });
+    if (isPreviousNodeValueChanged && result?.[type] !== undefined) {
+      updateNodeData(id, {
+        value: undefined,
+        result: { ...result, [type]: undefined },
+      });
     }
-  }, [id, selections, updateNodeData]);
+  }, [id, isPreviousNodeValueChanged, result, type, updateNodeData]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -71,36 +77,43 @@ export function ComboboxNode({
       </PopoverTrigger>
       <PopoverContent align="center" className="w-[200px] p-0">
         <Command>
-          <CommandInput
-            placeholder={`Search ${type.charAt(0).toUpperCase() + type.slice(1)}...`}
-          />
+          {selections && selections.length > 0 && (
+            <CommandInput
+              placeholder={`Search ${type.charAt(0).toUpperCase() + type.slice(1)}...`}
+              className="text-[10px] font-bold"
+            />
+          )}
           <CommandList>
-            <CommandEmpty>No {type} found.</CommandEmpty>
-            <CommandGroup>
-              {selections?.map((selection) => (
-                <CommandItem
-                  key={selection}
-                  value={selection}
-                  onSelect={(currentValue) => {
-                    updateNodeData(id, {
-                      value: currentValue === value ? "" : currentValue,
-                    });
-                    onSelectNodeOption?.(
-                      currentValue === value ? undefined : currentValue,
-                    );
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === selection ? "opacity-100" : "opacity-0",
-                    )}
-                  />
-                  {selection}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            <CommandEmpty className="flex items-center justify-center p-3 text-xs font-bold">
+              No {type} found.
+            </CommandEmpty>
+            {selections && selections.length > 0 && (
+              <CommandGroup>
+                {selections.map((selection) => (
+                  <CommandItem
+                    key={selection}
+                    value={selection}
+                    onSelect={(currentValue) => {
+                      updateNodeData(id, {
+                        value: currentValue === value ? "" : currentValue,
+                      });
+                      onSelectNodeOption?.(
+                        currentValue === value ? undefined : currentValue,
+                      );
+                      setOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === selection ? "opacity-100" : "opacity-0",
+                      )}
+                    />
+                    <span className="text-xs font-bold">{selection}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

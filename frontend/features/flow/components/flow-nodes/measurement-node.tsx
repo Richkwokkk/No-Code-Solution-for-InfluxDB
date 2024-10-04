@@ -14,7 +14,7 @@ import {
   NodeData,
   NodeProps,
   NodeType,
-} from "@/features/flow/components/flow-nodes/type";
+} from "@/features/flow/components/flow-nodes/types";
 import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
 import { useMeasurements } from "@/features/flow/hooks/use-measurements";
 
@@ -27,16 +27,9 @@ export const MeasurementNode = ({ id }: NodeProps) => {
   const dateRangeNodeData = useNodesData(dateRangeConnections?.[0]?.source);
 
   const previousNodeData = React.useMemo(
-    () => (dateRangeNodeData?.data.result as NodeData["result"]) || {},
+    () => (dateRangeNodeData?.data.result as NodeData["result"]) || null,
     [dateRangeNodeData],
   );
-
-  React.useEffect(() => {
-    updateNodeData(id, {
-      value: undefined,
-      result: { ...previousNodeData, measurement: undefined },
-    });
-  }, [previousNodeData, id, updateNodeData]);
 
   const { data, error } = useMeasurements(previousNodeData);
 
@@ -47,9 +40,26 @@ export const MeasurementNode = ({ id }: NodeProps) => {
   const handleSelectMeasurement = (measurement: string | undefined) => {
     updateNodeData(id, {
       value: measurement,
-      result: { ...previousNodeData, measurement },
+      result: { ...previousNodeData, measurement, field: undefined },
     });
   };
+
+  const [isPreviousNodeValueChanged, setIsPreviousNodeValueChanged] =
+    React.useState(false);
+  const previousBucketRef = React.useRef(previousNodeData?.bucket);
+
+  React.useEffect(() => {
+    if (previousNodeData?.bucket !== previousBucketRef.current) {
+      previousBucketRef.current = previousNodeData?.bucket;
+      setIsPreviousNodeValueChanged(true);
+    }
+  }, [previousNodeData]);
+
+  React.useEffect(() => {
+    if (isPreviousNodeValueChanged) {
+      setIsPreviousNodeValueChanged(false);
+    }
+  }, [isPreviousNodeValueChanged]);
 
   return (
     <ComboboxNode
@@ -62,6 +72,7 @@ export const MeasurementNode = ({ id }: NodeProps) => {
       upHandle
       underHandle
       onSelectNodeOption={handleSelectMeasurement}
+      isPreviousNodeValueChanged={isPreviousNodeValueChanged}
     />
   );
 };

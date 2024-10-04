@@ -37,62 +37,66 @@ export const Header = () => {
         <div className="flex space-x-2">
           <TooltipProvider delayDuration={0}>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   variant="outline"
                   onClick={() => toggleFlow?.()}
-                  className="h-8 w-8 p-0"
+                  className={`h-8 w-8 p-0 ${isFlowOpen && "bg-accent text-accent-foreground"}`}
                 >
                   <WorkflowIcon size={16} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="center">
                 <span className="text-[10px] font-bold capitalize">
-                  {isFlowOpen ? "Close" : "Open"} Flow Panel
+                  {isFlowOpen ? "hide" : "show"} flow panel
                 </span>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   variant="outline"
                   onClick={() => toggleVisualization?.()}
-                  className="h-8 w-8 p-0"
+                  className={`h-8 w-8 p-0 ${
+                    isVisualizationOpen && "bg-accent text-accent-foreground"
+                  }`}
                 >
                   <ChartNoAxesCombinedIcon size={16} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="center">
                 <span className="text-[10px] font-bold capitalize">
-                  {isVisualizationOpen ? "Close" : "Open"} Visualization Panel
+                  {isVisualizationOpen ? "hide" : "show"} visualization panel
                 </span>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   variant="outline"
                   onClick={() => toggleCodeEditor?.()}
-                  className="h-8 w-8 p-0"
+                  className={`h-8 w-8 p-0 ${
+                    isCodeEditorOpen && "bg-accent text-accent-foreground"
+                  }`}
                 >
                   <SquareTerminalIcon size={16} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="center">
                 <span className="text-[10px] font-bold capitalize">
-                  {isCodeEditorOpen ? "Close" : "Open"} Code Editor
+                  {isCodeEditorOpen ? "hide" : "show"} code editor
                 </span>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button variant="default" className="h-8 w-8 p-0">
                   <PlayIcon size={16} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="center">
                 <span className="text-[10px] font-bold capitalize">
-                  Run Query
+                  run query
                 </span>
               </TooltipContent>
             </Tooltip>
