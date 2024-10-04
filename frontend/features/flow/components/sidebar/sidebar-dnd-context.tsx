@@ -4,8 +4,9 @@ import { DndContext as DndKitContext, DragEndEvent } from "@dnd-kit/core";
 import { useReactFlow } from "@xyflow/react";
 
 import short from "short-uuid";
+import { toast } from "sonner";
 
-import { NodeType } from "@/features/flow/components/flow-nodes/type";
+import { NodeType } from "@/features/flow/components/flow-nodes/types";
 import { sidebarNodes } from "@/features/flow/components/sidebar/constants";
 import { SidebarDragOverlay } from "@/features/flow/components/sidebar/sidebar-drag-overlay";
 
@@ -45,6 +46,9 @@ export const SidebarDndContext = ({ children }: DndContextProps) => {
           clientRect.bottom >= flowRect.bottom
         ) {
           // Drop is inside the flow, do not add the node
+          toast.info("Node out of bounds", {
+            description: "Please try dragging it fully into the flow panel",
+          });
           return;
         }
       }
@@ -58,6 +62,7 @@ export const SidebarDndContext = ({ children }: DndContextProps) => {
 
       setNodes((nds) => nds.concat(newNode));
       setIsDragComplete(true);
+      toast.success("Node added successfully");
     },
     [screenToFlowPosition, setNodes],
   );

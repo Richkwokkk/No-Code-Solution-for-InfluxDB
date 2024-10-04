@@ -1,7 +1,7 @@
 import { DragOverlay, useDndContext } from "@dnd-kit/core";
 import { defaultDropAnimationSideEffects } from "@dnd-kit/core";
 
-import { NodeType } from "@/features/flow/components/flow-nodes/type";
+import { NodeType } from "@/features/flow/components/flow-nodes/types";
 import { sidebarNodes } from "@/features/flow/components/sidebar/constants";
 
 export const SidebarDragOverlay = ({

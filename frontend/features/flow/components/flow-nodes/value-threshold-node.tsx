@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { useNodesData, useReactFlow } from "@xyflow/react";
+
 import { Hash } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -10,94 +12,68 @@ import {
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { BaseNode } from "@/features/flow/components/flow-nodes/base-node";
+import {
+  NodeData,
+  NodeProps,
+} from "@/features/flow/components/flow-nodes/types";
 import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
 
-interface ValueThresholdState {
-  minValue: string;
-  maxValue: string;
-  isMinIncluded: boolean;
-  isMaxIncluded: boolean;
-}
-
-export const ValueThresholdNode = () => {
+export const ValueThresholdNode = ({ id }: NodeProps) => {
   const [open, setOpen] = React.useState(false);
-  const [state, setState] = React.useState<ValueThresholdState>({
-    minValue: "",
-    maxValue: "",
-    isMinIncluded: false,
-    isMaxIncluded: false,
-  });
-  const [error, setError] = React.useState("");
-
-  const validateRange = React.useCallback(
-    (currentState: ValueThresholdState): string => {
-      const { minValue, maxValue, isMinIncluded, isMaxIncluded } = currentState;
-      const minNum = parseFloat(minValue);
-      const maxNum = parseFloat(maxValue);
-
-      if (isNaN(minNum) || isNaN(maxNum)) {
-        return "";
-      }
-
-      const areBothIncluded = isMaxIncluded && isMinIncluded;
-      const invalidWhenBothIncluded = areBothIncluded && minNum > maxNum;
-      const invalidWhenEitherExcluded = !areBothIncluded && minNum >= maxNum;
-
-      if (invalidWhenBothIncluded) {
-        return "Min value must be ≤ max value when both are included";
-      }
-      if (invalidWhenEitherExcluded) {
-        return "Min value must be < max value if either is excluded";
-      }
-      return "";
-    },
-    [],
-  );
+  const nodeData = useNodesData(id)?.data as NodeData;
+  const { updateNodeData } = useReactFlow();
 
   React.useEffect(() => {
-    const newError = validateRange(state);
-    setError(newError);
-  }, [state, validateRange]);
+    if (!nodeData) return;
 
-  const handleStateChange = (updates: Partial<ValueThresholdState>) => {
-    setState((prevState) => ({ ...prevState, ...updates }));
-  };
+    let value = "Pick a threshold";
+    const {
+      thresholdValue,
+      thresholdType: type,
+      isThresholdIncluded: isIncluded,
+    } = nodeData?.result || {};
+    const thresholdType = type === undefined ? "min" : type;
+    const isThresholdIncluded = isIncluded === undefined ? false : isIncluded;
 
-  const handlePopoverClose = () => {
-    if (error) {
-      setState({
-        minValue: "",
-        maxValue: "",
-        isMinIncluded: false,
-        isMaxIncluded: false,
+    if (thresholdValue !== undefined) {
+      value =
+        thresholdType === "max"
+          ? `value ${isThresholdIncluded ? "≤" : "<"} ${thresholdValue}`
+          : `value ${isThresholdIncluded ? "≥" : ">"} ${thresholdValue}`;
+    }
+
+    if (nodeData?.value !== value) {
+      updateNodeData(id, {
+        value,
+        result: {
+          ...nodeData.result,
+          thresholdValue,
+          thresholdType,
+          isThresholdIncluded,
+        },
       });
-      setError("");
     }
+  }, [id, nodeData, updateNodeData]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseFloat(e.target.value) || undefined;
+    updateNodeData(id, {
+      result: {
+        ...nodeData.result,
+        thresholdValue: newValue,
+      },
+    });
   };
 
-  const displayValue = () => {
-    const { minValue, maxValue, isMinIncluded, isMaxIncluded } = state;
-
-    if (!minValue && !maxValue) {
-      return "Pick a threshold";
-    }
-
-    if (error) {
-      return "Pick a valid threshold";
-    }
-
-    const minSymbol = isMinIncluded ? "≤" : "<";
-    const maxSymbol = isMaxIncluded ? "≤" : "<";
-
-    if (minValue && maxValue) {
-      return `${minValue} ${minSymbol} value ${maxSymbol} ${maxValue}`;
-    } else if (minValue) {
-      return `${minValue} ${minSymbol} value`;
-    } else if (maxValue) {
-      return `value ${maxSymbol} ${maxValue}`;
-    }
-
-    return "";
+  const handleSwitchChange = (checked: boolean, type: "type" | "included") => {
+    updateNodeData(id, {
+      result: {
+        ...nodeData.result,
+        ...(type === "type"
+          ? { thresholdType: checked ? "max" : "min" }
+          : { isThresholdIncluded: checked }),
+      },
+    });
   };
 
   return (
@@ -105,13 +81,12 @@ export const ValueThresholdNode = () => {
       open={open}
       onOpenChange={(isOpen) => {
         setOpen(isOpen);
-        if (!isOpen) handlePopoverClose();
       }}
     >
       <PopoverTrigger className="focus:outline-none" asChild>
         <div>
           <BaseNode
-            value={displayValue()}
+            value={nodeData?.value ?? "Pick a threshold"}
             title={NODE_TITLES.VALUE_THRESHOLD}
             icon={Hash}
             ariaExpanded={open}
@@ -120,61 +95,60 @@ export const ValueThresholdNode = () => {
           />
         </div>
       </PopoverTrigger>
-      <PopoverContent align="center" className="w-[230px] p-0">
+      <PopoverContent align="center" className="w-[180px] p-0">
         <div className="space-y-3 p-4">
-          <div className="flex space-x-4">
+          <div className="flex w-full items-center justify-between">
+            <label
+              htmlFor="threshold-"
+              className="text-xs font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              threshold
+            </label>
             <Input
               type="number"
-              placeholder="Min"
-              value={state.minValue}
-              onChange={(e) => handleStateChange({ minValue: e.target.value })}
-              className="w-3/5"
+              value={nodeData?.result?.thresholdValue ?? ""}
+              onChange={handleInputChange}
+              className="w-[70px] text-xs font-bold"
             />
-            <div className="flex w-full items-center justify-between space-x-1">
+          </div>
+          <div className="flex w-full items-center justify-between">
+            <label
+              htmlFor="threshold-"
+              className="text-xs font-bold capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {nodeData?.result?.thresholdType === "max"
+                ? "maximum"
+                : "minimum"}
+            </label>
+            <div className="flex w-[70px] items-center justify-start">
               <Switch
-                id="min-included"
-                checked={state.isMinIncluded}
-                onCheckedChange={(checked: boolean) =>
-                  handleStateChange({ isMinIncluded: checked })
+                id="threshold-type"
+                checked={nodeData?.result?.thresholdType === "max"}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange(checked, "type")
                 }
                 aria-readonly
               />
-              <label
-                htmlFor="min-included"
-                className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {state.isMinIncluded ? "Included" : "Excluded"}
-              </label>
             </div>
           </div>
-          <div className="flex space-x-4">
-            <Input
-              type="number"
-              placeholder="Max"
-              value={state.maxValue}
-              onChange={(e) => handleStateChange({ maxValue: e.target.value })}
-              className="w-3/5"
-            />
-            <div className="flex w-full items-center justify-between space-x-1">
+          <div className="flex w-full items-center justify-between">
+            <label
+              htmlFor="threshold-"
+              className="text-xs font-bold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {nodeData?.result?.isThresholdIncluded ? "Included" : "Excluded"}
+            </label>
+            <div className="flex w-[70px] items-center justify-start">
               <Switch
-                id="max-included"
-                checked={state.isMaxIncluded}
-                onCheckedChange={(checked: boolean) =>
-                  handleStateChange({ isMaxIncluded: checked })
+                id="threshold-included"
+                checked={nodeData?.result?.isThresholdIncluded ?? false}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange(checked, "included")
                 }
                 aria-readonly
               />
-              <label
-                htmlFor="max-included"
-                className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {state.isMaxIncluded ? "Included" : "Excluded"}
-              </label>
             </div>
           </div>
-          {error && (
-            <p className="mt-1 text-xs font-medium text-destructive">{error}</p>
-          )}
         </div>
       </PopoverContent>
     </Popover>

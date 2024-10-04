@@ -24,7 +24,7 @@ import {
   NodeProps,
   NodeType,
   NodeData,
-} from "@/features/flow/components/flow-nodes/type";
+} from "@/features/flow/components/flow-nodes/types";
 import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
 
 export function DateRangeNode({ id }: NodeProps) {

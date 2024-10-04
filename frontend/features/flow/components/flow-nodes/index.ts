@@ -5,4 +5,4 @@ export * from "./field-node";
 export * from "./measurement-node";
 export * from "./value-threshold-node";
 
-export * from "./type";
+export * from "./types";

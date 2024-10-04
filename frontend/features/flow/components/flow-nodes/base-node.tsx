@@ -3,7 +3,7 @@ import { Handle, Position } from "@xyflow/react";
 import { LucideIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { NodeType } from "@/features/flow/components/flow-nodes/type";
+import { NodeType } from "@/features/flow/components/flow-nodes/types";
 
 export interface BaseNodeProps {
   value: string;
@@ -32,7 +32,7 @@ export function BaseNode({
       asChild
       variant="outline"
       aria-expanded={ariaExpanded}
-      className="min-w-40 rounded-lg border px-2 py-7 shadow-sm transition-colors hover:cursor-grab hover:bg-primary-foreground active:cursor-grabbing"
+      className="h-14 min-w-[175px] rounded-lg border px-2 py-7 shadow-sm transition-colors hover:cursor-grab hover:bg-primary-foreground active:cursor-grabbing"
     >
       <div className="relative flex items-center justify-between p-2">
         {upHandle ? (

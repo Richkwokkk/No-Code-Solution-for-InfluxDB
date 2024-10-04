@@ -3,7 +3,7 @@ import { useReactFlow } from "@xyflow/react";
 import { Cylinder } from "lucide-react";
 
 import { ComboboxNode } from "@/features/flow/components/flow-nodes/combobox-node";
-import { NodeProps } from "@/features/flow/components/flow-nodes/type";
+import { NodeProps } from "@/features/flow/components/flow-nodes/types";
 import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
 import { useBuckets } from "@/features/flow/hooks/use-buckets";
 

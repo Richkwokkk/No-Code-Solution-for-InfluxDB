@@ -14,7 +14,7 @@ import {
   NodeData,
   NodeProps,
   NodeType,
-} from "@/features/flow/components/flow-nodes/type";
+} from "@/features/flow/components/flow-nodes/types";
 import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
 import { useFields } from "@/features/flow/hooks/use-fields";
 
