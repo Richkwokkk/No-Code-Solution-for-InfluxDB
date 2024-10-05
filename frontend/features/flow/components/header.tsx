@@ -26,7 +26,7 @@ export const Header = () => {
     toggleCodeEditor,
     toggleFlow,
     toggleVisualization,
-  } = useStore(useToggle, (state) => state);
+  } = useStore(useToggle);
 
   return (
     <header className="z-50 flex h-10 w-screen items-center justify-between border bg-background px-8 py-6">

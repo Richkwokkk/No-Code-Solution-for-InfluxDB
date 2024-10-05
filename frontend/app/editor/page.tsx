@@ -22,8 +22,13 @@ import { useToggle } from "@/features/flow/hooks/use-toggle";
 export default function EditorPage() {
   const { isCodeEditorOpen, isFlowOpen, isVisualizationOpen } = useStore(
     useToggle,
-    (state) => state,
+    (state) => ({
+      isCodeEditorOpen: state.isCodeEditorOpen,
+      isFlowOpen: state.isFlowOpen,
+      isVisualizationOpen: state.isVisualizationOpen,
+    }),
   );
+
   const shouldRenderUpperPanel = isFlowOpen || isCodeEditorOpen;
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const upperPanelRef = useRef<ImperativePanelHandle>(null);
