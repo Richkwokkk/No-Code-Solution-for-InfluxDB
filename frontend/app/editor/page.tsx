@@ -64,7 +64,7 @@ export default function EditorPage() {
               direction="vertical"
               className="flex-1"
             >
-              {shouldRenderUpperPanel ? (
+              {shouldRenderUpperPanel && (
                 <ResizablePanel
                   order={1}
                   id="upper-panel"
@@ -76,7 +76,7 @@ export default function EditorPage() {
                     autoSaveId="horizontal-panel-group"
                     direction="horizontal"
                   >
-                    {isFlowOpen ? (
+                    {isFlowOpen && (
                       <ResizablePanel
                         order={2}
                         id="flow-panel"
@@ -86,42 +86,44 @@ export default function EditorPage() {
                       >
                         <Flow />
                       </ResizablePanel>
-                    ) : null}
+                    )}
 
-                    {isCodeEditorOpen ? (
-                      <>
-                        <ResizableHandle
-                          onDoubleClickCapture={resetHorizontalPanelSize}
-                        />
-                        <ResizablePanel
-                          order={3}
-                          id="code-panel"
-                          defaultSize={50}
-                          minSize={10}
-                        >
-                          <CodeEditor />
-                        </ResizablePanel>
-                      </>
-                    ) : null}
+                    {isFlowOpen && isCodeEditorOpen && (
+                      <ResizableHandle
+                        onDoubleClickCapture={resetHorizontalPanelSize}
+                      />
+                    )}
+
+                    {isCodeEditorOpen && (
+                      <ResizablePanel
+                        order={3}
+                        id="code-panel"
+                        defaultSize={50}
+                        minSize={10}
+                      >
+                        <CodeEditor />
+                      </ResizablePanel>
+                    )}
                   </ResizablePanelGroup>
                 </ResizablePanel>
-              ) : null}
+              )}
 
-              {isVisualizationOpen ? (
-                <>
-                  <ResizableHandle
-                    onDoubleClickCapture={resetVerticalPanelSize}
-                  />
-                  <ResizablePanel
-                    order={4}
-                    id="visualization-panel"
-                    defaultSize={30}
-                    minSize={10}
-                  >
-                    <ChartContainer />
-                  </ResizablePanel>
-                </>
-              ) : null}
+              {shouldRenderUpperPanel && isVisualizationOpen && (
+                <ResizableHandle
+                  onDoubleClickCapture={resetVerticalPanelSize}
+                />
+              )}
+
+              {isVisualizationOpen && (
+                <ResizablePanel
+                  order={4}
+                  id="visualization-panel"
+                  defaultSize={30}
+                  minSize={10}
+                >
+                  <ChartContainer />
+                </ResizablePanel>
+              )}
             </ResizablePanelGroup>
           )}
         </div>
