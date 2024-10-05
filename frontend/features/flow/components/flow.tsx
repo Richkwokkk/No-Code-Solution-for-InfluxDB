@@ -156,7 +156,7 @@ export function Flow() {
         maxZoom={1}
         proOptions={{ hideAttribution: true }}
       >
-        <Controls>
+        <Controls position="bottom-right" orientation="vertical">
           <AlignButton />
           <ResetButton />
         </Controls>

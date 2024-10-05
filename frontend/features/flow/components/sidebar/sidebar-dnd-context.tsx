@@ -33,24 +33,27 @@ export const SidebarDndContext = ({ children }: DndContextProps) => {
         y: clientRect.top,
       });
 
-      // Get the sidebar element and its boundaries
       const flow = document.querySelector(".flow");
-      if (flow) {
-        const flowRect = flow.getBoundingClientRect();
+      const flowRect = flow?.getBoundingClientRect();
 
-        // Check if the drop position is within the flow
-        if (
-          clientRect.left <= flowRect.left ||
-          clientRect.right >= flowRect.right ||
-          clientRect.top <= flowRect.top ||
-          clientRect.bottom >= flowRect.bottom
-        ) {
-          // Drop is inside the flow, do not add the node
-          toast.info("Node out of bounds", {
-            description: "Please try dragging it fully into the flow panel",
-          });
-          return;
-        }
+      if (!flowRect) {
+        toast.info("Flow panel not found", {
+          description:
+            "Please open the flow panel using the first button in the top right corner",
+        });
+        return;
+      }
+
+      if (
+        clientRect.left <= flowRect.left ||
+        clientRect.right >= flowRect.right ||
+        clientRect.top <= flowRect.top ||
+        clientRect.bottom >= flowRect.bottom
+      ) {
+        toast.info("Node out of bounds", {
+          description: "Please try dragging it fully into the flow panel",
+        });
+        return;
       }
 
       const newNode = {
