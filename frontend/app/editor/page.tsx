@@ -52,7 +52,7 @@ export default function EditorPage() {
 
   return (
     <SidebarDndContext>
-      <div className="flex h-screen w-screen flex-col">
+      <section className="flex h-screen w-screen flex-col">
         <Header />
         <div className="flex h-full w-full">
           <Sidebar />
@@ -132,7 +132,7 @@ export default function EditorPage() {
             </ResizablePanelGroup>
           )}
         </div>
-      </div>
+      </section>
     </SidebarDndContext>
   );
 }
