@@ -7,6 +7,7 @@ import {
 } from "@xyflow/react";
 
 import { RectangleEllipsis } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { ComboboxNode } from "@/features/flow/components/flow-nodes/combobox-node";
@@ -20,6 +21,9 @@ import { useFields } from "@/features/flow/hooks/use-fields";
 
 export const FieldNode = ({ id }: NodeProps) => {
   const { updateNodeData } = useReactFlow();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const measurementConnections = useHandleConnections({
     type: "target",
     id: "MEASUREMENT" as NodeType,
@@ -34,7 +38,11 @@ export const FieldNode = ({ id }: NodeProps) => {
   const { data, error } = useFields(previousNodeData);
 
   if (error) {
-    toast.error(error?.message);
+    localStorage.removeItem("vf-token");
+    if (pathname !== "/login") {
+      router.push("/login");
+      toast.error("Session expired. Please login again.");
+    }
   }
 
   const handleSelectField = (field: string | undefined) => {
@@ -49,17 +57,16 @@ export const FieldNode = ({ id }: NodeProps) => {
   const previousMeasurementRef = React.useRef(previousNodeData?.measurement);
 
   React.useEffect(() => {
-    if (previousNodeData?.measurement !== previousMeasurementRef.current) {
+    if (
+      !isPreviousNodeValueChanged &&
+      previousNodeData?.measurement !== previousMeasurementRef.current
+    ) {
       previousMeasurementRef.current = previousNodeData?.measurement;
       setIsPreviousNodeValueChanged(true);
-    }
-  }, [previousNodeData]);
-
-  React.useEffect(() => {
-    if (isPreviousNodeValueChanged) {
+    } else {
       setIsPreviousNodeValueChanged(false);
     }
-  }, [isPreviousNodeValueChanged]);
+  }, [isPreviousNodeValueChanged, previousNodeData]);
 
   return (
     <ComboboxNode
