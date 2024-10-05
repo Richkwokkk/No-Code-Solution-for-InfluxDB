@@ -42,7 +42,7 @@ export function DateRangeNode({ id }: NodeProps) {
   const parseDateRange = (value: string): DateRange | undefined => {
     const [fromStr, toStr] = value.split(" - ");
     const from = new Date(fromStr);
-    const to = new Date(toStr);
+    const to = toStr ? new Date(toStr) : undefined;
     return { from, to };
   };
 
@@ -68,20 +68,11 @@ export function DateRangeNode({ id }: NodeProps) {
         result: {
           ...bucketData?.result,
           timeStart: format(date.from, "yyyy-MM-dd'T'HH'%3A'mm'%3A'ss'Z'"),
-          timeStop: undefined,
+          timeStop: date.to
+            ? format(date.to, "yyyy-MM-dd'T'HH'%3A'mm'%3A'ss'Z'")
+            : undefined,
         },
       });
-
-      if (date?.to) {
-        updateNodeData(id, {
-          value: formattedDate,
-          result: {
-            ...bucketData?.result,
-            timeStart: format(date.from, "yyyy-MM-dd'T'HH'%3A'mm'%3A'ss'Z'"),
-            timeStop: format(date.to, "yyyy-MM-dd'T'HH'%3A'mm'%3A'ss'Z'"),
-          },
-        });
-      }
     } else {
       updateNodeData(id, {
         value: "Pick a date range",
@@ -115,7 +106,7 @@ export function DateRangeNode({ id }: NodeProps) {
             date.to ? (
               <>
                 {format(date.from, "LLL dd, y")} -{" "}
-                {format(date.to, "LLL dd, y")}
+                {date.to ? format(date.to, "LLL dd, y") : ""}
               </>
             ) : (
               format(date.from, "LLL dd, y")

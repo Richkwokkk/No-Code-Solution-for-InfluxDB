@@ -6,11 +6,11 @@ import { useTheme } from "next-themes";
 
 import {
   CODE_EDITOR_FONT_FAMILY,
-  DEFAULT_CODE_VALUE,
   DARK_THEME,
   LIGHT_THEME,
   READ_ONLY_MESSAGE,
 } from "@/features/code/constants";
+import { useFluxCode } from "@/features/code/hooks/use-flux-code";
 import { useIsDarkMode } from "@/hooks/use-is-dark-mode";
 import { firaCode } from "@/lib/fonts";
 import { setupEditor } from "@/lib/monaco";
@@ -33,6 +33,8 @@ export const CodeEditor = () => {
     [isDark],
   );
 
+  const code = useFluxCode();
+
   return (
     <Editor
       beforeMount={beforeMount}
@@ -44,7 +46,7 @@ export const CodeEditor = () => {
       }
       height="100%"
       defaultLanguage="flux"
-      value={DEFAULT_CODE_VALUE}
+      value={code}
       options={{
         wordWrap: "on",
         readOnly: true,

@@ -90,13 +90,15 @@ export function Flow() {
       const sourceType = sourceNode?.type as NodeType;
       const targetType = targetNode?.type as NodeType;
 
-      if (!sourceNode || !targetNode) return false;
-
       if (
+        !sourceNode ||
+        !targetNode ||
         (sourceType === "DATE_RANGE" && targetType === "DATE_RANGE") ||
         (sourceType === "VALUE_THRESHOLD" && targetType === "VALUE_THRESHOLD")
-      )
+      ) {
+        throttleToastWarning();
         return false;
+      }
 
       if (sourceType === "BUCKET" && targetType === "DATE_RANGE") return true;
       if (sourceType === "DATE_RANGE" && targetType === "MEASUREMENT")
@@ -104,9 +106,6 @@ export function Flow() {
       if (sourceType === "MEASUREMENT" && targetType === "FIELD") return true;
       if (sourceType === "FIELD" && targetType === "VALUE_THRESHOLD")
         return true;
-
-      throttleToastWarning();
-      return false;
     },
     [nodes, throttleToastWarning],
   );
@@ -152,7 +151,9 @@ export function Flow() {
         onInit={setRfInstance}
         onMoveEnd={saveRfInstance}
         connectionLineType={ConnectionLineType.Bezier}
-        isValidConnection={isValidConnection}
+        isValidConnection={(connection) =>
+          isValidConnection(connection) ?? false
+        }
         maxZoom={1}
         proOptions={{ hideAttribution: true }}
       >
