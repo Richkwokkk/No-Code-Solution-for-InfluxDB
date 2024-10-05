@@ -22,8 +22,13 @@ import { useToggle } from "@/features/flow/hooks/use-toggle";
 export default function EditorPage() {
   const { isCodeEditorOpen, isFlowOpen, isVisualizationOpen } = useStore(
     useToggle,
-    (state) => state,
+    (state) => ({
+      isCodeEditorOpen: state.isCodeEditorOpen,
+      isFlowOpen: state.isFlowOpen,
+      isVisualizationOpen: state.isVisualizationOpen,
+    }),
   );
+
   const shouldRenderUpperPanel = isFlowOpen || isCodeEditorOpen;
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const upperPanelRef = useRef<ImperativePanelHandle>(null);
@@ -47,7 +52,7 @@ export default function EditorPage() {
 
   return (
     <SidebarDndContext>
-      <div className="flex h-screen w-screen flex-col">
+      <section className="flex h-screen w-screen flex-col">
         <Header />
         <div className="flex h-full w-full">
           <Sidebar />
@@ -64,7 +69,7 @@ export default function EditorPage() {
               direction="vertical"
               className="flex-1"
             >
-              {shouldRenderUpperPanel ? (
+              {shouldRenderUpperPanel && (
                 <ResizablePanel
                   order={1}
                   id="upper-panel"
@@ -76,7 +81,7 @@ export default function EditorPage() {
                     autoSaveId="horizontal-panel-group"
                     direction="horizontal"
                   >
-                    {isFlowOpen ? (
+                    {isFlowOpen && (
                       <ResizablePanel
                         order={2}
                         id="flow-panel"
@@ -86,46 +91,48 @@ export default function EditorPage() {
                       >
                         <Flow />
                       </ResizablePanel>
-                    ) : null}
+                    )}
 
-                    {isCodeEditorOpen ? (
-                      <>
-                        <ResizableHandle
-                          onDoubleClickCapture={resetHorizontalPanelSize}
-                        />
-                        <ResizablePanel
-                          order={3}
-                          id="code-panel"
-                          defaultSize={50}
-                          minSize={10}
-                        >
-                          <CodeEditor />
-                        </ResizablePanel>
-                      </>
-                    ) : null}
+                    {isFlowOpen && isCodeEditorOpen && (
+                      <ResizableHandle
+                        onDoubleClickCapture={resetHorizontalPanelSize}
+                      />
+                    )}
+
+                    {isCodeEditorOpen && (
+                      <ResizablePanel
+                        order={3}
+                        id="code-panel"
+                        defaultSize={50}
+                        minSize={10}
+                      >
+                        <CodeEditor />
+                      </ResizablePanel>
+                    )}
                   </ResizablePanelGroup>
                 </ResizablePanel>
-              ) : null}
+              )}
 
-              {isVisualizationOpen ? (
-                <>
-                  <ResizableHandle
-                    onDoubleClickCapture={resetVerticalPanelSize}
-                  />
-                  <ResizablePanel
-                    order={4}
-                    id="visualization-panel"
-                    defaultSize={30}
-                    minSize={10}
-                  >
-                    <ChartContainer />
-                  </ResizablePanel>
-                </>
-              ) : null}
+              {shouldRenderUpperPanel && isVisualizationOpen && (
+                <ResizableHandle
+                  onDoubleClickCapture={resetVerticalPanelSize}
+                />
+              )}
+
+              {isVisualizationOpen && (
+                <ResizablePanel
+                  order={4}
+                  id="visualization-panel"
+                  defaultSize={30}
+                  minSize={10}
+                >
+                  <ChartContainer />
+                </ResizablePanel>
+              )}
             </ResizablePanelGroup>
           )}
         </div>
-      </div>
+      </section>
     </SidebarDndContext>
   );
 }

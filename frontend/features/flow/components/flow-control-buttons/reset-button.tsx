@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { ControlButton, useReactFlow } from "@xyflow/react";
+import { useReactFlow } from "@xyflow/react";
 
 import {
   AlertDialog,
@@ -14,18 +14,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ControlButton } from "@/features/flow/components/flow-control-buttons/control-button";
 import { initialNodes } from "@/features/flow/constants";
 
 export function ResetButton() {
+  const ref = React.useRef<HTMLButtonElement>(null);
   const { fitView, setNodes, updateNodeData } = useReactFlow();
 
   return (
     <AlertDialog>
-      <ControlButton title="Reset">
-        <AlertDialogTrigger asChild>
+      <AlertDialogTrigger asChild>
+        <ControlButton ref={ref} title="Reset">
           <ReloadIcon />
-        </AlertDialogTrigger>
-      </ControlButton>
+        </ControlButton>
+      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

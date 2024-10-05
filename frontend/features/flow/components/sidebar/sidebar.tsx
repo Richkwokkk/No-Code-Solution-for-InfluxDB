@@ -22,10 +22,10 @@ export type DraggableNode = {
 };
 
 export const Sidebar = () => {
-  const { isSidebarOpen, toggleSidebar } = useStore(
-    useToggle,
-    (state) => state,
-  );
+  const { isSidebarOpen, toggleSidebar } = useStore(useToggle, (state) => ({
+    isSidebarOpen: state.isSidebarOpen,
+    toggleSidebar: state.toggleSidebar,
+  }));
 
   return (
     <aside
