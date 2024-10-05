@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Edge, Node, useEdges, useNodes } from "@xyflow/react";
 
-import { NodeData } from "@/features/flow/components/flow-nodes";
+import { NodeData, NodeType } from "@/features/flow/components/flow-nodes";
 import { FLOW_KEY } from "@/features/flow/constants";
 
 export const useFluxCode = () => {
@@ -10,36 +10,39 @@ export const useFluxCode = () => {
   const nodesFromFlow = useNodes();
   const edgesFromFlow = useEdges();
 
-  const flow = React.useMemo(() => {
-    try {
-      return JSON.parse(localStorage.getItem(FLOW_KEY) || "");
-    } catch {
-      return null;
-    }
-  }, []);
+  let flow = null;
+  try {
+    flow = JSON.parse(localStorage.getItem(FLOW_KEY) || "");
+  } catch (error) {
+    flow = null;
+  }
 
   const nodes = React.useMemo(
     () => (nodesFromFlow.length > 0 ? nodesFromFlow : flow?.nodes || []),
     [flow?.nodes, nodesFromFlow],
   );
-
   const edges = React.useMemo(
     () => (edgesFromFlow.length > 0 ? edgesFromFlow : flow?.edges || []),
     [flow?.edges, edgesFromFlow],
   );
 
   React.useEffect(() => {
-    const bucketNode = nodes.find((node: Node) => node.type === "BUCKET");
+    // Initialize the Flux code with the bucket node
+    const bucketNode = nodes.find(
+      (node: Node) => node.type === ("BUCKET" as NodeType),
+    );
     const bucketValue = bucketNode?.data.value || "/* Pick a bucket */";
     let newFluxCode = `from(bucket: "${bucketValue}")\n`;
 
+    // Find the date range node connected to the bucket
     const dateRangeEdge = edges.find(
-      (edge: Edge) => edge.targetHandle === "BUCKET",
+      (edge: Edge) => edge.targetHandle === ("BUCKET" as NodeType),
     );
     const dateRangeNode = nodes.find(
       (node: Node) => node.id === dateRangeEdge?.target,
     );
 
+    // Add the date range to the Flux code if it exists
     if (dateRangeNode) {
       const { timeStart, timeStop } =
         (dateRangeNode.data as NodeData)?.result || {};
@@ -52,6 +55,7 @@ export const useFluxCode = () => {
       }
     }
 
+    // Find all measurement nodes connected to the date range node
     const measurementEdges = edges.filter(
       (edge: Edge) => edge.source === dateRangeNode?.id,
     );
@@ -59,6 +63,7 @@ export const useFluxCode = () => {
       .map((edge: Edge) => nodes.find((node: Node) => node.id === edge.target))
       .filter(Boolean);
 
+    // Add the measurement filters to the Flux code if there are any
     if (measurementNodes.length > 0) {
       const measurementFilters = measurementNodes
         .map(
