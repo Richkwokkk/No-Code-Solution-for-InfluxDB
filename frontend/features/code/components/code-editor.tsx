@@ -46,6 +46,7 @@ export const CodeEditor = () => {
       defaultLanguage="flux"
       value={DEFAULT_CODE_VALUE}
       options={{
+        wordWrap: "on",
         readOnly: true,
         fontLigatures: true,
         fontSize: 16,
