@@ -90,22 +90,17 @@ export function Flow() {
       const sourceType = sourceNode?.type as NodeType;
       const targetType = targetNode?.type as NodeType;
 
-      if (
-        !sourceNode ||
-        !targetNode ||
-        (sourceType === "DATE_RANGE" && targetType === "DATE_RANGE") ||
-        (sourceType === "VALUE_THRESHOLD" && targetType === "VALUE_THRESHOLD")
-      ) {
-        throttleToastWarning();
-        return false;
-      }
-
       if (sourceType === "BUCKET" && targetType === "DATE_RANGE") return true;
       if (sourceType === "DATE_RANGE" && targetType === "MEASUREMENT")
         return true;
       if (sourceType === "MEASUREMENT" && targetType === "FIELD") return true;
       if (sourceType === "FIELD" && targetType === "VALUE_THRESHOLD")
         return true;
+      if (sourceType === "VALUE_THRESHOLD" && targetType === "VALUE_THRESHOLD")
+        return true;
+
+      throttleToastWarning();
+      return false;
     },
     [nodes, throttleToastWarning],
   );
