@@ -79,5 +79,9 @@
     .monaco-editor-overlaymessage {
       display: none !important;
     }
+
+    .react-flow__controls-button {
+      @apply bg-background text-foreground;
+    }
   }
 }

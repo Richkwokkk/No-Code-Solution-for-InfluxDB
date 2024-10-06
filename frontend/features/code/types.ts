@@ -2,6 +2,7 @@ export type BundledTheme =
   | "andromeeda"
   | "aurora-x"
   | "ayu-dark"
+  | "black"
   | "catppuccin-frappe"
   | "catppuccin-latte"
   | "catppuccin-macchiato"

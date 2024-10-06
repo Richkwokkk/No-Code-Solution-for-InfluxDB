@@ -16,6 +16,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 
 import {
@@ -134,10 +135,13 @@ export function Flow() {
   React.useEffect(restoreFlow, [restoreFlow]);
   React.useEffect(saveRfInstance, [saveRfInstance]);
 
+  const { theme } = useTheme();
+
   return (
     <section className="flow h-full w-full">
       <ReactFlow
         nodeTypes={nodeTypes}
+        colorMode={theme === "dark" ? "dark" : "light"}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -156,7 +160,11 @@ export function Flow() {
           <AlignButton />
           <ResetButton />
         </Controls>
-        <Background variant={BackgroundVariant.Dots} />
+        <Background
+          variant={BackgroundVariant.Dots}
+          gap={40}
+          bgColor={theme === "dark" ? "#09090B" : "#ffffff"}
+        />
       </ReactFlow>
     </section>
   );

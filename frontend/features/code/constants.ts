@@ -1,6 +1,6 @@
 import { BundledTheme } from "@/features/code/types";
 
-export const DARK_THEME: BundledTheme = "github-dark";
+export const DARK_THEME: BundledTheme = "poimandres";
 export const LIGHT_THEME: BundledTheme = "github-light";
 
 export const DEFAULT_CODE_VALUE = `from(bucket: "example-bucket")

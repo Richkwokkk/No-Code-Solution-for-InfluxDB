@@ -13,7 +13,11 @@ const ControlButton = forwardRef<HTMLButtonElement, ControlButtonProps>(
     <button
       type="button"
       ref={ref}
-      className={cn("react-flow__controls-button", className)}
+      className={cn(
+        "react-flow__controls-button",
+        className,
+        "bg-background text-foreground",
+      )}
       {...rest}
     >
       {children}

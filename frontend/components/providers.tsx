@@ -1,9 +1,8 @@
 "use client";
 
-import { ThemeProvider } from "next-themes";
-
 import { AuthProvider } from "@/components/auth-provider";
 import { QueryProvider } from "@/components/query-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -11,7 +10,12 @@ interface ProvidersProps {
 
 export const Providers = ({ children }: ProvidersProps) => {
   return (
-    <ThemeProvider defaultTheme="light">
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
       <QueryProvider>
         <AuthProvider>{children}</AuthProvider>
       </QueryProvider>

@@ -11,26 +11,16 @@ import {
   READ_ONLY_MESSAGE,
 } from "@/features/code/constants";
 import { useFluxCode } from "@/features/code/hooks/use-flux-code";
-import { useIsDarkMode } from "@/hooks/use-is-dark-mode";
 import { firaCode } from "@/lib/fonts";
 import { setupEditor } from "@/lib/monaco";
 
 export const CodeEditor = () => {
-  const isDark = useIsDarkMode();
-  const [theme, setTheme] = React.useState(isDark ? DARK_THEME : LIGHT_THEME);
-
-  const { theme: nextTheme, systemTheme } = useTheme();
-
-  React.useEffect(() => {
-    const currentTheme = nextTheme === "system" ? systemTheme : nextTheme;
-    setTheme(currentTheme === "dark" ? DARK_THEME : LIGHT_THEME);
-  }, [nextTheme, systemTheme]);
+  const { theme } = useTheme();
 
   const beforeMount = React.useCallback(
-    async (monaco: Monaco) => {
-      await setupEditor(monaco, isDark);
-    },
-    [isDark],
+    async (monaco: Monaco) =>
+      await setupEditor(monaco, theme === "dark" ? DARK_THEME : LIGHT_THEME),
+    [theme],
   );
 
   const code = useFluxCode();
@@ -38,7 +28,7 @@ export const CodeEditor = () => {
   return (
     <Editor
       beforeMount={beforeMount}
-      theme={theme}
+      theme={theme === "dark" ? DARK_THEME : LIGHT_THEME}
       loading={
         <div className={`${firaCode.variable} font-mono`}>
           Loading code editor...
