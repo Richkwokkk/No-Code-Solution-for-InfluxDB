@@ -11,7 +11,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { ChartContainer } from "@/features/charts/components/chart-container";
+import { ChartComponent } from "@/features/charts/components/chart-container";
 import { CodeEditor } from "@/features/code/components/code-editor";
 import { Flow } from "@/features/flow/components/flow";
 import { Header } from "@/features/flow/components/header";
@@ -126,7 +126,7 @@ export default function EditorPage() {
                   defaultSize={30}
                   minSize={10}
                 >
-                  <ChartContainer />
+                  <ChartComponent />
                 </ResizablePanel>
               )}
             </ResizablePanelGroup>
