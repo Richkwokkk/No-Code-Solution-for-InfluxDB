@@ -73,8 +73,6 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-
     .monaco-editor .cursors-layer > .cursor,
     .monaco-editor-overlaymessage {
       display: none !important;

@@ -162,8 +162,8 @@ export function Flow() {
         </Controls>
         <Background
           variant={BackgroundVariant.Dots}
-          gap={40}
-          bgColor={theme === "dark" ? "#09090B" : "#ffffff"}
+          gap={30}
+          bgColor={theme === "dark" ? "#09090B" : "#FFFFFF"}
         />
       </ReactFlow>
     </section>
