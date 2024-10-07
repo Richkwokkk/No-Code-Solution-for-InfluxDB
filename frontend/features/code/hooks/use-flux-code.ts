@@ -64,14 +64,44 @@ export const useFluxCode = () => {
       .filter(Boolean);
 
     // Add the measurement filters to the Flux code if there are any
+    // if (measurementNodes.length > 0) {
+    //   const measurementFilters = measurementNodes
+    //     .map(
+    //       (node: Node) =>
+    //         `r._measurement == "${node?.data?.value ?? "/* Pick a measurement */"}"`,
+    //     )
+    //     .join(" or ");
+    //   newFluxCode += `  |> filter(fn: (r) => ${measurementFilters})\n`;
+    // }
+
+    const fieldEdges = edges.filter(
+      (edge: Edge) => edge.source === measurementNodes[0]?.id,
+    );
+    const fieldNodes = fieldEdges
+      .map((edge: Edge) => nodes.find((node: Node) => node.id === edge.target))
+      .filter(Boolean);
+
     if (measurementNodes.length > 0) {
-      const measurementFilters = measurementNodes
-        .map(
-          (node: Node) =>
-            `r._measurement == "${node?.data?.value ?? "/* Pick a measurement */"}"`,
-        )
+      const combinedFilters = measurementNodes
+        .map((measurementNode: Node) => {
+          const connectedFieldNodes = fieldEdges
+            .filter((edge: Edge) => edge.source === measurementNode.id)
+            .map((edge: Edge) => nodes.find((node: Node) => node.id === edge.target))
+            .filter(Boolean);
+    
+          if (connectedFieldNodes.length > 0) {
+            return connectedFieldNodes
+              .map(
+                (fieldNode: Node) =>
+                  `r._measurement == "${measurementNode?.data?.value ?? "/* Pick a measurement */"}" and r._field == "${fieldNode?.data?.value ?? "/* Pick a field */"}"`,
+              )
+              .join(" or ");
+          } else {
+            return `r._measurement == "${measurementNode?.data?.value ?? "/* Pick a measurement */"}"`;
+          }
+        })
         .join(" or ");
-      newFluxCode += `  |> filter(fn: (r) => ${measurementFilters})\n`;
+      newFluxCode += `  |> filter(fn: (r) => ${combinedFilters})\n`;
     }
 
     setFluxCode(newFluxCode);
