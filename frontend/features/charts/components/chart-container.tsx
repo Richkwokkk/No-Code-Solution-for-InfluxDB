@@ -556,7 +556,13 @@ export function ChartComponent() {
             {chartType === "line" ? (
               <LineChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" />
+                <XAxis
+                  dataKey="time"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(11, 16)}
+                />
                 <YAxis />
                 <Tooltip content={<ChartTooltipContent />} />
                 <Legend content={<ChartLegendContent />} />
@@ -570,7 +576,7 @@ export function ChartComponent() {
                   tickLine={false}
                   tickMargin={10}
                   axisLine={false}
-                  tickFormatter={(value) => value.slice(0, 10)}
+                  tickFormatter={(value) => value.slice(11, 16)}
                 />
                 <Tooltip content={<ChartTooltipContent />} />
                 <Legend content={<ChartLegendContent />} />
