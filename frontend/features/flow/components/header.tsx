@@ -34,7 +34,7 @@ export const Header = () => {
   const { setTheme, theme } = useTheme();
 
   return (
-    <header className="z-50 flex h-10 w-screen items-center justify-between border bg-background px-8 py-6">
+    <header className="z-50 flex h-10 w-screen items-center justify-between border-b bg-background px-8 py-6">
       <div className="flex w-full items-center justify-between">
         <Link href="/">
           <h1 className="text-lg font-bold">Visual Flux</h1>

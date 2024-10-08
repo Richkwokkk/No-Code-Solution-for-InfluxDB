@@ -44,14 +44,18 @@ export const useFluxCode = () => {
 
     // Add the date range to the Flux code if it exists
     if (dateRangeNode) {
-      const { timeStart, timeStop } =
-        (dateRangeNode.data as NodeData)?.result || {};
-      if (timeStart) {
-        const start = timeStart.replaceAll("%3A", ":");
-        const stop = timeStop
-          ? `, stop: ${timeStop.replaceAll("%3A", ":")}`
-          : "";
-        newFluxCode += `  |> range(start: ${start}${stop})\n`;
+      if (dateRangeNode.data.value === undefined) {
+        newFluxCode += `  |> range(/* Pick a date range */)\n`;
+      } else {
+        const { timeStart, timeStop } =
+          (dateRangeNode.data as NodeData)?.result || {};
+        if (timeStart) {
+          const start = timeStart.replaceAll("%3A", ":");
+          const stop = timeStop
+            ? `, stop: ${timeStop.replaceAll("%3A", ":")}`
+            : "";
+          newFluxCode += `  |> range(start: ${start}${stop})\n`;
+        }
       }
     }
 
@@ -86,9 +90,11 @@ export const useFluxCode = () => {
         .map((measurementNode: Node) => {
           const connectedFieldNodes = edges
             .filter((edge: Edge) => edge.source === measurementNode.id)
-            .map((edge: Edge) => nodes.find((node: Node) => node.id === edge.target))
+            .map((edge: Edge) =>
+              nodes.find((node: Node) => node.id === edge.target),
+            )
             .filter(Boolean);
-    
+
           if (connectedFieldNodes.length > 0) {
             const fieldFilters = connectedFieldNodes
               .map((fieldNode: Node) => {

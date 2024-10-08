@@ -8,7 +8,6 @@ import {
   CODE_EDITOR_FONT_FAMILY,
   DARK_THEME,
   LIGHT_THEME,
-  READ_ONLY_MESSAGE,
 } from "@/features/code/constants";
 import { useFluxCode } from "@/features/code/hooks/use-flux-code";
 import { firaCode } from "@/lib/fonts";
@@ -53,7 +52,6 @@ export const CodeEditor = () => {
         padding: { top: 26 },
         minimap: { enabled: false },
         guides: { indentation: false },
-        readOnlyMessage: { value: READ_ONLY_MESSAGE },
       }}
     />
   );
