@@ -13,7 +13,6 @@ import {
 } from "@tanstack/react-table";
 
 import { ChevronDownIcon } from "lucide-react";
-import { useStore } from "zustand";
 
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
@@ -33,18 +32,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { data, columns } from "@/features/visualization/components/constants";
-import { useVisualizationType } from "@/features/visualization/hooks/use-visualization-type";
+import { data, columns } from "@/features/visualization/constants";
 
 function DataTable() {
-  const { visualizationType, setVisualizationType } = useStore(
-    useVisualizationType,
-    (state) => ({
-      visualizationType: state.visualizationType,
-      setVisualizationType: state.setVisualizationType,
-    }),
-  );
-
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -89,44 +79,46 @@ function DataTable() {
               </TabsTrigger>
             </TabsList>
           </div>
-          <div className="flex items-center gap-2">
-            <Input
-              placeholder="Filter rooms..."
-              value={
-                (table.getColumn("room")?.getFilterValue() as string) ?? ""
-              }
-              onChange={(event) =>
-                table.getColumn("room")?.setFilterValue(event.target.value)
-              }
-              className="max-w-[150px] text-xs font-medium"
-            />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="px-3 text-xs">
-                  Columns <ChevronDownIcon className="ml-4 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {table
-                  .getAllColumns()
-                  .filter((column) => column.getCanHide())
-                  .map((column) => {
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        className="capitalize"
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) =>
-                          column.toggleVisibility(!!value)
-                        }
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    );
-                  })}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          <TabsContent value="table" className="mt-0">
+            <div className="flex items-center gap-2">
+              <Input
+                placeholder="Filter rooms..."
+                value={
+                  (table.getColumn("room")?.getFilterValue() as string) ?? ""
+                }
+                onChange={(event) =>
+                  table.getColumn("room")?.setFilterValue(event.target.value)
+                }
+                className="max-w-[150px] text-xs font-medium"
+              />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="px-3 text-xs">
+                    Columns <ChevronDownIcon className="ml-4 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {table
+                    .getAllColumns()
+                    .filter((column) => column.getCanHide())
+                    .map((column) => {
+                      return (
+                        <DropdownMenuCheckboxItem
+                          key={column.id}
+                          className="capitalize"
+                          checked={column.getIsVisible()}
+                          onCheckedChange={(value) =>
+                            column.toggleVisibility(!!value)
+                          }
+                        >
+                          {column.id}
+                        </DropdownMenuCheckboxItem>
+                      );
+                    })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </TabsContent>
         </div>
         <TabsContent value="table" className="mt-0">
           <CardContent className="px-6 pb-0">

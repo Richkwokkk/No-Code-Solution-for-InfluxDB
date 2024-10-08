@@ -1,44 +1,30 @@
-import React, { useState } from "react";
-
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  BarChart,
-  Bar,
-} from "recharts";
-
+// import React, { useState } from "react";
+// import {
+//   LineChart,
+//   Line,
+//   XAxis,
+//   YAxis,
+//   CartesianGrid,
+//   Tooltip,
+//   Legend,
+//   BarChart,
+//   Bar,
+// } from "recharts";
 import { Card } from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartLegendContent,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import {
-  data,
-  chartConfig,
-} from "@/features/visualization/components/constants";
+// import {
+//   ChartContainer,
+//   ChartLegendContent,
+//   ChartTooltipContent,
+// } from "@/components/ui/chart";
 import { DataTable } from "@/features/visualization/components/data-table";
 
+// import { data, chartConfig } from "@/features/visualization/constants";
+
 export function Visualization() {
-  const [visualizationType, setVisualizationType] = useState<
-    "line" | "bar" | "table"
-  >("table");
-
-  const handleClick = (type: "line" | "bar" | "table") => {
-    setVisualizationType(type);
-  };
-
   return (
     <Card className="h-full w-full overflow-y-scroll border-none">
-      {visualizationType === "table" ? (
-        <DataTable />
-      ) : (
-        <div className="h-full w-full">
+      <DataTable />
+      {/* <div className="h-full w-full">
           <ChartContainer config={chartConfig} className="h-full w-full">
             {visualizationType === "line" ? (
               <LineChart data={data}>
@@ -71,8 +57,7 @@ export function Visualization() {
               </BarChart>
             )}
           </ChartContainer>
-        </div>
-      )}
+        </div> */}
     </Card>
   );
 }

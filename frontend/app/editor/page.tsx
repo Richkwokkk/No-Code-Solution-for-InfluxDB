@@ -17,7 +17,7 @@ import { Header } from "@/features/flow/components/header";
 import { Sidebar } from "@/features/flow/components/sidebar";
 import { SidebarDndContext } from "@/features/flow/components/sidebar/sidebar-dnd-context";
 import { useToggle } from "@/features/flow/hooks/use-toggle";
-import { Visualization } from "@/features/visualization/components/chart-container";
+import { Visualization } from "@/features/visualization/components/visualization";
 
 export default function EditorPage() {
   const { isCodeEditorOpen, isFlowOpen, isVisualizationOpen } = useStore(

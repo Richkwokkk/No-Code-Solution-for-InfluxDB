@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { ChartConfig } from "@/components/ui/chart";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Measurement } from "@/features/visualization/components/types";
+import { Measurement } from "@/features/visualization/types";
 
 export const columns: ColumnDef<Measurement>[] = [
   {
