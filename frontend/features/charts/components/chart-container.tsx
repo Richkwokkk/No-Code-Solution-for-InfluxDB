@@ -48,6 +48,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const chartConfig = {
   desktop: {
@@ -532,59 +533,63 @@ export function ChartComponent() {
   const [viewType, setViewType] = useState<"chart" | "table">("chart");
   const [chartType, setChartType] = useState<"line" | "bar">("line");
 
-  const toggleChartType = () => {
-    setChartType((prevType) => (prevType === "line" ? "bar" : "line"));
-  };
-
-  const toggleViewType = () => {
-    setViewType((prevType) => (prevType === "chart" ? "table" : "chart"));
-  };
-
   return (
     <div>
-      <button onClick={toggleViewType}>
-        {viewType === "chart" ? "Switch to Data Table" : "Switch to Chart"}
-      </button>
+      <ToggleGroup
+        type="single"
+        value={viewType}
+        onValueChange={(value: string) =>
+          setViewType(value as "chart" | "table")
+        }
+      >
+        <ToggleGroupItem value="chart">Chart</ToggleGroupItem>
+        <ToggleGroupItem value="table">Data Table</ToggleGroupItem>
+      </ToggleGroup>
+      {viewType === "chart" && (
+        <ToggleGroup
+          type="single"
+          value={chartType}
+          onValueChange={(value: string) =>
+            setChartType(value as "line" | "bar")
+          }
+        >
+          <ToggleGroupItem value="line">Line Chart</ToggleGroupItem>
+          <ToggleGroupItem value="bar">Bar Chart</ToggleGroupItem>
+        </ToggleGroup>
+      )}
       {viewType === "chart" ? (
-        <>
-          <button onClick={toggleChartType}>
-            {chartType === "line"
-              ? "Switch to Bar Chart"
-              : "Switch to Line Chart"}
-          </button>
-          <ChartContainer config={chartConfig} className="h-[200px] w-full">
-            {chartType === "line" ? (
-              <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="time"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => value.slice(11, 16)}
-                />
-                <YAxis />
-                <Tooltip content={<ChartTooltipContent />} />
-                <Legend content={<ChartLegendContent />} />
-                <Line type="monotone" dataKey="value" stroke="#8884d8" />
-              </LineChart>
-            ) : (
-              <BarChart data={data}>
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="time"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => value.slice(11, 16)}
-                />
-                <Tooltip content={<ChartTooltipContent />} />
-                <Legend content={<ChartLegendContent />} />
-                <Bar dataKey="value" fill="var(--color-desktop)" radius={4} />
-              </BarChart>
-            )}
-          </ChartContainer>
-        </>
+        <ChartContainer config={chartConfig} className="h-[200px] w-full">
+          {chartType === "line" ? (
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="time"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(11, 16)}
+              />
+              <YAxis />
+              <Tooltip content={<ChartTooltipContent />} />
+              <Legend content={<ChartLegendContent />} />
+              <Line type="monotone" dataKey="value" stroke="#8884d8" />
+            </LineChart>
+          ) : (
+            <BarChart data={data}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="time"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(11, 16)}
+              />
+              <Tooltip content={<ChartTooltipContent />} />
+              <Legend content={<ChartLegendContent />} />
+              <Bar dataKey="value" fill="var(--color-desktop)" radius={4} />
+            </BarChart>
+          )}
+        </ChartContainer>
       ) : (
         <DataTable />
       )}
@@ -593,6 +598,72 @@ export function ChartComponent() {
 }
 
 export default ChartComponent;
+
+// export function ChartComponent() {
+//   const [viewType, setViewType] = useState<"chart" | "table">("chart");
+//   const [chartType, setChartType] = useState<"line" | "bar">("line");
+
+//   const toggleChartType = () => {
+//     setChartType((prevType) => (prevType === "line" ? "bar" : "line"));
+//   };
+
+//   const toggleViewType = () => {
+//     setViewType((prevType) => (prevType === "chart" ? "table" : "chart"));
+//   };
+
+//   return (
+//     <div>
+//       <button onClick={toggleViewType}>
+//         {viewType === "chart" ? "Switch to Data Table" : "Switch to Chart"}
+//       </button>
+//       {viewType === "chart" ? (
+//         <>
+//           <button onClick={toggleChartType}>
+//             {chartType === "line"
+//               ? "Switch to Bar Chart"
+//               : "Switch to Line Chart"}
+//           </button>
+//           <ChartContainer config={chartConfig} className="h-[200px] w-full">
+//             {chartType === "line" ? (
+//               <LineChart data={data}>
+//                 <CartesianGrid strokeDasharray="3 3" />
+//                 <XAxis
+//                   dataKey="time"
+//                   tickLine={false}
+//                   tickMargin={10}
+//                   axisLine={false}
+//                   tickFormatter={(value) => value.slice(11, 16)}
+//                 />
+//                 <YAxis />
+//                 <Tooltip content={<ChartTooltipContent />} />
+//                 <Legend content={<ChartLegendContent />} />
+//                 <Line type="monotone" dataKey="value" stroke="#8884d8" />
+//               </LineChart>
+//             ) : (
+//               <BarChart data={data}>
+//                 <CartesianGrid vertical={false} />
+//                 <XAxis
+//                   dataKey="time"
+//                   tickLine={false}
+//                   tickMargin={10}
+//                   axisLine={false}
+//                   tickFormatter={(value) => value.slice(11, 16)}
+//                 />
+//                 <Tooltip content={<ChartTooltipContent />} />
+//                 <Legend content={<ChartLegendContent />} />
+//                 <Bar dataKey="value" fill="var(--color-desktop)" radius={4} />
+//               </BarChart>
+//             )}
+//           </ChartContainer>
+//         </>
+//       ) : (
+//         <DataTable />
+//       )}
+//     </div>
+//   );
+// }
+
+// export default ChartComponent;
 
 // export function ChartComponent() {
 //   const [chartType, setChartType] = useState<"line" | "bar">("line");
