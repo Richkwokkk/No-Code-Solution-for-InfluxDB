@@ -84,18 +84,58 @@ export const useFluxCode = () => {
     if (measurementNodes.length > 0) {
       const combinedFilters = measurementNodes
         .map((measurementNode: Node) => {
-          const connectedFieldNodes = fieldEdges
+          const connectedFieldNodes = edges
             .filter((edge: Edge) => edge.source === measurementNode.id)
             .map((edge: Edge) => nodes.find((node: Node) => node.id === edge.target))
             .filter(Boolean);
     
           if (connectedFieldNodes.length > 0) {
-            return connectedFieldNodes
-              .map(
-                (fieldNode: Node) =>
-                  `r._measurement == "${measurementNode?.data?.value ?? "/* Pick a measurement */"}" and r._field == "${fieldNode?.data?.value ?? "/* Pick a field */"}"`,
-              )
+            const fieldFilters = connectedFieldNodes
+              .map((fieldNode: Node) => {
+                const valueThresholdEdges = edges.filter(
+                  (edge: Edge) => edge.source === fieldNode.id
+                );
+                const valueThresholdNodes = valueThresholdEdges
+                  .map((edge: Edge) => nodes.find((node: Node) => node.id === edge.target))
+                  .filter(Boolean);
+    
+                if (valueThresholdNodes.length > 0) {
+                  const thresholdFilters = valueThresholdNodes
+                  .map((thresholdNode: Node) => {
+                    const nextThresholdEdges = edges.filter(
+                      (edge: Edge) => edge.source === thresholdNode.id
+                    );
+                    const nextThresholdNodes = nextThresholdEdges
+                      .map((edge: Edge) => nodes.find((node: Node) => node.id === edge.target))
+                      .filter(Boolean);
+                  
+                    if (nextThresholdNodes.length > 0) {
+                      // 串联逻辑
+                      return nextThresholdNodes
+                        .map(
+                          (nextNode: Node) =>
+                            `(r._value ${thresholdNode?.data?.operator ?? "=="} ${thresholdNode?.data?.value ?? "/* Pick a value */"} and r._value ${nextNode?.data?.operator ?? "=="} ${nextNode?.data?.value ?? "/* Pick a value */"})`
+                        )
+                        .join(" and ");
+                    } else {
+                      // 单个 threshold 逻辑
+                      return `(r._value ${thresholdNode?.data?.operator ?? "=="} ${thresholdNode?.data?.value ?? "/* Pick a value */"})`;
+                    }
+                  })
+                  .join(" or ");
+                  
+                  // 如果有多个 valueThresholdNodes，则添加括号
+                  const thresholdFilterString = valueThresholdNodes.length > 1 ? `(${thresholdFilters})` : thresholdFilters;
+                  return `r._field == "${fieldNode?.data?.value ?? "/* Pick a field */"}" and ${thresholdFilterString}`;
+                } else {
+                  return `r._field == "${fieldNode?.data?.value ?? "/* Pick a field */"}"`;
+                }
+              })
               .join(" or ");
+    
+            // 如果有多个 fieldNodes，则添加括号
+            const fieldFilterString = connectedFieldNodes.length > 1 ? `(${fieldFilters})` : fieldFilters;
+            return `r._measurement == "${measurementNode?.data?.value ?? "/* Pick a measurement */"}" and ${fieldFilterString}`;
           } else {
             return `r._measurement == "${measurementNode?.data?.value ?? "/* Pick a measurement */"}"`;
           }
