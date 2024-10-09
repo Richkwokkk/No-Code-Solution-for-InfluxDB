@@ -128,6 +128,10 @@ export const useFluxCode = () => {
             })
             .join(" or ");
 
+          if (fieldFilters === "") {
+            return `(r._measurement == "${measurementNode?.data?.value ?? "/* Pick a measurement */"}")`;
+          }
+
           return `(r._measurement == "${measurementNode?.data?.value ?? "/* Pick a measurement */"}" and (${fieldFilters}))`;
         })
         .join(" or ");
