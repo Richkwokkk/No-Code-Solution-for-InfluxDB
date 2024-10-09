@@ -26,6 +26,49 @@ export const useFluxCode = () => {
     [flow?.edges, edgesFromFlow],
   );
 
+  const parseThresholds = React.useCallback(
+    (node: Node, edges: Edge[], nodes: Node[]): string => {
+      const childEdges = edges.filter((edge: Edge) => edge.source === node.id);
+      const childNodes = childEdges
+        .map((edge: Edge) => nodes.find((n: Node) => n.id === edge.target))
+        .filter((n): n is Node => n !== undefined);
+
+      if (childNodes.length === 0) {
+        const thresholdData = node?.data as NodeData;
+        if (!thresholdData || !thresholdData.value) return "";
+        if (thresholdData.value === "Pick a threshold")
+          return "/* Pick a threshold */";
+        const parts = thresholdData.value.split(" ");
+        if (parts.length < 3) return "";
+        const [_, operator, thresholdValue] = parts;
+        if (!operator || !thresholdValue) return "";
+        return `r._value ${operator} ${thresholdValue}`;
+      }
+
+      const childConditions = childNodes
+        .map((childNode) => parseThresholds(childNode, edges, nodes))
+        .filter((condition) => condition !== "");
+
+      const parentCondition = (() => {
+        const thresholdData = node?.data as NodeData;
+        if (!thresholdData || !thresholdData.value) return "";
+        const parts = thresholdData.value.split(" ");
+        if (parts.length < 3) return "";
+        const [_, operator, thresholdValue] = parts;
+        return `r._value ${operator} ${thresholdValue}`;
+      })();
+
+      if (parentCondition && childConditions.length > 0) {
+        return `(${parentCondition} and (${childConditions.join(" or ")}))`;
+      } else if (childConditions.length > 1) {
+        return `(${childConditions.join(" or ")})`;
+      } else {
+        return childConditions[0] || parentCondition;
+      }
+    },
+    [],
+  );
+
   React.useEffect(() => {
     // Initialize the Flux code with the bucket node
     const bucketNode = nodes.find(
@@ -59,15 +102,13 @@ export const useFluxCode = () => {
       }
     }
 
-    // Find all measurement nodes connected to the date range node
     const measurementEdges = edges.filter(
       (edge: Edge) => edge.source === dateRangeNode?.id,
     );
     const measurementNodes = measurementEdges
       .map((edge: Edge) => nodes.find((node: Node) => node.id === edge.target))
-      .filter(Boolean);
+      .filter((n: Node | undefined): n is Node => n !== undefined);
 
-    // Add the measurement filters to the Flux code if there are any
     if (measurementNodes.length > 0) {
       const combinedFilters = measurementNodes
         .map((measurementNode: Node) => {
@@ -76,58 +117,26 @@ export const useFluxCode = () => {
             .map((edge: Edge) =>
               nodes.find((node: Node) => node.id === edge.target),
             )
-            .filter(Boolean);
+            .filter((n: Node | undefined): n is Node => n !== undefined);
 
           const fieldFilters = connectedFieldNodes
             .map((fieldNode: Node) => {
-              const valueThresholdEdges = edges.filter(
-                (edge: Edge) => edge.source === fieldNode.id,
-              );
-              const valueThresholdNodes = valueThresholdEdges
-                .map((edge: Edge) =>
-                  nodes.find((node: Node) => node.id === edge.target),
-                )
-                .filter(Boolean);
-
-              if (valueThresholdNodes.length > 0) {
-                const thresholdFilters = valueThresholdNodes
-                  .map((thresholdNode: Node) => {
-                    const thresholdData = thresholdNode?.data as NodeData;
-                    if (thresholdData.value === "Pick a threshold") {
-                      return "/* Pick a threshold */";
-                    }
-                    const [_, operator, thresholdValue] =
-                      thresholdData.value.split(" ");
-                    return `r._value ${operator} ${thresholdValue}`;
-                  })
-                  .join(" or ");
-
-                return `(
-        r._field == "${fieldNode?.data?.value ?? "/* Pick a field */"}" and 
-        (${thresholdFilters})
-      )`;
-              } else {
-                return `r._field == "${fieldNode?.data?.value ?? "/* Pick a field */"}"`;
-              }
+              const thresholdFilter = parseThresholds(fieldNode, edges, nodes);
+              return thresholdFilter
+                ? `(r._field == "${fieldNode?.data?.value ?? "/* Pick a field */"}" and ${thresholdFilter})`
+                : `r._field == "${fieldNode?.data?.value ?? "/* Pick a field */"}"`;
             })
             .join(" or ");
-          if (fieldFilters.length > 1) {
-            return `
-    (
-      r._measurement == "${measurementNode?.data?.value ?? "/* Pick a measurement */"}" and 
-      ${fieldFilters}
-    )`;
-          }
 
-          return `(r._measurement == "${measurementNode?.data?.value ?? "/* Pick a measurement */"}")`;
+          return `(r._measurement == "${measurementNode?.data?.value ?? "/* Pick a measurement */"}" and (${fieldFilters}))`;
         })
         .join(" or ");
-      newFluxCode += `  |> filter(fn: (r) => ${combinedFilters}
-  )\n`;
+
+      newFluxCode += `  |> filter(fn: (r) => \n    ${combinedFilters}\n  )\n`;
     }
 
     setFluxCode(newFluxCode);
-  }, [nodes, edges]);
+  }, [nodes, edges, parseThresholds]);
 
   return fluxCode;
 };
