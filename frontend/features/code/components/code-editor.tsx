@@ -51,7 +51,7 @@ export const CodeEditor = () => {
         fontFamily: CODE_EDITOR_FONT_FAMILY,
         padding: { top: 26 },
         minimap: { enabled: false },
-        guides: { indentation: false },
+        overviewRulerLanes: 0,
       }}
     />
   );
