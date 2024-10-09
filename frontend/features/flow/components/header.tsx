@@ -46,7 +46,7 @@ export const Header = () => {
                   <WorkflowIcon size={16} />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent align="center">
+              <TooltipContent align="start" alignOffset={-40}>
                 <span className="text-[10px] font-bold capitalize">
                   {isFlowOpen ? "hide" : "show"} flow panel
                 </span>
@@ -64,7 +64,7 @@ export const Header = () => {
                   <ChartNoAxesCombinedIcon size={16} />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent align="center">
+              <TooltipContent align="start" alignOffset={-60}>
                 <span className="text-[10px] font-bold capitalize">
                   {isVisualizationOpen ? "hide" : "show"} visualization panel
                 </span>
@@ -82,7 +82,7 @@ export const Header = () => {
                   <SquareTerminalIcon size={16} />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent align="center">
+              <TooltipContent align="start" alignOffset={-40}>
                 <span className="text-[10px] font-bold capitalize">
                   {isCodeEditorOpen ? "hide" : "show"} code editor
                 </span>
@@ -94,7 +94,7 @@ export const Header = () => {
                   <PlayIcon size={16} />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent align="center">
+              <TooltipContent align="start" alignOffset={-30}>
                 <span className="text-[10px] font-bold capitalize">
                   run query
                 </span>

@@ -65,7 +65,7 @@ function DataTable() {
   return (
     <>
       <Tabs defaultValue="table">
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between px-8 py-4">
           <div className="flex flex-col justify-center gap-1 p-0">
             <TabsList>
               <TabsTrigger value="table" className="text-xs font-medium">
@@ -121,7 +121,7 @@ function DataTable() {
           </TabsContent>
         </div>
         <TabsContent value="table" className="mt-0">
-          <CardContent className="px-6 pb-0">
+          <CardContent className="px-8 pb-0">
             <div className="rounded-md border">
               <Table>
                 <TableHeader>
