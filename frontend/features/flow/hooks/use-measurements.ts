@@ -22,7 +22,10 @@ export function useMeasurements(
       result,
     ],
     queryFn: async () => {
-      if (!result) return [];
+      if (!result || !result.bucket || !result.timeStart || !result.timeStop) {
+        return [];
+      }
+
       const response = await apiClient.get<GetMeasurementsResponse>(
         `${EDITOR_ENDPOINTS.getMeasurements}?bucket=${result.bucket}&organization=${org}&time-start=${result.timeStart}&time-stop=${result.timeStop}`,
       );

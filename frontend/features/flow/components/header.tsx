@@ -2,10 +2,13 @@ import * as React from "react";
 
 import {
   ChartNoAxesCombinedIcon,
+  Moon,
   PlayIcon,
   SquareTerminalIcon,
+  Sun,
   WorkflowIcon,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useStore } from "zustand";
 
@@ -16,6 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useFluxQuery } from "@/features/code/hooks/use-flux-query";
 import { useToggle } from "@/features/flow/hooks/use-toggle";
 
 export const Header = () => {
@@ -28,14 +32,42 @@ export const Header = () => {
     toggleVisualization,
   } = useStore(useToggle);
 
+  const { setTheme, theme } = useTheme();
+
+  const { mutate } = useFluxQuery();
+  const handleRunQuery = () => {
+    mutate();
+  };
+
   return (
-    <header className="z-50 flex h-10 w-screen items-center justify-between border bg-background px-8 py-6">
+    <header className="z-50 flex h-10 w-screen items-center justify-between border-b bg-background px-8 py-6">
       <div className="flex w-full items-center justify-between">
         <Link href="/">
           <h1 className="text-lg font-bold">Visual Flux</h1>
         </Link>
         <div className="flex space-x-2">
           <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                  className="h-8 w-8 p-0"
+                >
+                  {theme === "light" ? (
+                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  ) : (
+                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  )}
+                  <span className="sr-only">Toggle theme</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent align="center">
+                <span className="text-[10px] font-bold capitalize">
+                  toggle theme
+                </span>
+              </TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -91,7 +123,7 @@ export const Header = () => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="default" className="h-8 w-8 p-0">
-                  <PlayIcon size={16} />
+                  <PlayIcon size={16} onClick={handleRunQuery} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="center">

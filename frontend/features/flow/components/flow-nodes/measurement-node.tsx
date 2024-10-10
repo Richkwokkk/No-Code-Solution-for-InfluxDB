@@ -31,7 +31,7 @@ export const MeasurementNode = ({ id }: NodeProps) => {
   const dateRangeNodeData = useNodesData(dateRangeConnections?.[0]?.source);
 
   const previousNodeData = React.useMemo(
-    () => (dateRangeNodeData?.data.result as NodeData["result"]) || null,
+    () => dateRangeNodeData?.data.result as NodeData["result"],
     [dateRangeNodeData],
   );
 

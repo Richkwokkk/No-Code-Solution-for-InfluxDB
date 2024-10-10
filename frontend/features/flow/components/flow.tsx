@@ -16,6 +16,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 
 import {
@@ -134,10 +135,13 @@ export function Flow() {
   React.useEffect(restoreFlow, [restoreFlow]);
   React.useEffect(saveRfInstance, [saveRfInstance]);
 
+  const { theme } = useTheme();
+
   return (
     <section className="flow h-full w-full">
       <ReactFlow
         nodeTypes={nodeTypes}
+        colorMode={theme === "dark" ? "dark" : "light"}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -146,15 +150,21 @@ export function Flow() {
         onInit={setRfInstance}
         onMoveEnd={saveRfInstance}
         connectionLineType={ConnectionLineType.Bezier}
-        isValidConnection={isValidConnection}
+        isValidConnection={(connection) =>
+          isValidConnection(connection) ?? false
+        }
         maxZoom={1}
         proOptions={{ hideAttribution: true }}
       >
-        <Controls position="bottom-right" orientation="vertical">
+        <Controls position="bottom-left">
           <AlignButton />
           <ResetButton />
         </Controls>
-        <Background variant={BackgroundVariant.Dots} />
+        <Background
+          variant={BackgroundVariant.Dots}
+          gap={30}
+          bgColor={theme === "dark" ? "hsl(207, 95%, 8%)" : "hsl(0, 0%, 100%)"}
+        />
       </ReactFlow>
     </section>
   );

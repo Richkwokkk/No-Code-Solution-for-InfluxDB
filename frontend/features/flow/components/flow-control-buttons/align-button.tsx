@@ -5,7 +5,7 @@ import { ControlButton, useReactFlow } from "@xyflow/react";
 
 import { getLayoutedElements } from "@/lib/dagre";
 
-export function AlignButton() {
+export function AlignButton({ className }: { className?: string }) {
   const { fitView, getNodes, getEdges, setNodes, setEdges } = useReactFlow();
 
   const onLayout = React.useCallback(
@@ -27,6 +27,7 @@ export function AlignButton() {
         onLayout("TB");
         setTimeout(fitView);
       }}
+      className={className}
     >
       <TextAlignCenterIcon />
     </ControlButton>
