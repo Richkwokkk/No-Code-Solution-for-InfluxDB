@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { type FormData } from "@/features/auth/components/login-card";
-import { authQueryKeys } from "@/features/auth/hooks/queryKeys";
+import { authQueryKeys } from "@/features/auth/hooks/constants";
 import { apiClient } from "@/lib/api-client";
 
 export function useLogin() {
