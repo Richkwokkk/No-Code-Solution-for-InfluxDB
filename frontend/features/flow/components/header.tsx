@@ -19,6 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useFluxQuery } from "@/features/code/hooks/use-flux-query";
 import { useToggle } from "@/features/flow/hooks/use-toggle";
 
 export const Header = () => {
@@ -32,6 +33,11 @@ export const Header = () => {
   } = useStore(useToggle);
 
   const { setTheme, theme } = useTheme();
+
+  const { mutate } = useFluxQuery();
+  const handleRunQuery = () => {
+    mutate();
+  };
 
   return (
     <header className="z-50 flex h-10 w-screen items-center justify-between border-b bg-background px-8 py-6">
@@ -117,7 +123,7 @@ export const Header = () => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="default" className="h-8 w-8 p-0">
-                  <PlayIcon size={16} />
+                  <PlayIcon size={16} onClick={handleRunQuery} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="center">
