@@ -22,6 +22,9 @@ export const useFluxQuery = () => {
       if (sanitizedCode.includes("/*")) {
         throw new Error("Please complete your query");
       }
+      if (!sanitizedCode.includes("range")) {
+        throw new Error("Please add a range to your query");
+      }
       return apiClient
         .post("influxdb/query?organization=ATSYS", {
           json: { query: sanitizedCode },
@@ -50,7 +53,9 @@ export const useFluxQuery = () => {
     },
     onError: (error: unknown) => {
       if (error instanceof Error) {
-        toast.error(error.message);
+        toast.error("Error querying data", {
+          description: error.message,
+        });
       } else {
         toast.error("An unknown error occurred");
       }
