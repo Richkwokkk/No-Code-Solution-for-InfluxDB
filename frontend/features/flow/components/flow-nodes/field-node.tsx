@@ -38,7 +38,6 @@ export const FieldNode = ({ id }: NodeProps) => {
   const { data, error } = useFields(previousNodeData);
 
   if (error) {
-    localStorage.removeItem("vf-token");
     if (pathname !== "/login") {
       router.push("/login");
       toast.error("Session expired. Please login again.");

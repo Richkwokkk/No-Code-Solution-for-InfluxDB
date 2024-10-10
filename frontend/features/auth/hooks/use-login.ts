@@ -18,11 +18,7 @@ export function useLogin() {
       queryClient.setQueryData(authQueryKeys.authStatus, {
         isAuthenticated: true,
       });
-      localStorage.setItem("vf-token", btoa(Date.now().toString()));
       router.push("/editor");
-    },
-    onError: () => {
-      localStorage.removeItem("vf-token");
     },
   });
 }

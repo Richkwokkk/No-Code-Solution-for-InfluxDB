@@ -20,7 +20,6 @@ export const BucketNode = ({ id }: NodeProps) => {
     updateNodeData(id, { value: bucket, result: { bucket } });
 
   if (error) {
-    localStorage.removeItem("vf-token");
     if (pathname !== "/login") {
       router.push("/login");
       toast.error("Session expired. Please login again.");

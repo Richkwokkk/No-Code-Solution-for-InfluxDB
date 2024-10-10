@@ -33,7 +33,7 @@ export const useFluxQuery = () => {
     },
     onSuccess: (data: { result: Record<string, any> }) => {
       queryClient.invalidateQueries({ queryKey: fluxQueryKeys.fluxQuery });
-      queryClient.setQueryData([fluxQueryKeys.fluxQuery, sanitizedCode], {
+      queryClient.setQueryData([...fluxQueryKeys.fluxQuery, sanitizedCode], {
         data: Object.values(data.result)
           .flat()
           .filter((r) => r.result === "_result")
