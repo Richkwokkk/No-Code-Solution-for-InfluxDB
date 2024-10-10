@@ -122,7 +122,7 @@ export const Header = () => {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button className="h-8 w-8 p-0 hover:bg-background/90">
+                <Button className="h-8 w-8 p-0">
                   <PlayIcon size={16} onClick={handleRunQuery} />
                 </Button>
               </TooltipTrigger>
