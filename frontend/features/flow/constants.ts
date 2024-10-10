@@ -41,3 +41,6 @@ export const EDITOR_QUERY_KEYS = {
   MEASUREMENTS: ["measurements"] as const,
   FIELDS: ["fields"] as const,
 };
+
+export const FLOW_BACKGROUND_COLOR_LIGHT = "hsl(0, 0%, 100%)";
+export const FLOW_BACKGROUND_COLOR_DARK = "hsl(207, 95%, 8%)";
