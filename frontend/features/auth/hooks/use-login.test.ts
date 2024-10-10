@@ -4,7 +4,7 @@ import { renderHook, act } from "@testing-library/react";
 import { useRouter } from "next/navigation";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-import { useLogin } from "@/features/auth/hooks/useLogin";
+import { useLogin } from "@/features/auth/hooks/use-login";
 import { apiClient } from "@/lib/api-client";
 
 // Mock dependencies

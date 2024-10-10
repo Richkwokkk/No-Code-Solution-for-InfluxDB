@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { authQueryKeys } from "@/features/auth/hooks/queryKeys";
+import { authQueryKeys } from "@/features/auth/hooks/constants";
 
 export function useAuthStatus() {
   return useQuery({

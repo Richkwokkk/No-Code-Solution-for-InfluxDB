@@ -10,8 +10,7 @@ import { toast } from "sonner";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 
 import { LoginCard } from "@/features/auth/components/login-card";
-
-import { useLogin } from "../hooks/useLogin";
+import { useLogin } from "@/features/auth/hooks/use-login";
 
 vi.mock("@/features/auth/hooks/useLogin", () => ({
   useLogin: vi.fn(),
@@ -187,7 +186,7 @@ describe("LoginCard", () => {
 
   it("handles successful login", async () => {
     const user = { id: "1", username: "testuser" };
-    const mockMutate = vi.fn().mockImplementation((data) => {
+    const mockMutate = vi.fn().mockImplementation((_data) => {
       // Simulate successful login
       setTimeout(() => {
         mockSetQueryData(["user"], user);
