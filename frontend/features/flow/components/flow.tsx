@@ -32,7 +32,12 @@ import {
   type NodeProps,
   type NodeType,
 } from "@/features/flow/components/flow-nodes";
-import { FLOW_KEY, initialNodes } from "@/features/flow/constants";
+import {
+  FLOW_BACKGROUND_COLOR_DARK,
+  FLOW_BACKGROUND_COLOR_LIGHT,
+  FLOW_KEY,
+  initialNodes,
+} from "@/features/flow/constants";
 import { throttle } from "@/lib/utils";
 
 type ReactFlowNodeTypes = {
@@ -163,7 +168,11 @@ export function Flow() {
         <Background
           variant={BackgroundVariant.Dots}
           gap={30}
-          bgColor={theme === "dark" ? "hsl(207, 95%, 8%)" : "hsl(0, 0%, 100%)"}
+          bgColor={
+            theme === "dark"
+              ? FLOW_BACKGROUND_COLOR_DARK
+              : FLOW_BACKGROUND_COLOR_LIGHT
+          }
         />
       </ReactFlow>
     </section>
