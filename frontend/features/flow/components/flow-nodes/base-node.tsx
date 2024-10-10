@@ -41,7 +41,7 @@ export function BaseNode({
           />
         ) : null}
         <div className="flex items-center space-x-2">
-          <div className="text-editor-node-text flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
             <Icon size={20} />
           </div>
           <div className="flex flex-col pr-1">

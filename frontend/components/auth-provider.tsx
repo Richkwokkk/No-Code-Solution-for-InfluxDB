@@ -3,7 +3,7 @@ import * as React from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { useAuthStatus } from "@/features/auth/hooks/useAuthStatus";
+import { useAuthStatus } from "@/features/auth/hooks/use-auth-status";
 
 interface AuthProviderProps {
   children: React.ReactNode;
