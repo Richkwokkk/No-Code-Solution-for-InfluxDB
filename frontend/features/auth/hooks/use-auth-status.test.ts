@@ -3,8 +3,8 @@ import { renderHook } from "@testing-library/react";
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-import { authQueryKeys } from "@/features/auth/hooks/queryKeys";
-import { useAuthStatus } from "@/features/auth/hooks/useAuthStatus";
+import { authQueryKeys } from "@/features/auth/hooks/constants";
+import { useAuthStatus } from "@/features/auth/hooks/use-auth-status";
 
 // Mock dependencies
 vi.mock("@tanstack/react-query", () => ({
