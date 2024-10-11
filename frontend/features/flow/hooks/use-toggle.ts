@@ -6,11 +6,13 @@ interface ToggleStore {
   isFlowOpen: boolean;
   isSidebarOpen: boolean;
   isVisualizationOpen: boolean;
+  isQueryRunning: boolean;
 
   toggleCodeEditor: () => void;
   toggleFlow: () => void;
   toggleSidebar: () => void;
   toggleVisualization: () => void;
+  toggleQueryRunning: () => void;
 }
 
 export const useToggle = create(
@@ -20,6 +22,7 @@ export const useToggle = create(
       isFlowOpen: true,
       isSidebarOpen: true,
       isVisualizationOpen: true,
+      isQueryRunning: false,
 
       toggleCodeEditor: () => {
         set({ isCodeEditorOpen: !get().isCodeEditorOpen });
@@ -32,6 +35,9 @@ export const useToggle = create(
       },
       toggleVisualization: () => {
         set({ isVisualizationOpen: !get().isVisualizationOpen });
+      },
+      toggleQueryRunning: () => {
+        set({ isQueryRunning: !get().isQueryRunning });
       },
     }),
     {

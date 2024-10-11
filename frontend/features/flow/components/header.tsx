@@ -3,6 +3,7 @@ import * as React from "react";
 import {
   ChartNoAxesCombinedIcon,
   Moon,
+  PauseIcon,
   PlayIcon,
   SquareTerminalIcon,
   Sun,
@@ -19,6 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useFluxCode } from "@/features/code/hooks/use-flux-code";
 import { useFluxQuery } from "@/features/code/hooks/use-flux-query";
 import { useToggle } from "@/features/flow/hooks/use-toggle";
 
@@ -27,17 +29,25 @@ export const Header = () => {
     isCodeEditorOpen,
     isFlowOpen,
     isVisualizationOpen,
+    isQueryRunning,
     toggleCodeEditor,
     toggleFlow,
     toggleVisualization,
+    toggleQueryRunning,
   } = useStore(useToggle);
 
   const { setTheme, theme } = useTheme();
+  const code = useFluxCode();
+  const { mutate: runQuery } = useFluxQuery();
 
-  const { mutate } = useFluxQuery();
   const handleRunQuery = () => {
-    mutate();
+    toggleQueryRunning();
   };
+
+  React.useEffect(() => {
+    if (!isQueryRunning) return;
+    runQuery(code);
+  }, [isQueryRunning, runQuery, code]);
 
   return (
     <header className="z-50 flex h-10 w-screen items-center justify-between border-b bg-background px-8 py-6">
@@ -122,13 +132,17 @@ export const Header = () => {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button className="h-8 w-8 p-0">
-                  <PlayIcon size={16} onClick={handleRunQuery} />
+                <Button className="h-8 w-8 p-0" onClick={handleRunQuery}>
+                  {isQueryRunning ? (
+                    <PauseIcon size={16} />
+                  ) : (
+                    <PlayIcon size={16} />
+                  )}
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="start" alignOffset={-30}>
                 <span className="text-[10px] font-bold capitalize">
-                  run query
+                  {isQueryRunning ? "pause" : "run"} query
                 </span>
               </TooltipContent>
             </Tooltip>

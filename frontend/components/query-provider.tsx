@@ -31,6 +31,7 @@ function makeQueryClient({ isServer }: { isServer: boolean }) {
   persistQueryClient({
     queryClient,
     persister: localStoragePersister,
+    maxAge: 1000 * 60 * 60 * 24, // 24 hours
   });
 
   return queryClient;

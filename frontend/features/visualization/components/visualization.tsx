@@ -1,3 +1,5 @@
+import { CSVLink } from "react-csv";
+
 import { ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,6 +17,20 @@ import { useTable } from "@/features/visualization/hooks/use-table";
 
 export function Visualization() {
   const table = useTable();
+
+  const rows = table.getIsSomeRowsSelected()
+    ? table.getSelectedRowModel().rows
+    : table.getCoreRowModel().rows;
+
+  const displayedData = rows.map((row) => {
+    const visibleData: Record<string, any> = {};
+    table.getVisibleFlatColumns().forEach((column) => {
+      if (column.id === "select") return;
+      visibleData[column.id] = row.getValue(column.id);
+    });
+    return visibleData;
+  });
+
   return (
     <Card className="h-full w-full overflow-y-scroll border-none">
       <Tabs defaultValue="table">
@@ -22,7 +38,7 @@ export function Visualization() {
           <div className="flex flex-col justify-center gap-1 p-0">
             <TabsList>
               <TabsTrigger value="table" className="text-xs font-semibold">
-                Table
+                Data Preview
               </TabsTrigger>
               <TabsTrigger value="line" className="text-xs font-semibold">
                 Line Chart
@@ -34,6 +50,9 @@ export function Visualization() {
           </div>
           <TabsContent value="table" className="mt-0">
             <div className="flex items-center gap-2">
+              <Button variant="outline" className="px-3 text-xs font-semibold">
+                <CSVLink data={displayedData}>Export CSV</CSVLink>
+              </Button>
               <Input
                 placeholder="Filter rooms..."
                 value={
@@ -42,11 +61,14 @@ export function Visualization() {
                 onChange={(event) => {
                   table?.getColumn("room")?.setFilterValue(event.target.value);
                 }}
-                className="max-w-[150px] text-xs font-medium"
+                className="max-w-[150px] text-xs font-semibold"
               />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="px-3 text-xs">
+                  <Button
+                    variant="outline"
+                    className="px-3 text-xs font-semibold"
+                  >
                     Columns <ChevronDownIcon className="ml-4 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
