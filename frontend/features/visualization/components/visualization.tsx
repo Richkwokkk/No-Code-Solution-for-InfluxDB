@@ -50,8 +50,14 @@ export function Visualization() {
           </div>
           <TabsContent value="table" className="mt-0">
             <div className="flex items-center gap-2">
-              <Button variant="outline" className="px-3 text-xs font-semibold">
-                <CSVLink data={displayedData}>Export CSV</CSVLink>
+              <Button
+                variant="outline"
+                className="px-3 text-xs font-semibold"
+                asChild
+              >
+                <CSVLink data={displayedData} filename="export.csv">
+                  Export CSV
+                </CSVLink>
               </Button>
               <Input
                 placeholder="Filter rooms..."
