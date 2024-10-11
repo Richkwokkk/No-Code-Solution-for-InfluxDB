@@ -5,7 +5,6 @@ docker compose \
     --env-file .env/influxdb.dev.env \
     --env-file .env/grafana.dev.env \
     --env-file .env/server.dev.env \
-    --env-file .env/frontend.dev.env \
     up \
     --build \
     --watch
