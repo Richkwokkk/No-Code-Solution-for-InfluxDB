@@ -33,8 +33,9 @@ export const useFluxQuery = () => {
     },
     onSuccess: (data: { result: Record<string, any> }) => {
       queryClient.invalidateQueries({ queryKey: fluxQueryKeys.fluxQuery });
-      queryClient.setQueryData([...fluxQueryKeys.fluxQuery, sanitizedCode], {
-        data: Object.values(data.result)
+      queryClient.setQueryData(
+        fluxQueryKeys.fluxQuery,
+        Object.values(data.result)
           .flat()
           .filter((r) => r.result === "_result")
           .map(
@@ -49,7 +50,7 @@ export const useFluxQuery = () => {
               [""]: string;
             }) => ({ ...rest }),
           ),
-      });
+      );
     },
     onError: (error: unknown) => {
       if (error instanceof Error) {
