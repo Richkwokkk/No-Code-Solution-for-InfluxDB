@@ -31,14 +31,13 @@ export const MeasurementNode = ({ id }: NodeProps) => {
   const dateRangeNodeData = useNodesData(dateRangeConnections?.[0]?.source);
 
   const previousNodeData = React.useMemo(
-    () => (dateRangeNodeData?.data.result as NodeData["result"]) || null,
+    () => dateRangeNodeData?.data.result as NodeData["result"],
     [dateRangeNodeData],
   );
 
   const { data, error } = useMeasurements(previousNodeData);
 
   if (error) {
-    localStorage.removeItem("vf-token");
     if (pathname !== "/login") {
       router.push("/login");
       toast.error("Session expired. Please login again.");

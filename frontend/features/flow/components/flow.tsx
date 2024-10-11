@@ -16,6 +16,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 
 import {
@@ -31,7 +32,12 @@ import {
   type NodeProps,
   type NodeType,
 } from "@/features/flow/components/flow-nodes";
-import { FLOW_KEY, initialNodes } from "@/features/flow/constants";
+import {
+  FLOW_BACKGROUND_COLOR_DARK,
+  FLOW_BACKGROUND_COLOR_LIGHT,
+  FLOW_KEY,
+  initialNodes,
+} from "@/features/flow/constants";
 import { throttle } from "@/lib/utils";
 
 type ReactFlowNodeTypes = {
@@ -61,7 +67,8 @@ export function Flow() {
           {
             ...params,
             style: {
-              strokeWidth: "2px",
+              strokeWidth: "1.5px",
+              stroke: "hsl(217.2, 32.6%, 70%)",
             },
             animated: true,
           },
@@ -134,10 +141,13 @@ export function Flow() {
   React.useEffect(restoreFlow, [restoreFlow]);
   React.useEffect(saveRfInstance, [saveRfInstance]);
 
+  const { theme } = useTheme();
+
   return (
     <section className="flow h-full w-full">
       <ReactFlow
         nodeTypes={nodeTypes}
+        colorMode={theme === "dark" ? "dark" : "light"}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -146,15 +156,25 @@ export function Flow() {
         onInit={setRfInstance}
         onMoveEnd={saveRfInstance}
         connectionLineType={ConnectionLineType.Bezier}
-        isValidConnection={isValidConnection}
+        isValidConnection={(connection) =>
+          isValidConnection(connection) ?? false
+        }
         maxZoom={1}
         proOptions={{ hideAttribution: true }}
       >
-        <Controls position="bottom-right" orientation="vertical">
+        <Controls position="bottom-left">
           <AlignButton />
           <ResetButton />
         </Controls>
-        <Background variant={BackgroundVariant.Dots} />
+        <Background
+          variant={BackgroundVariant.Dots}
+          gap={30}
+          bgColor={
+            theme === "dark"
+              ? FLOW_BACKGROUND_COLOR_DARK
+              : FLOW_BACKGROUND_COLOR_LIGHT
+          }
+        />
       </ReactFlow>
     </section>
   );

@@ -37,7 +37,7 @@ export function BaseNode({
             type="target"
             id={upHandleId}
             position={Position.Top}
-            className="!-bottom-[4px] !h-1 !w-4 !min-w-0 !rounded-none !rounded-b-[2px] !border-none !bg-transparent"
+            className="!-bottom-[4px] !h-1 !w-full !min-w-0 !rounded-none !rounded-b-[2px] !border-none !bg-transparent"
           />
         ) : null}
         <div className="flex items-center space-x-2">
@@ -56,7 +56,7 @@ export function BaseNode({
             type="source"
             id={underHandleId}
             position={Position.Bottom}
-            className="!-bottom-[4px] !h-1 !w-4 !min-w-0 !rounded-none !rounded-b-[2px] !border-none !bg-transparent"
+            className="!-bottom-[4px] !h-1 !w-full !min-w-0 !rounded-none !rounded-b-[2px] !border-none !bg-transparent"
           />
         ) : null}
       </div>

@@ -49,9 +49,9 @@ export const Sidebar = () => {
                       key={type}
                       id={type}
                       type={type}
-                      className="flex h-14 w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:shadow-md"
+                      className="flex h-14 w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:bg-primary-foreground hover:shadow-md"
                     >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-accent">
                         <Icon size={20} />
                       </div>
                     </SidebarDraggable>
@@ -72,7 +72,7 @@ export const Sidebar = () => {
                 key={type}
                 id={type}
                 type={type}
-                className="flex h-14 w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:shadow-md"
+                className="flex h-14 w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:bg-primary-foreground hover:shadow-md"
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
                   <Icon size={20} />

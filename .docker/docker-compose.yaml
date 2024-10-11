@@ -44,33 +44,33 @@ services:
       - grafana
     networks:
       - main_network
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: ${FE_DOCKERFILE}
-    image: ${FE_IMAGE}:${FE_VERSION}
-    container_name: ${FE_CONTAINER}-${FE_VERSION}
-    ports:
-      - ${FE_PORT}
-    environment:
-      - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
-    depends_on:
-      - influxdb
-      - grafana
-      - server
-    develop:
-      watch:
-        - path: ./frontend/package.json
-          action: rebuild
-        - path: ./frontend/package-lock.json
-          action: rebuild
-        - path: ./frontend/pnpm-lock.json
-          action: rebuild
-        - path: ./frontend
-          target: /app
-          action: sync
-    networks:
-      - main_network
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: ${FE_DOCKERFILE}
+  #   image: ${FE_IMAGE}:${FE_VERSION}
+  #   container_name: ${FE_CONTAINER}-${FE_VERSION}
+  #   ports:
+  #     - ${FE_PORT}
+  #   environment:
+  #     - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
+  #   depends_on:
+  #     - influxdb
+  #     - grafana
+  #     - server
+  #   develop:
+  #     watch:
+  #       - path: ./frontend/package.json
+  #         action: rebuild
+  #       - path: ./frontend/package-lock.json
+  #         action: rebuild
+  #       - path: ./frontend/pnpm-lock.json
+  #         action: rebuild
+  #       - path: ./frontend
+  #         target: /app
+  #         action: sync
+  #   networks:
+  #     - main_network
 
 networks:
   main_network:

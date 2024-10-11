@@ -51,7 +51,7 @@ export const SidebarDndContext = ({ children }: DndContextProps) => {
         clientRect.bottom >= flowRect.bottom
       ) {
         toast.info("Node out of bounds", {
-          description: "Please try dragging it fully into the flow panel",
+          description: "Please drag the node fully into the flow panel",
         });
         return;
       }
