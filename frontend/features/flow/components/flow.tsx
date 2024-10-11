@@ -67,7 +67,8 @@ export function Flow() {
           {
             ...params,
             style: {
-              strokeWidth: "2px",
+              strokeWidth: "1.5px",
+              stroke: "hsl(217.2, 32.6%, 70%)",
             },
             animated: true,
           },
