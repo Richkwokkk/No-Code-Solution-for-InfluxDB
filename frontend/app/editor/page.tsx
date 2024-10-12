@@ -11,13 +11,13 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { ChartContainer } from "@/features/charts/components/chart-container";
 import { CodeEditor } from "@/features/code/components/code-editor";
 import { Flow } from "@/features/flow/components/flow";
 import { Header } from "@/features/flow/components/header";
 import { Sidebar } from "@/features/flow/components/sidebar";
 import { SidebarDndContext } from "@/features/flow/components/sidebar/sidebar-dnd-context";
 import { useToggle } from "@/features/flow/hooks/use-toggle";
+import { Visualization } from "@/features/visualization/components/visualization";
 
 export default function EditorPage() {
   const { isCodeEditorOpen, isFlowOpen, isVisualizationOpen } = useStore(
@@ -29,7 +29,7 @@ export default function EditorPage() {
     }),
   );
 
-  const shouldRenderUpperPanel = isFlowOpen || isCodeEditorOpen;
+  const shouldRenderLowerPanel = isFlowOpen || isCodeEditorOpen;
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const upperPanelRef = useRef<ImperativePanelHandle>(null);
 
@@ -69,10 +69,10 @@ export default function EditorPage() {
               direction="vertical"
               className="flex-1"
             >
-              {shouldRenderUpperPanel && (
+              {shouldRenderLowerPanel && (
                 <ResizablePanel
                   order={1}
-                  id="upper-panel"
+                  id="lower-panel"
                   ref={upperPanelRef}
                   defaultSize={50}
                   minSize={10}
@@ -112,13 +112,11 @@ export default function EditorPage() {
                   </ResizablePanelGroup>
                 </ResizablePanel>
               )}
-
-              {shouldRenderUpperPanel && isVisualizationOpen && (
+              {shouldRenderLowerPanel && isVisualizationOpen && (
                 <ResizableHandle
                   onDoubleClickCapture={resetVerticalPanelSize}
                 />
               )}
-
               {isVisualizationOpen && (
                 <ResizablePanel
                   order={4}
@@ -126,7 +124,7 @@ export default function EditorPage() {
                   defaultSize={30}
                   minSize={10}
                 >
-                  <ChartContainer />
+                  <Visualization />
                 </ResizablePanel>
               )}
             </ResizablePanelGroup>

@@ -169,11 +169,7 @@ export function Flow() {
         <Background
           variant={BackgroundVariant.Dots}
           gap={30}
-          bgColor={
-            theme === "dark"
-              ? FLOW_BACKGROUND_COLOR_DARK
-              : FLOW_BACKGROUND_COLOR_LIGHT
-          }
+          bgColor="hsl(var(--background))"
         />
       </ReactFlow>
     </section>

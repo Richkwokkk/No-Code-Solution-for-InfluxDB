@@ -12,6 +12,7 @@ import {
 
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
+import { useStore } from "zustand";
 
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -26,9 +27,14 @@ import {
   NodeData,
 } from "@/features/flow/components/flow-nodes/types";
 import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
+import { useDateRange } from "@/features/flow/hooks/use-date-range";
 
 export function DateRangeNode({ id }: NodeProps) {
   const { updateNodeData } = useReactFlow();
+  const { setDateRange } = useStore(useDateRange, (state) => ({
+    setDateRange: state.setDateRange,
+  }));
+
   const nodeData = useNodesData(id)?.data as NodeData;
   const { value } = nodeData;
 
@@ -63,6 +69,8 @@ export function DateRangeNode({ id }: NodeProps) {
       const formattedDate = date.to
         ? `${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}`
         : format(date.from, "LLL dd, y");
+
+      setDateRange(formattedDate);
       updateNodeData(id, {
         value: formattedDate,
         result: {
@@ -74,6 +82,7 @@ export function DateRangeNode({ id }: NodeProps) {
         },
       });
     } else {
+      setDateRange("");
       updateNodeData(id, {
         value: undefined,
         result: {
@@ -83,7 +92,7 @@ export function DateRangeNode({ id }: NodeProps) {
         },
       });
     }
-  }, [bucketData, date, id, updateNodeData]);
+  }, [bucketData, date, id, updateNodeData, setDateRange]);
 
   const handleDateChange = (selectedDate: DateRange | undefined) => {
     setDate(selectedDate);

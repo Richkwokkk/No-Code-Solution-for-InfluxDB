@@ -14,7 +14,6 @@ export function useLogin() {
     mutationFn: (data: FormData) =>
       apiClient.post("accounts/signin/", { json: data }).json(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: authQueryKeys.authStatus });
       queryClient.setQueryData(authQueryKeys.authStatus, {
         isAuthenticated: true,
       });
