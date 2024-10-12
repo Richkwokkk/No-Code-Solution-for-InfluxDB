@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Chart } from "@/features/visualization/components/charts";
+import { Chart } from "@/features/visualization/components/chart";
 import { DataTable } from "@/features/visualization/components/data-table";
 import { useTable } from "@/features/visualization/hooks/use-table";
 
