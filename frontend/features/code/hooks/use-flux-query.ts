@@ -36,6 +36,11 @@ export const useFluxQuery = () => {
     onSuccess: (data: { result: Record<string, any> } | undefined) => {
       if (!data) return;
       queryClient.invalidateQueries({ queryKey: fluxQueryKeys.fluxQuery });
+      const labels = {
+        co: "carbon",
+        hum: "humidity",
+        temp: "temperature",
+      };
       queryClient.setQueryData(
         fluxQueryKeys.fluxQuery,
         Object.values(data.result)
@@ -45,14 +50,37 @@ export const useFluxQuery = () => {
             ({
               [""]: _,
               result: _result,
+              room,
               table: _table,
-              ...rest
+              _field: field,
+              _measurement: measurement,
+              _start: start,
+              _stop: stop,
+              _time: time,
+              _value: value,
             }: {
               result: string;
               table: string;
+              _field: string;
               [""]: string;
-            }) => ({ ...rest }),
-          ),
+              room: string;
+              _measurement: string;
+              _start: string;
+              _stop: string;
+              _time: string;
+              _value: string;
+            }) => ({
+              time,
+              start,
+              stop,
+              label: labels[field as keyof typeof labels],
+              room,
+              value: parseFloat(value),
+              field,
+              measurement,
+            }),
+          )
+          .sort((a, b) => (a as any)._time - (b as any)._time),
       );
     },
     onError: (error: unknown) => {

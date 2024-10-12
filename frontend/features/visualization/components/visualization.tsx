@@ -3,7 +3,6 @@ import { CSVLink } from "react-csv";
 import { ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -12,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Chart } from "@/features/visualization/components/charts";
 import { DataTable } from "@/features/visualization/components/data-table";
 import { useTable } from "@/features/visualization/hooks/use-table";
 
@@ -32,7 +32,7 @@ export function Visualization() {
   });
 
   return (
-    <Card className="h-full w-full overflow-y-scroll border-none">
+    <section className="h-full w-full overflow-y-scroll border-none">
       <Tabs defaultValue="table">
         <div className="flex items-center justify-between px-8 py-4">
           <div className="flex flex-col justify-center gap-1 p-0">
@@ -104,11 +104,21 @@ export function Visualization() {
           </TabsContent>
         </div>
         <TabsContent value="table" className="mt-0">
-          <CardContent className="px-8 pb-0">
+          <div className="px-8 pb-0">
             <DataTable table={table} />
-          </CardContent>
+          </div>
+        </TabsContent>
+        <TabsContent value="line" className="mt-0">
+          <div className="max-h-[350px] px-8 pb-8">
+            <Chart type="line" />
+          </div>
+        </TabsContent>
+        <TabsContent value="bar" className="mt-0">
+          <div className="max-h-[350px] px-8 pb-8">
+            <Chart type="bar" />
+          </div>
         </TabsContent>
       </Tabs>
-    </Card>
+    </section>
   );
 }

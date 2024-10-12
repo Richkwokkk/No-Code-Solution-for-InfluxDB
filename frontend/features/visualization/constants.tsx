@@ -2,9 +2,9 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { ChartConfig } from "@/components/ui/chart";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Measurement } from "@/features/visualization/types";
+import { Row } from "@/features/visualization/types";
 
-export const columns: ColumnDef<Measurement>[] = [
+export const columns: ColumnDef<Row>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -30,27 +30,27 @@ export const columns: ColumnDef<Measurement>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "_time",
+    accessorKey: "time",
     header: "Time",
   },
   {
-    accessorKey: "_start",
-    header: "Start",
+    accessorKey: "start",
+    header: "Date Range Start Time",
   },
   {
-    accessorKey: "_stop",
-    header: "Stop",
+    accessorKey: "stop",
+    header: "Date Range Stop Time",
   },
   {
-    accessorKey: "_value",
+    accessorKey: "value",
     header: "Value",
   },
   {
-    accessorKey: "_field",
+    accessorKey: "field",
     header: "Field",
   },
   {
-    accessorKey: "_measurement",
+    accessorKey: "measurement",
     header: "Measurement",
   },
   {

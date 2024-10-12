@@ -1,10 +1,11 @@
-export type Measurement = {
-  _result: string;
-  _start: string;
-  _stop: string;
-  _time: string;
-  _value: number;
-  _field: string;
-  _measurement: string;
+export type Row = {
+  label: string;
+  result: string;
+  start: string;
+  stop: string;
+  time: string;
+  value: string;
+  field: string;
+  measurement: string;
   room: string;
 };

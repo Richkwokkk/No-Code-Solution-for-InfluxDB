@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { useQuery } from "@tanstack/react-query";
 import {
   ColumnFiltersState,
   getCoreRowModel,
@@ -12,9 +11,8 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 
-import { fluxQueryKeys } from "@/features/code/constants";
 import { columns } from "@/features/visualization/constants";
-import { Measurement } from "@/features/visualization/types";
+import { useQueryData } from "@/features/visualization/hooks/use-query-data";
 
 export function useTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -24,13 +22,7 @@ export function useTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
-  const { data } = useQuery({
-    queryKey: fluxQueryKeys.fluxQuery,
-    staleTime: Infinity,
-  }) as {
-    data: Measurement[];
-  };
+  const data = useQueryData();
 
   return useReactTable({
     data: data ?? [],
