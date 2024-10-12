@@ -115,6 +115,12 @@ export function Chart({ type }: { type: "line" | "bar" }) {
 
   const ChartComponent = chartComponents[type];
 
+  const chartComponentData = React.useMemo(() => {
+    return chartData
+      .filter((row) => row.label === activeChart)
+      .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+  }, [chartData, activeChart]);
+
   return (
     <Card>
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
@@ -138,7 +144,7 @@ export function Chart({ type }: { type: "line" | "bar" }) {
                 onClick={() => setActiveChart(chart)}
               >
                 <span className="text-xs text-muted-foreground">
-                  {chartConfig[chart]?.label} Avg.
+                  Avg. {chartConfig[chart]?.label}
                 </span>
                 <span className="text-lg font-bold leading-none sm:text-3xl">
                   {average[chart as keyof typeof average]?.toFixed(2)}
@@ -151,15 +157,11 @@ export function Chart({ type }: { type: "line" | "bar" }) {
       <CardContent className="px-2 sm:p-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[230px] w-full"
+          className="aspect-auto h-[170px] w-full"
         >
           <ChartComponent
-            data={chartData
-              .filter((row) => row.label === activeChart)
-              .sort(
-                (a, b) =>
-                  new Date(a.time).getTime() - new Date(b.time).getTime(),
-              )}
+            dataKey={activeChart}
+            data={chartComponentData}
             margin={{
               left: 12,
               right: 12,

@@ -29,7 +29,7 @@ export default function EditorPage() {
     }),
   );
 
-  const shouldRenderLowerPanel = isFlowOpen || isCodeEditorOpen;
+  const shouldRenderUpperPanel = isFlowOpen || isCodeEditorOpen;
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const upperPanelRef = useRef<ImperativePanelHandle>(null);
 
@@ -69,7 +69,7 @@ export default function EditorPage() {
               direction="vertical"
               className="flex-1"
             >
-              {shouldRenderLowerPanel && (
+              {shouldRenderUpperPanel && (
                 <ResizablePanel
                   order={1}
                   id="lower-panel"
@@ -112,7 +112,7 @@ export default function EditorPage() {
                   </ResizablePanelGroup>
                 </ResizablePanel>
               )}
-              {shouldRenderLowerPanel && isVisualizationOpen && (
+              {shouldRenderUpperPanel && isVisualizationOpen && (
                 <ResizableHandle
                   onDoubleClickCapture={resetVerticalPanelSize}
                 />
