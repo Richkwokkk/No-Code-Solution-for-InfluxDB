@@ -59,13 +59,12 @@ export function Chart({ type }: { type: "line" | "bar" }) {
     [chartData],
   );
 
-  const [activeChart, setActiveChart] = React.useState<
-    keyof typeof chartConfig
-  >(Array.from(fields)[0] as keyof typeof chartConfig);
+  const [activeChart, setActiveChart] =
+    React.useState<keyof typeof chartConfig>("carbon");
 
   React.useEffect(() => {
     if (fields.size > 0) {
-      setActiveChart(Array.from(fields)[0] as keyof typeof chartConfig);
+      setActiveChart(Array?.from(fields)[0] as keyof typeof chartConfig);
     }
   }, [chartData, fields]);
 
