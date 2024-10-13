@@ -22,10 +22,12 @@ export function useTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
   const data = useQueryData();
+  const memoizedData = React.useMemo(() => data ?? [], [data]);
 
   return useReactTable({
-    data: data ?? [],
+    data: memoizedData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
