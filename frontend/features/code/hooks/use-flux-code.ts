@@ -151,7 +151,8 @@ export const useFluxCode = () => {
         })
         .join(" or ");
 
-      newFluxCode += `  |> filter(fn: (r) => \n    ${combinedFilters}\n  )\n`;
+      newFluxCode += `  |> filter(
+    fn: (r) => ${combinedFilters}\n  )\n`;
     }
 
     setFluxCode(newFluxCode);
