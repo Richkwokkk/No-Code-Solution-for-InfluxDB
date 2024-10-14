@@ -12,7 +12,7 @@ import {
 } from "@tanstack/react-table";
 
 import { columns } from "@/features/visualization/constants";
-import { useQueryData } from "@/features/visualization/hooks/use-query-data";
+import { useTableData } from "@/features/visualization/hooks/use-query-data";
 
 export function useTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -23,7 +23,7 @@ export function useTable() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const data = useQueryData();
+  const data = useTableData();
   const memoizedData = React.useMemo(() => data ?? [], [data]);
 
   return useReactTable({

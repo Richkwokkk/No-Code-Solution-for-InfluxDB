@@ -27,23 +27,17 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useDateRange } from "@/features/flow/hooks/use-date-range";
-import { useQueryData } from "@/features/visualization/hooks/use-query-data";
+import { useChartData } from "@/features/visualization/hooks/use-query-data";
+import { Row } from "@/features/visualization/types";
 
 const chartConfig = {
-  value: {
-    label: "Value",
-  },
-  humidity: {
-    label: "Humidity",
+  livingRoom: {
+    label: "Living Room",
     color: "hsl(var(--chart-1))",
   },
-  temperature: {
-    label: "Temperature",
+  kitchen: {
+    label: "Kitchen",
     color: "hsl(var(--chart-2))",
-  },
-  carbon: {
-    label: "Carbon Dioxide Level",
-    color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;
 
@@ -51,38 +45,37 @@ export function Chart({ type }: { type: "line" | "bar" }) {
   const { dateRange } = useStore(useDateRange, (state) => ({
     dateRange: state.dateRange,
   }));
-  const chartData = useQueryData();
+  const chartData = useChartData();
 
-  const fields = React.useMemo(
+  const labels = React.useMemo(
     () =>
-      chartData?.reduce((acc, cur) => acc.add(cur.label), new Set<string>()),
+      chartData?.reduce(
+        (acc, cur) => acc.set(cur.field, cur.label),
+        new Map<string, string>(),
+      ),
     [chartData],
   );
 
-  const [activeChart, setActiveChart] =
-    React.useState<keyof typeof chartConfig>("carbon");
+  const [activeChart, setActiveChart] = React.useState<Row["field"]>("co");
 
   React.useEffect(() => {
-    if (fields.size > 0) {
-      setActiveChart(Array?.from(fields)[0] as keyof typeof chartConfig);
+    if (labels.size > 0) {
+      setActiveChart(Array.from(labels)[0][0] as Row["field"]);
     }
-  }, [chartData, fields]);
+  }, [chartData, labels]);
 
   const sum = React.useMemo(() => {
     return {
-      humidity: chartData?.reduce(
-        (acc, curr) =>
-          curr.label === "humidity" ? acc + parseFloat(curr.value) : acc,
+      hum: chartData?.reduce(
+        (acc, curr) => (curr.field === "hum" ? acc + (curr?.value ?? 0) : acc),
         0,
       ),
-      temperature: chartData?.reduce(
-        (acc, curr) =>
-          curr.label === "temperature" ? acc + parseFloat(curr.value) : acc,
+      temp: chartData?.reduce(
+        (acc, curr) => (curr.field === "temp" ? acc + (curr?.value ?? 0) : acc),
         0,
       ),
-      carbon: chartData?.reduce(
-        (acc, curr) =>
-          curr.label === "carbon" ? acc + parseFloat(curr.value) : acc,
+      co: chartData?.reduce(
+        (acc, curr) => (curr.field === "co" ? acc + (curr?.value ?? 0) : acc),
         0,
       ),
     };
@@ -90,10 +83,9 @@ export function Chart({ type }: { type: "line" | "bar" }) {
 
   const counts = React.useMemo(() => {
     return {
-      humidity: chartData?.filter((row) => row.label === "humidity").length,
-      temperature: chartData?.filter((row) => row.label === "temperature")
-        .length,
-      carbon: chartData?.filter((row) => row.label === "carbon").length,
+      hum: chartData?.filter((row) => row.field === "hum").length,
+      temp: chartData?.filter((row) => row.field === "temp").length,
+      co: chartData?.filter((row) => row.field === "co").length,
     };
   }, [chartData]);
 
@@ -116,7 +108,7 @@ export function Chart({ type }: { type: "line" | "bar" }) {
 
   const chartComponentData = React.useMemo(() => {
     return chartData
-      .filter((row) => row.label === activeChart)
+      .filter((row) => row.field === activeChart)
       .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
   }, [chartData, activeChart]);
 
@@ -125,7 +117,7 @@ export function Chart({ type }: { type: "line" | "bar" }) {
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle className="capitalize">
-            {chartConfig[activeChart]?.label}
+            {Array.from(labels).find(([key]) => key === activeChart)?.[1]}
           </CardTitle>
           <CardDescription>
             Showing data {dateRange.includes("-") ? "for " : "from "}
@@ -133,8 +125,8 @@ export function Chart({ type }: { type: "line" | "bar" }) {
           </CardDescription>
         </div>
         <div className="flex">
-          {Array.from(fields).map((key) => {
-            const chart = key as keyof typeof chartConfig;
+          {Array.from(labels).map(([key, value]) => {
+            const chart = key as Row["field"];
             return (
               <button
                 key={chart}
@@ -142,8 +134,8 @@ export function Chart({ type }: { type: "line" | "bar" }) {
                 className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
                 onClick={() => setActiveChart(chart)}
               >
-                <span className="text-xs text-muted-foreground">
-                  Avg. {chartConfig[chart]?.label}
+                <span className="text-xs capitalize text-muted-foreground">
+                  Avg. {value}
                 </span>
                 <span className="text-lg font-bold leading-none sm:text-3xl">
                   {average[chart as keyof typeof average]?.toFixed(2)}
@@ -200,7 +192,7 @@ export function Chart({ type }: { type: "line" | "bar" }) {
               content={
                 <ChartTooltipContent
                   className="w-[150px]"
-                  nameKey={activeChart}
+                  nameKey="room"
                   labelFormatter={(value) => {
                     {
                       const date = new Date(value);
@@ -223,15 +215,27 @@ export function Chart({ type }: { type: "line" | "bar" }) {
               }
             />
             {type === "line" ? (
-              <Line
-                dataKey="value"
-                type="monotone"
-                stroke={`var(--color-${activeChart})`}
-                dot={false}
-                strokeWidth={2}
-              />
+              <>
+                <Line
+                  dataKey="Kitchen"
+                  type="monotone"
+                  stroke={`var(--color-kitchen)`}
+                  dot={false}
+                  strokeWidth={2}
+                />
+                <Line
+                  dataKey="Living Room"
+                  type="monotone"
+                  stroke={`var(--color-livingRoom)`}
+                  dot={false}
+                  strokeWidth={2}
+                />
+              </>
             ) : (
-              <Bar dataKey="value" fill={`var(--color-${activeChart})`} />
+              <>
+                <Bar dataKey="Kitchen" fill={`var(--color-kitchen)`} />
+                <Bar dataKey="Living Room" fill={`var(--color-livingRoom)`} />
+              </>
             )}
           </ChartComponent>
         </ChartContainer>
