@@ -6,7 +6,8 @@ export const LIGHT_THEME: BundledTheme = "github-light";
 export const CODE_EDITOR_FONT_FAMILY = "Fira Code";
 
 const fluxQueryKeys = {
-  fluxQuery: ["fluxQuery"] as const,
+  tableData: ["tableData"] as const,
+  chartData: ["chartData"] as const,
 };
 
 export { fluxQueryKeys };

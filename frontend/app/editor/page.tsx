@@ -121,7 +121,7 @@ export default function EditorPage() {
                 <ResizablePanel
                   order={4}
                   id="visualization-panel"
-                  defaultSize={30}
+                  defaultSize={50}
                   minSize={10}
                 >
                   <Visualization />

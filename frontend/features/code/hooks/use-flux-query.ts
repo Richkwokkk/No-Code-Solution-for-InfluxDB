@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { fluxQueryKeys } from "@/features/code/constants";
+import { Row } from "@/features/visualization/types";
 import { apiClient } from "@/lib/api-client";
 
 export const useFluxQuery = () => {
@@ -35,53 +36,75 @@ export const useFluxQuery = () => {
     },
     onSuccess: (data: { result: Record<string, any> } | undefined) => {
       if (!data) return;
-      queryClient.invalidateQueries({ queryKey: fluxQueryKeys.fluxQuery });
+      queryClient.invalidateQueries({ queryKey: fluxQueryKeys.tableData });
+      queryClient.invalidateQueries({ queryKey: fluxQueryKeys.chartData });
       const labels = {
-        co: "carbon",
-        hum: "humidity",
-        temp: "temperature",
-      };
-      queryClient.setQueryData(
-        fluxQueryKeys.fluxQuery,
-        Object.values(data.result)
-          .flat()
-          .filter((r) => r.result === "_result")
-          .map(
-            ({
-              [""]: _,
-              result: _result,
-              room,
-              table: _table,
-              _field: field,
-              _measurement: measurement,
-              _start: start,
-              _stop: stop,
-              _time: time,
-              _value: value,
-            }: {
-              result: string;
-              table: string;
-              _field: string;
-              [""]: string;
-              room: string;
-              _measurement: string;
-              _start: string;
-              _stop: string;
-              _time: string;
-              _value: string;
-            }) => ({
-              time,
+        co: "Carbon Dioxide Level",
+        hum: "Humidity",
+        temp: "Temperature",
+      } as const;
+      const chartData: Row[] = [];
+      const tableData: Row[] = [];
+      Object.values(data.result)
+        .flat()
+        .filter((r) => r.result === "_result")
+        .forEach((curr) => {
+          const {
+            room,
+            _field: field,
+            _measurement: measurement,
+            _start: start,
+            _stop: stop,
+            _time: time,
+            _value: value,
+          } = curr;
+
+          tableData.push({
+            start: start as string,
+            stop: stop as string,
+            time: time as string,
+            measurement: measurement as string,
+            field: field as "co" | "temp" | "hum",
+            room: room as "Kitchen" | "Living Room",
+            value: parseFloat(value),
+            label: labels[field as "co" | "temp" | "hum"],
+          });
+
+          const existingEntry = chartData.find(
+            (entry) =>
+              entry.measurement === measurement &&
+              entry.field === field &&
+              entry.time === time,
+          ) as Row;
+
+          if (existingEntry) {
+            existingEntry[room as "Kitchen" | "Living Room"] =
+              parseFloat(value);
+          } else {
+            chartData.push({
               start,
               stop,
-              label: labels[field as keyof typeof labels],
+              time,
+              measurement,
+              field,
               room,
               value: parseFloat(value),
-              field,
-              measurement,
-            }),
-          )
-          .sort((a, b) => (a as any)._time - (b as any)._time),
+              label: labels[field as "co" | "hum" | "temp"],
+              [room]: parseFloat(value),
+            });
+          }
+        });
+
+      tableData.sort(
+        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
       );
+
+      chartData.sort(
+        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
+      );
+
+      queryClient.setQueryData(fluxQueryKeys.chartData, chartData);
+      queryClient.setQueryData(fluxQueryKeys.tableData, tableData);
     },
     onError: (error: unknown) => {
       if (error instanceof Error) {
