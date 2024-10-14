@@ -1,6 +1,4 @@
 export type Row = {
-  start: string;
-  stop: string;
   time: string;
   measurement: string;
   room: string;

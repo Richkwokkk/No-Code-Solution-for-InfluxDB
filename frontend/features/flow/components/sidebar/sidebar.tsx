@@ -61,9 +61,9 @@ export const Sidebar = () => {
                     align="start"
                     sideOffset={5}
                     alignOffset={-3}
-                    className="text-[10px] font-semibold capitalize"
+                    className="text-[10px] capitalize"
                   >
-                    <p className="font-semibold capitalize">{title}</p>
+                    {title}
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

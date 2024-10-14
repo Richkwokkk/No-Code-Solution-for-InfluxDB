@@ -73,9 +73,7 @@ export const Header = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="center">
-                <span className="text-[10px] font-bold capitalize">
-                  toggle theme
-                </span>
+                <span className="text-[10px] capitalize">toggle theme</span>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -89,7 +87,7 @@ export const Header = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="start" alignOffset={-40}>
-                <span className="text-[10px] font-bold capitalize">
+                <span className="text-[10px] capitalize">
                   {isFlowOpen ? "hide" : "show"} flow panel
                 </span>
               </TooltipContent>
@@ -107,7 +105,7 @@ export const Header = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="start" alignOffset={-60}>
-                <span className="text-[10px] font-bold capitalize">
+                <span className="text-[10px] capitalize">
                   {isVisualizationOpen ? "hide" : "show"} visualization panel
                 </span>
               </TooltipContent>
@@ -125,7 +123,7 @@ export const Header = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="start" alignOffset={-40}>
-                <span className="text-[10px] font-bold capitalize">
+                <span className="text-[10px] capitalize">
                   {isCodeEditorOpen ? "hide" : "show"} code editor
                 </span>
               </TooltipContent>
@@ -141,7 +139,7 @@ export const Header = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="start" alignOffset={-30}>
-                <span className="text-[10px] font-bold capitalize">
+                <span className="text-[10px] capitalize">
                   {isQueryRunning ? "pause" : "run"} query
                 </span>
               </TooltipContent>

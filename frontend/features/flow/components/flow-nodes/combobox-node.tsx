@@ -80,11 +80,11 @@ export function ComboboxNode({
           {selections && selections.length > 0 && (
             <CommandInput
               placeholder={`Search ${type.charAt(0).toUpperCase() + type.slice(1)}...`}
-              className="text-[10px] font-bold"
+              className="text-[10px]"
             />
           )}
           <CommandList>
-            <CommandEmpty className="flex items-center justify-center p-3 text-xs font-bold">
+            <CommandEmpty className="flex items-center justify-center p-3 text-xs">
               No {type} found.
             </CommandEmpty>
             {selections && selections.length > 0 && (
@@ -109,7 +109,7 @@ export function ComboboxNode({
                         value === selection ? "opacity-100" : "opacity-0",
                       )}
                     />
-                    <span className="text-xs font-bold">{selection}</span>
+                    <span className="text-xs">{selection}</span>
                   </CommandItem>
                 ))}
               </CommandGroup>

@@ -34,14 +34,6 @@ export const columns: ColumnDef<Row>[] = [
     header: "Time",
   },
   {
-    accessorKey: "start",
-    header: "Date Range Start Time",
-  },
-  {
-    accessorKey: "stop",
-    header: "Date Range Stop Time",
-  },
-  {
     accessorKey: "value",
     header: "Value",
   },

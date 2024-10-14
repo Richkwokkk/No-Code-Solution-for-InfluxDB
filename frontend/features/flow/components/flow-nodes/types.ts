@@ -14,6 +14,6 @@ export type NodeData = {
     field?: string;
     thresholdValue: number | undefined;
     isThresholdIncluded: boolean | undefined;
-    thresholdType: "max" | "min" | undefined;
+    thresholdType: "max" | "min" | "equal" | "notEqual" | undefined;
   };
 };
