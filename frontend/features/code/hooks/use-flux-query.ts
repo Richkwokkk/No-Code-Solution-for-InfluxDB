@@ -54,15 +54,11 @@ export const useFluxQuery = () => {
             room,
             _field: field,
             _measurement: measurement,
-            _start: start,
-            _stop: stop,
             _time: time,
             _value: value,
           } = curr;
 
           tableData.push({
-            start: formatDate(start as string, "yyyy-MM-dd HH:mm:ss"),
-            stop: formatDate(stop as string, "yyyy-MM-dd HH:mm:ss"),
             time: formatDate(time as string, "yyyy-MM-dd HH:mm:ss"),
             measurement: measurement as string,
             field: field as "co" | "temp" | "hum",
@@ -83,8 +79,6 @@ export const useFluxQuery = () => {
               parseFloat(value);
           } else {
             chartData.push({
-              start,
-              stop,
               time,
               measurement,
               field,

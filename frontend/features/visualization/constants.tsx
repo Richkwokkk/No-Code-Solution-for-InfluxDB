@@ -1,7 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
 
-import { formatDate } from "date-fns";
-
 import { ChartConfig } from "@/components/ui/chart";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Row } from "@/features/visualization/types";
@@ -34,14 +32,6 @@ export const columns: ColumnDef<Row>[] = [
   {
     accessorKey: "time",
     header: "Time",
-  },
-  {
-    accessorKey: "start",
-    header: "Date Range Start Time",
-  },
-  {
-    accessorKey: "stop",
-    header: "Date Range Stop Time",
   },
   {
     accessorKey: "value",
