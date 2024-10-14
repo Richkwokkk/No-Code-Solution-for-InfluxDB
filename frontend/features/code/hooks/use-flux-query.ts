@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { formatDate } from "date-fns";
 import { toast } from "sonner";
 
 import { fluxQueryKeys } from "@/features/code/constants";
@@ -60,9 +61,9 @@ export const useFluxQuery = () => {
           } = curr;
 
           tableData.push({
-            start: start as string,
-            stop: stop as string,
-            time: time as string,
+            start: formatDate(start as string, "yyyy-MM-dd HH:mm:ss"),
+            stop: formatDate(stop as string, "yyyy-MM-dd HH:mm:ss"),
+            time: formatDate(time as string, "yyyy-MM-dd HH:mm:ss"),
             measurement: measurement as string,
             field: field as "co" | "temp" | "hum",
             room: room as "Kitchen" | "Living Room",

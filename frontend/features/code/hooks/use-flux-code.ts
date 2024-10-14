@@ -43,7 +43,19 @@ export const useFluxCode = () => {
         const [_, operator, thresholdValue] = parts;
         if (!operator || !thresholdValue) return "";
         return `r._value ${
-          operator === "≤" ? "<=" : operator === "≥" ? ">=" : operator
+          operator === "≤"
+            ? "<="
+            : operator === "≥"
+              ? ">="
+              : operator === ">"
+                ? ">"
+                : operator === "<"
+                  ? "<"
+                  : operator === "="
+                    ? "=="
+                    : operator === "≠"
+                      ? "!="
+                      : ""
         } ${thresholdValue}`;
       }
 
@@ -57,7 +69,8 @@ export const useFluxCode = () => {
         const parts = thresholdData.value.split(" ");
         if (parts.length < 3) return "";
         const [_, operator, thresholdValue] = parts;
-        return `r._value ${operator === "≤" ? "<=" : operator === "≥" ? ">=" : operator} ${thresholdValue}`;
+        console.log({ operator, thresholdValue });
+        return `r._value ${operator === "≤" ? "<=" : operator === "≥" ? ">=" : operator === ">" ? ">" : operator === "<" ? "<" : operator === "=" ? "==" : operator === "≠" ? "!=" : ""} ${thresholdValue}`;
       })();
 
       if (parentCondition && childConditions.length > 0) {
