@@ -3,10 +3,12 @@
 import * as React from "react";
 
 import {
+  Area,
+  AreaChart,
   Bar,
-  BarChart as RechartsBarChart,
+  BarChart,
   Line,
-  LineChart as RechartsLineChart,
+  LineChart,
   CartesianGrid,
   XAxis,
   YAxis,
@@ -41,7 +43,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function Chart({ type }: { type: "line" | "bar" }) {
+export function Chart({ type }: { type: "line" | "bar" | "area" }) {
   const { dateRange } = useStore(useDateRange, (state) => ({
     dateRange: state.dateRange,
   }));
@@ -100,8 +102,9 @@ export function Chart({ type }: { type: "line" | "bar" }) {
   }, [counts, sum]);
 
   const chartComponents = {
-    line: RechartsLineChart,
-    bar: RechartsBarChart,
+    line: LineChart,
+    bar: BarChart,
+    area: AreaChart,
   };
 
   const ChartComponent = chartComponents[type];
@@ -153,7 +156,7 @@ export function Chart({ type }: { type: "line" | "bar" }) {
           className="aspect-auto h-[170px] w-full"
         >
           <ChartComponent
-            dataKey={activeChart}
+            accessibilityLayer
             data={chartComponentData}
             margin={{
               left: 12,
@@ -191,6 +194,7 @@ export function Chart({ type }: { type: "line" | "bar" }) {
               }}
             />
             <ChartTooltip
+              cursor={false}
               content={
                 <ChartTooltipContent
                   className="w-[150px]"
@@ -233,12 +237,65 @@ export function Chart({ type }: { type: "line" | "bar" }) {
                   strokeWidth={2}
                 />
               </>
-            ) : (
+            ) : null}
+            {type === "bar" ? (
               <>
                 <Bar dataKey="Kitchen" fill={`var(--color-kitchen)`} />
                 <Bar dataKey="Living Room" fill={`var(--color-livingRoom)`} />
               </>
-            )}
+            ) : null}
+            {type === "area" ? (
+              <>
+                <defs>
+                  <linearGradient id="fillKitchen" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-kitchen)"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-kitchen)"
+                      stopOpacity={0.1}
+                    />
+                  </linearGradient>
+                  <linearGradient
+                    id="fillLivingRoom"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-livingRoom)"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-livingRoom)"
+                      stopOpacity={0.1}
+                    />
+                  </linearGradient>
+                </defs>
+                <Area
+                  dataKey="Kitchen"
+                  type="natural"
+                  fill="url(#fillKitchen)"
+                  fillOpacity={0.4}
+                  stroke="var(--color-kitchen)"
+                  stackId="a"
+                />
+                <Area
+                  dataKey="Living Room"
+                  type="natural"
+                  fill="url(#fillLivingRoom)"
+                  fillOpacity={0.4}
+                  stroke="var(--color-livingRoom)"
+                  stackId="a"
+                />
+              </>
+            ) : null}
           </ChartComponent>
         </ChartContainer>
       </CardContent>

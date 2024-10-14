@@ -48,6 +48,9 @@ export function Visualization() {
               <TabsTrigger value="bar" className="text-xs font-semibold">
                 Bar Chart
               </TabsTrigger>
+              <TabsTrigger value="area" className="text-xs font-semibold">
+                Area Chart
+              </TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value="table" className="mt-0">
@@ -118,6 +121,11 @@ export function Visualization() {
         <TabsContent value="bar" className="mt-0">
           <div className="max-h-[350px] px-8 pb-8">
             <Chart type="bar" />
+          </div>
+        </TabsContent>
+        <TabsContent value="area" className="mt-0">
+          <div className="max-h-[350px] px-8 pb-8">
+            <Chart type="area" />
           </div>
         </TabsContent>
       </Tabs>
