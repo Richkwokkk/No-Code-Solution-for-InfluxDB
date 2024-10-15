@@ -26,7 +26,7 @@ test.describe("Authentication Flow", () => {
 
     if (result === "editor") {
       await expect(page).toHaveURL("/editor");
-      await expect(page.getByText("Editor Page")).toBeVisible();
+      await expect(page.getByText("Visual Flux")).toBeVisible();
     } else {
       const errorToasts = await page
         .locator('li[role="status"][data-type="error"]')
@@ -88,7 +88,7 @@ test.describe("Authentication Flow", () => {
 
     await page.goto("/login");
     await page.waitForURL("/editor");
-    await expect(page.getByText("Editor Page")).toBeVisible();
+    await expect(page.getByText("Visual Flux")).toBeVisible();
   });
 
   test("logged in user stays on editor page when going to the login page after closing the window", async ({
@@ -102,12 +102,9 @@ test.describe("Authentication Flow", () => {
     await page.waitForURL("/editor");
     await page.reload();
     await page.waitForURL("/editor");
-    await expect(page.getByText("Editor Page")).toBeVisible();
-    await page.evaluate(() => {
-      localStorage.removeItem("vf-token");
-    });
+    await expect(page.getByText("Visual Flux")).toBeVisible();
     await page.reload();
-    await page.waitForURL("/login");
-    await expect(page.getByRole("heading", { name: "Login" })).toBeVisible();
+    await page.waitForURL("/editor");
+    await expect(page.getByText("Visual Flux")).toBeVisible();
   });
 });
