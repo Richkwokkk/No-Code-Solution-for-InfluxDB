@@ -32,12 +32,7 @@ import {
   type NodeProps,
   type NodeType,
 } from "@/features/flow/components/flow-nodes";
-import {
-  FLOW_BACKGROUND_COLOR_DARK,
-  FLOW_BACKGROUND_COLOR_LIGHT,
-  FLOW_KEY,
-  initialNodes,
-} from "@/features/flow/constants";
+import { FLOW_KEY, initialNodes } from "@/features/flow/constants";
 import { throttle } from "@/lib/utils";
 
 type ReactFlowNodeTypes = {
@@ -146,6 +141,7 @@ export function Flow() {
   return (
     <section className="flow h-full w-full">
       <ReactFlow
+        fitView
         nodeTypes={nodeTypes}
         colorMode={theme === "dark" ? "dark" : "light"}
         nodes={nodes}
