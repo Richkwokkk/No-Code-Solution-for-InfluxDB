@@ -238,52 +238,62 @@ export function Chart({ type }: { type: "line" | "bar" | "area" }) {
                 />
               </>
             ) : null}
+            {type === "bar" || type === "area" ? (
+              <defs>
+                <linearGradient id="fillKitchen" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="var(--color-kitchen)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--color-kitchen)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+                <linearGradient id="fillLivingRoom" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="var(--color-livingRoom)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--color-livingRoom)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+              </defs>
+            ) : null}
             {type === "bar" ? (
               <>
-                <Bar dataKey="Kitchen" fill={`var(--color-kitchen)`} />
-                <Bar dataKey="Living Room" fill={`var(--color-livingRoom)`} />
+                <Bar
+                  dataKey="Kitchen"
+                  fill="var(--color-kitchen)"
+                  fillOpacity={0.4}
+                  stroke="var(--color-kitchen)"
+                  strokeWidth={2}
+                />
+                <Bar
+                  dataKey="Living Room"
+                  type="natural"
+                  fill="var(--color-livingRoom)"
+                  fillOpacity={0.4}
+                  stroke="var(--color-livingRoom)"
+                  strokeWidth={2}
+                />
               </>
             ) : null}
             {type === "area" ? (
               <>
-                <defs>
-                  <linearGradient id="fillKitchen" x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="5%"
-                      stopColor="var(--color-kitchen)"
-                      stopOpacity={0.8}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="var(--color-kitchen)"
-                      stopOpacity={0.1}
-                    />
-                  </linearGradient>
-                  <linearGradient
-                    id="fillLivingRoom"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop
-                      offset="5%"
-                      stopColor="var(--color-livingRoom)"
-                      stopOpacity={0.8}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="var(--color-livingRoom)"
-                      stopOpacity={0.1}
-                    />
-                  </linearGradient>
-                </defs>
                 <Area
                   dataKey="Kitchen"
                   type="natural"
                   fill="url(#fillKitchen)"
                   fillOpacity={0.4}
                   stroke="var(--color-kitchen)"
+                  strokeWidth={2}
                   stackId="a"
                 />
                 <Area
@@ -292,6 +302,7 @@ export function Chart({ type }: { type: "line" | "bar" | "area" }) {
                   fill="url(#fillLivingRoom)"
                   fillOpacity={0.4}
                   stroke="var(--color-livingRoom)"
+                  strokeWidth={2}
                   stackId="a"
                 />
               </>
