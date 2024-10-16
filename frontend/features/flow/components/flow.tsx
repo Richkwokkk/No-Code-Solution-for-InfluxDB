@@ -48,6 +48,7 @@ export const nodeTypes: ReactFlowNodeTypes = {
 };
 
 export function Flow() {
+  const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [rfInstance, setRfInstance] = React.useState<ReactFlowInstance | null>(
@@ -135,13 +136,15 @@ export function Flow() {
 
   React.useEffect(restoreFlow, [restoreFlow]);
   React.useEffect(saveRfInstance, [saveRfInstance]);
+  React.useEffect(() => {
+    setTimeout(fitView);
+  }, [fitView]);
 
   const { theme } = useTheme();
 
   return (
     <section className="flow h-full w-full">
       <ReactFlow
-        fitView
         nodeTypes={nodeTypes}
         colorMode={theme === "dark" ? "dark" : "light"}
         nodes={nodes}
