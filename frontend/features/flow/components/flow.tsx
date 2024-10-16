@@ -32,12 +32,7 @@ import {
   type NodeProps,
   type NodeType,
 } from "@/features/flow/components/flow-nodes";
-import {
-  FLOW_BACKGROUND_COLOR_DARK,
-  FLOW_BACKGROUND_COLOR_LIGHT,
-  FLOW_KEY,
-  initialNodes,
-} from "@/features/flow/constants";
+import { FLOW_KEY, initialNodes } from "@/features/flow/constants";
 import { throttle } from "@/lib/utils";
 
 type ReactFlowNodeTypes = {
@@ -53,6 +48,7 @@ export const nodeTypes: ReactFlowNodeTypes = {
 };
 
 export function Flow() {
+  const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [rfInstance, setRfInstance] = React.useState<ReactFlowInstance | null>(
@@ -140,6 +136,9 @@ export function Flow() {
 
   React.useEffect(restoreFlow, [restoreFlow]);
   React.useEffect(saveRfInstance, [saveRfInstance]);
+  React.useEffect(() => {
+    setTimeout(fitView);
+  }, [fitView]);
 
   const { theme } = useTheme();
 

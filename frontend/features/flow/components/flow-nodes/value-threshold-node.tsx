@@ -15,7 +15,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -95,6 +94,11 @@ export const ValueThresholdNode = ({ id }: NodeProps) => {
     });
   };
 
+  const shouldShowExclusionSwitch =
+    nodeData?.result?.thresholdType !== undefined &&
+    nodeData?.result?.thresholdType !== "equal" &&
+    nodeData?.result?.thresholdType !== "notEqual";
+
   return (
     <Popover
       open={open}
@@ -153,36 +157,43 @@ export const ValueThresholdNode = ({ id }: NodeProps) => {
                 </SelectTrigger>
                 <SelectContent align="center">
                   <SelectGroup>
-                    <SelectItem value="max">Smaller than</SelectItem>
-                    <SelectItem value="min">Greater than</SelectItem>
-                    <SelectItem value="equal">Equal</SelectItem>
-                    <SelectItem value="notEqual">Not Equal</SelectItem>
+                    <SelectItem value="max" className="text-xs">
+                      Smaller than
+                    </SelectItem>
+                    <SelectItem value="min" className="text-xs">
+                      Greater than
+                    </SelectItem>
+                    <SelectItem value="equal" className="text-xs">
+                      Equal
+                    </SelectItem>
+                    <SelectItem value="notEqual" className="text-xs">
+                      Not Equal
+                    </SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
           </div>
-          {nodeData?.result?.thresholdType !== "equal" &&
-            nodeData?.result?.thresholdType !== "notEqual" && (
-              <div className="flex w-full items-center justify-between">
-                <label
-                  htmlFor="threshold-included"
-                  className="text-xs leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {nodeData?.result?.isThresholdIncluded
-                    ? "Included"
-                    : "Excluded"}
-                </label>
-                <div className="flex w-[60%] items-center justify-start">
-                  <Switch
-                    id="threshold-included"
-                    checked={nodeData?.result?.isThresholdIncluded ?? false}
-                    onCheckedChange={handleSwitchChange}
-                    aria-readonly
-                  />
-                </div>
+          {shouldShowExclusionSwitch ? (
+            <div className="flex w-full items-center justify-between">
+              <label
+                htmlFor="threshold-included"
+                className="text-xs leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                {nodeData?.result?.isThresholdIncluded
+                  ? "Included"
+                  : "Excluded"}
+              </label>
+              <div className="flex w-[60%] items-center justify-start">
+                <Switch
+                  id="threshold-included"
+                  checked={nodeData?.result?.isThresholdIncluded ?? false}
+                  onCheckedChange={handleSwitchChange}
+                  aria-readonly
+                />
               </div>
-            )}
+            </div>
+          ) : null}
         </div>
       </PopoverContent>
     </Popover>
