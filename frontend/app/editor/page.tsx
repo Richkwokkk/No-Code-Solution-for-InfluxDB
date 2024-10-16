@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 import { ImperativePanelHandle } from "react-resizable-panels";
 
+import dynamic from "next/dynamic";
 import { useStore } from "zustand";
 
 import {
@@ -15,9 +16,18 @@ import { CodeEditor } from "@/features/code/components/code-editor";
 import { Flow } from "@/features/flow/components/flow";
 import { Header } from "@/features/flow/components/header";
 import { Sidebar } from "@/features/flow/components/sidebar";
-import { SidebarDndContext } from "@/features/flow/components/sidebar/sidebar-dnd-context";
 import { useToggle } from "@/features/flow/hooks/use-toggle";
 import { Visualization } from "@/features/visualization/components/visualization";
+
+const SidebarDndContext = dynamic(
+  () =>
+    import("@/features/flow/components/sidebar/sidebar-dnd-context").then(
+      (mod) => mod.SidebarDndContext,
+    ),
+  {
+    ssr: false,
+  },
+);
 
 export default function EditorPage() {
   const { isCodeEditorOpen, isFlowOpen, isVisualizationOpen } = useStore(
