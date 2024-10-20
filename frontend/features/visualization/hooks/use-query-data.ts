@@ -6,7 +6,7 @@ import { Row } from "@/features/visualization/types";
 export function useTableData() {
   const { data } = useQuery({
     queryKey: fluxQueryKeys.tableData,
-    staleTime: Infinity,
+    staleTime: 60000 * 60 * 24,
   }) as {
     data: Row[];
   };
@@ -17,7 +17,7 @@ export function useTableData() {
 export function useChartData() {
   const { data } = useQuery({
     queryKey: fluxQueryKeys.chartData,
-    staleTime: Infinity,
+    staleTime: 60000 * 60 * 24,
   }) as {
     data: Row[];
   };

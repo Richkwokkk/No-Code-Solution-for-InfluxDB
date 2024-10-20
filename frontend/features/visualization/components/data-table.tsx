@@ -13,9 +13,11 @@ import {
 } from "@/components/ui/table";
 import { columns } from "@/features/visualization/constants";
 import { useTable } from "@/features/visualization/hooks/use-table";
+import { useIsClient } from "@/hooks/use-is-client";
 
 function DataTable({ table }: { table: ReturnType<typeof useTable> }) {
-  return (
+  const isClient = useIsClient();
+  return isClient ? (
     <>
       <div className="rounded-md border">
         <Table>
@@ -92,7 +94,7 @@ function DataTable({ table }: { table: ReturnType<typeof useTable> }) {
         </div>
       </div>
     </>
-  );
+  ) : null;
 }
 
 export { DataTable };
