@@ -22,9 +22,15 @@ export function useTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [memoizedData, setMemoizedData] = React.useState<any[]>([]);
 
   const data = useTableData();
-  const memoizedData = React.useMemo(() => data ?? [], [data]);
+
+  React.useEffect(() => {
+    if (data) {
+      setMemoizedData(data);
+    }
+  }, [data]);
 
   return useReactTable({
     data: memoizedData,

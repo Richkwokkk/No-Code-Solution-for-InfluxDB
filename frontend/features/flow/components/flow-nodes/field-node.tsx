@@ -7,8 +7,6 @@ import {
 } from "@xyflow/react";
 
 import { RectangleEllipsis } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 import { ComboboxNode } from "@/features/flow/components/flow-nodes/combobox-node";
 import {
@@ -21,8 +19,6 @@ import { useFields } from "@/features/flow/hooks/use-fields";
 
 export const FieldNode = ({ id }: NodeProps) => {
   const { updateNodeData } = useReactFlow();
-  const router = useRouter();
-  const pathname = usePathname();
 
   const measurementConnections = useHandleConnections({
     type: "target",
@@ -35,14 +31,7 @@ export const FieldNode = ({ id }: NodeProps) => {
     [measurementNodeData],
   );
 
-  const { data, error } = useFields(previousNodeData);
-
-  if (error) {
-    if (pathname !== "/login") {
-      router.push("/login");
-      toast.error("Session expired. Please login again.");
-    }
-  }
+  const { data } = useFields(previousNodeData);
 
   const handleSelectField = (field: string | undefined) => {
     updateNodeData(id, {

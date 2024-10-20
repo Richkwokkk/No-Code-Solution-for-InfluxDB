@@ -1,17 +1,12 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { authQueryKeys } from "@/features/auth/hooks/constants";
 
 export function useAuthStatus() {
-  const queryClient = useQueryClient();
-
-  return useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: authQueryKeys.authStatus,
-    queryFn: () => {
-      return queryClient.getQueryData<{ isAuthenticated: boolean }>(
-        authQueryKeys.authStatus,
-      );
-    },
-    staleTime: Infinity,
-  });
+    staleTime: 60000 * 60 * 24,
+  }) as { data: { isAuthenticated: boolean }; isLoading: boolean };
+
+  return { data, isLoading };
 }

@@ -7,8 +7,6 @@ import {
 } from "@xyflow/react";
 
 import { Grid } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 import { ComboboxNode } from "@/features/flow/components/flow-nodes/combobox-node";
 import {
@@ -21,8 +19,6 @@ import { useMeasurements } from "@/features/flow/hooks/use-measurements";
 
 export const MeasurementNode = ({ id }: NodeProps) => {
   const { updateNodeData } = useReactFlow();
-  const router = useRouter();
-  const pathname = usePathname();
 
   const dateRangeConnections = useHandleConnections({
     type: "target",
@@ -35,14 +31,7 @@ export const MeasurementNode = ({ id }: NodeProps) => {
     [dateRangeNodeData],
   );
 
-  const { data, error } = useMeasurements(previousNodeData);
-
-  if (error) {
-    if (pathname !== "/login") {
-      router.push("/login");
-      toast.error("Session expired. Please login again.");
-    }
-  }
+  const { data } = useMeasurements(previousNodeData);
 
   const handleSelectMeasurement = (measurement: string | undefined) => {
     updateNodeData(id, {

@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import "@xyflow/react/dist/style.css";
 
 import { type Metadata } from "next";
