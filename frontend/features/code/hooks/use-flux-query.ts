@@ -23,11 +23,12 @@ export const useFluxQuery = () => {
         .join(" ")
         .replace(/\s*([|><=(),])\s*/g, "$1");
 
-      if (sanitizedCode === "" || sanitizedCode.includes("/*")) {
+      if (
+        sanitizedCode === "" ||
+        sanitizedCode.includes("/*") ||
+        !sanitizedCode.includes("range")
+      ) {
         return;
-      }
-      if (!sanitizedCode.includes("range")) {
-        throw new Error("Please add a range to your query");
       }
       return apiClient
         .post("influxdb/query?organization=ATSYS", {

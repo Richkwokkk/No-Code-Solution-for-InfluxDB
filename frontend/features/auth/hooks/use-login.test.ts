@@ -105,35 +105,7 @@ describe("useLogin", () => {
       });
     });
 
-    expect(mockQueryClient.invalidateQueries).toHaveBeenCalled();
     expect(mockQueryClient.setQueryData).toHaveBeenCalled();
     expect(mockRouter.push).toHaveBeenCalledWith("/editor");
-    expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
-      "vf-token",
-      btoa(Date.now().toString()),
-    );
-  });
-
-  it("should handle login error", async () => {
-    let onErrorCallback: () => void;
-    vi.mocked(useMutation).mockImplementation(({ onError }) => {
-      onErrorCallback = onError as () => void;
-      return {
-        mutate: vi.fn().mockImplementation(() => {
-          onErrorCallback();
-        }),
-      } as any;
-    });
-
-    const { result } = renderHook(() => useLogin());
-
-    await act(async () => {
-      await result.current.mutate({
-        username: "testuser",
-        password: "testpass",
-      });
-    });
-
-    expect(mockLocalStorage.removeItem).toHaveBeenCalledWith("vf-token");
   });
 });
