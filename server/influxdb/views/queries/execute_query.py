@@ -55,6 +55,7 @@ class ExecuteQueryView(generics.GenericAPIView):
                     params = {
                         "orgID": org["id"]
                     }
+                    break
             if params is None:
                 return JsonResponse({"error": "Organization not found"}, status=404)
             response_query = requests.post(
