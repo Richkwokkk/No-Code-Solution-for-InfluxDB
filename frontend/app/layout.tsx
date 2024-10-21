@@ -1,13 +1,13 @@
+import * as React from "react";
+
 import "@xyflow/react/dist/style.css";
 
 import { type Metadata } from "next";
-import { Inter } from "next/font/google";
 
 import "@/app/globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
-
-const inter = Inter({ subsets: ["latin"] });
+import { inter } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "Visual Flux",
@@ -21,8 +21,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans`}>
         <Providers>{children}</Providers>
         <Toaster />
       </body>

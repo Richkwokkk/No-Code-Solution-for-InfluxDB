@@ -8,25 +8,26 @@ export type GetMeasurementsResponse = {
   measurements: string[] | undefined;
 };
 
-export function useMeasurements({
-  bucket,
-  timeStart,
-  timeStop,
-}: NodeData["result"]): UseQueryResult<GetMeasurementsResponse, Error> {
+export function useMeasurements(
+  result: NodeData["result"] | null,
+): UseQueryResult<GetMeasurementsResponse, Error> {
   const org = "ATSYS";
   return useQuery({
     queryKey: [
       ...EDITOR_QUERY_KEYS.MEASUREMENTS,
       org,
-      bucket,
-      timeStart,
-      timeStop,
+      result?.bucket,
+      result?.timeStart,
+      result?.timeStop,
+      result,
     ],
     queryFn: async () => {
-      if (!bucket || !timeStart || !timeStop) return [];
+      if (!result || !result.bucket || !result.timeStart || !result.timeStop) {
+        return [];
+      }
 
       const response = await apiClient.get<GetMeasurementsResponse>(
-        `${EDITOR_ENDPOINTS.getMeasurements}?bucket=${bucket}&organization=${org}&time-start=${timeStart}&time-stop=${timeStop}`,
+        `${EDITOR_ENDPOINTS.getMeasurements}?bucket=${result.bucket}&organization=${org}&time-start=${result.timeStart}&time-stop=${result.timeStop}`,
       );
 
       if (!response.ok) {

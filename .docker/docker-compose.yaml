@@ -11,8 +11,13 @@ services:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN_FILE=${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN_FILE}
       - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG}
       - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
+<<<<<<< HEAD
       - INFLUXD_SESSION_LENGTH=${INFLUXD_SESSION_LENGTH}
       - INFLUXDB_URL=http://influxdb:${INFLUXDB_PORT}
+=======
+      - INFLUXDB_URL=http://influxdb:${INFLUXDB_PORT}
+      - INFLUXD_SESSION_LENGTH=${INFLUXD_SESSION_LENGTH}
+>>>>>>> c3e98a66d6d7ec3b7dc49a7b9c540030c6bc47e2
     networks:
       - main_network
   grafana:
@@ -44,33 +49,33 @@ services:
       - grafana
     networks:
       - main_network
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: ${FE_DOCKERFILE}
-    image: ${FE_IMAGE}:${FE_VERSION}
-    container_name: ${FE_CONTAINER}-${FE_VERSION}
-    ports:
-      - ${FE_PORT}
-    environment:
-      - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
-    depends_on:
-      - influxdb
-      - grafana
-      - server
-    develop:
-      watch:
-        - path: ./frontend/package.json
-          action: rebuild
-        - path: ./frontend/package-lock.json
-          action: rebuild
-        - path: ./frontend/pnpm-lock.json
-          action: rebuild
-        - path: ./frontend
-          target: /app
-          action: sync
-    networks:
-      - main_network
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: ${FE_DOCKERFILE}
+  #   image: ${FE_IMAGE}:${FE_VERSION}
+  #   container_name: ${FE_CONTAINER}-${FE_VERSION}
+  #   ports:
+  #     - ${FE_PORT}
+  #   environment:
+  #     - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
+  #   depends_on:
+  #     - influxdb
+  #     - grafana
+  #     - server
+  #   develop:
+  #     watch:
+  #       - path: ./frontend/package.json
+  #         action: rebuild
+  #       - path: ./frontend/package-lock.json
+  #         action: rebuild
+  #       - path: ./frontend/pnpm-lock.json
+  #         action: rebuild
+  #       - path: ./frontend
+  #         target: /app
+  #         action: sync
+  #   networks:
+  #     - main_network
 
 networks:
   main_network:

@@ -1,11 +1,12 @@
-import { useCallback, useId } from "react";
+import * as React from "react";
 
 import { DndContext as DndKitContext, DragEndEvent } from "@dnd-kit/core";
 import { useReactFlow } from "@xyflow/react";
 
 import short from "short-uuid";
+import { toast } from "sonner";
 
-import { NodeType } from "@/features/flow/components/flow-nodes/type";
+import { NodeType } from "@/features/flow/components/flow-nodes/types";
 import { sidebarNodes } from "@/features/flow/components/sidebar/constants";
 import { SidebarDragOverlay } from "@/features/flow/components/sidebar/sidebar-drag-overlay";
 
@@ -14,11 +15,13 @@ interface DndContextProps {
 }
 
 export const SidebarDndContext = ({ children }: DndContextProps) => {
-  const ctxId = useId();
+  const ctxId = React.useId();
   const { setNodes, screenToFlowPosition } = useReactFlow();
+  const [isDragComplete, setIsDragComplete] = React.useState(false);
 
-  const onDragEnd = useCallback(
+  const onDragEnd = React.useCallback(
     ({ active }: DragEndEvent) => {
+      setIsDragComplete(false);
       const type = active.data.current?.type as NodeType;
       if (!type) return;
 
@@ -30,21 +33,27 @@ export const SidebarDndContext = ({ children }: DndContextProps) => {
         y: clientRect.top,
       });
 
-      // Get the sidebar element and its boundaries
       const flow = document.querySelector(".flow");
-      if (flow) {
-        const flowRect = flow.getBoundingClientRect();
+      const flowRect = flow?.getBoundingClientRect();
 
-        // Check if the drop position is within the flow
-        if (
-          clientRect.left <= flowRect.left ||
-          clientRect.right >= flowRect.right ||
-          clientRect.top <= flowRect.top ||
-          clientRect.bottom >= flowRect.bottom
-        ) {
-          // Drop is inside the flow, do not add the node
-          return;
-        }
+      if (!flowRect) {
+        toast.info("Flow panel not found", {
+          description:
+            "Please open the flow panel using the first button in the top right corner",
+        });
+        return;
+      }
+
+      if (
+        clientRect.left <= flowRect.left ||
+        clientRect.right >= flowRect.right ||
+        clientRect.top <= flowRect.top ||
+        clientRect.bottom >= flowRect.bottom
+      ) {
+        toast.info("Node out of bounds", {
+          description: "Please drag the node fully into the flow panel",
+        });
+        return;
       }
 
       const newNode = {
@@ -55,13 +64,15 @@ export const SidebarDndContext = ({ children }: DndContextProps) => {
       };
 
       setNodes((nds) => nds.concat(newNode));
+      setIsDragComplete(true);
+      toast.success("Node added successfully");
     },
     [screenToFlowPosition, setNodes],
   );
 
   return (
     <DndKitContext id={ctxId} onDragEnd={onDragEnd}>
-      <SidebarDragOverlay />
+      <SidebarDragOverlay isDragComplete={isDragComplete} />
       {children}
     </DndKitContext>
   );

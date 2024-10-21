@@ -16,8 +16,13 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 
+import {
+  AlignButton,
+  ResetButton,
+} from "@/features/flow/components/flow-control-buttons";
 import {
   BucketNode,
   DateRangeNode,
@@ -43,6 +48,7 @@ export const nodeTypes: ReactFlowNodeTypes = {
 };
 
 export function Flow() {
+  const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [rfInstance, setRfInstance] = React.useState<ReactFlowInstance | null>(
@@ -57,7 +63,8 @@ export function Flow() {
           {
             ...params,
             style: {
-              strokeWidth: "2px",
+              strokeWidth: "1.5px",
+              stroke: "hsl(217.2, 32.6%, 70%)",
             },
             animated: true,
           },
@@ -86,19 +93,13 @@ export function Flow() {
       const sourceType = sourceNode?.type as NodeType;
       const targetType = targetNode?.type as NodeType;
 
-      if (!sourceNode || !targetNode) return false;
-
-      if (
-        (sourceType === "DATE_RANGE" && targetType === "DATE_RANGE") ||
-        (sourceType === "VALUE_THRESHOLD" && targetType === "VALUE_THRESHOLD")
-      )
-        return false;
-
       if (sourceType === "BUCKET" && targetType === "DATE_RANGE") return true;
       if (sourceType === "DATE_RANGE" && targetType === "MEASUREMENT")
         return true;
       if (sourceType === "MEASUREMENT" && targetType === "FIELD") return true;
       if (sourceType === "FIELD" && targetType === "VALUE_THRESHOLD")
+        return true;
+      if (sourceType === "VALUE_THRESHOLD" && targetType === "VALUE_THRESHOLD")
         return true;
 
       throttleToastWarning();
@@ -135,11 +136,17 @@ export function Flow() {
 
   React.useEffect(restoreFlow, [restoreFlow]);
   React.useEffect(saveRfInstance, [saveRfInstance]);
+  React.useEffect(() => {
+    setTimeout(fitView);
+  }, [fitView]);
+
+  const { theme } = useTheme();
 
   return (
     <section className="flow h-full w-full">
       <ReactFlow
         nodeTypes={nodeTypes}
+        colorMode={theme === "dark" ? "dark" : "light"}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -148,12 +155,21 @@ export function Flow() {
         onInit={setRfInstance}
         onMoveEnd={saveRfInstance}
         connectionLineType={ConnectionLineType.Bezier}
-        isValidConnection={isValidConnection}
+        isValidConnection={(connection) =>
+          isValidConnection(connection) ?? false
+        }
         maxZoom={1}
         proOptions={{ hideAttribution: true }}
       >
-        <Controls />
-        <Background variant={BackgroundVariant.Dots} />
+        <Controls position="bottom-left">
+          <AlignButton />
+          <ResetButton />
+        </Controls>
+        <Background
+          variant={BackgroundVariant.Dots}
+          gap={30}
+          bgColor="hsl(var(--background))"
+        />
       </ReactFlow>
     </section>
   );

@@ -10,8 +10,9 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
+import { useStore } from "zustand";
 
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -24,11 +25,16 @@ import {
   NodeProps,
   NodeType,
   NodeData,
-} from "@/features/flow/components/flow-nodes/type";
+} from "@/features/flow/components/flow-nodes/types";
 import { NODE_TITLES } from "@/features/flow/components/sidebar/constants";
+import { useDateRange } from "@/features/flow/hooks/use-date-range";
 
 export function DateRangeNode({ id }: NodeProps) {
   const { updateNodeData } = useReactFlow();
+  const { setDateRange } = useStore(useDateRange, (state) => ({
+    setDateRange: state.setDateRange,
+  }));
+
   const nodeData = useNodesData(id)?.data as NodeData;
   const { value } = nodeData;
 
@@ -42,7 +48,7 @@ export function DateRangeNode({ id }: NodeProps) {
   const parseDateRange = (value: string): DateRange | undefined => {
     const [fromStr, toStr] = value.split(" - ");
     const from = new Date(fromStr);
-    const to = new Date(toStr);
+    const to = toStr ? new Date(toStr) : undefined;
     return { from, to };
   };
 
@@ -50,8 +56,8 @@ export function DateRangeNode({ id }: NodeProps) {
     value && value !== "Pick a date range"
       ? parseDateRange(value)
       : {
-          from: new Date(2022, 0, 1),
-          to: addDays(new Date(2024, 0, 1), 1),
+          from: undefined,
+          to: undefined,
         };
 
   const [date, setDate] = React.useState<DateRange | undefined>(
@@ -63,28 +69,22 @@ export function DateRangeNode({ id }: NodeProps) {
       const formattedDate = date.to
         ? `${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}`
         : format(date.from, "LLL dd, y");
+
+      setDateRange(formattedDate);
       updateNodeData(id, {
         value: formattedDate,
         result: {
           ...bucketData?.result,
           timeStart: format(date.from, "yyyy-MM-dd'T'HH'%3A'mm'%3A'ss'Z'"),
-          timeStop: undefined,
+          timeStop: date.to
+            ? format(date.to, "yyyy-MM-dd'T'HH'%3A'mm'%3A'ss'Z'")
+            : undefined,
         },
       });
-
-      if (date?.to) {
-        updateNodeData(id, {
-          value: formattedDate,
-          result: {
-            ...bucketData?.result,
-            timeStart: format(date.from, "yyyy-MM-dd'T'HH'%3A'mm'%3A'ss'Z'"),
-            timeStop: format(date.to, "yyyy-MM-dd'T'HH'%3A'mm'%3A'ss'Z'"),
-          },
-        });
-      }
     } else {
+      setDateRange("");
       updateNodeData(id, {
-        value: "Pick a date range",
+        value: undefined,
         result: {
           ...bucketData?.result,
           timeStart: undefined,
@@ -92,7 +92,7 @@ export function DateRangeNode({ id }: NodeProps) {
         },
       });
     }
-  }, [bucketData, date, id, updateNodeData]);
+  }, [bucketData, date, id, updateNodeData, setDateRange]);
 
   const handleDateChange = (selectedDate: DateRange | undefined) => {
     setDate(selectedDate);
@@ -109,23 +109,9 @@ export function DateRangeNode({ id }: NodeProps) {
           underHandleId="DATE_RANGE"
           upHandle
           underHandle
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date?.from ? (
-            date.to ? (
-              <>
-                {format(date.from, "LLL dd, y")} -{" "}
-                {format(date.to, "LLL dd, y")}
-              </>
-            ) : (
-              format(date.from, "LLL dd, y")
-            )
-          ) : (
-            <span>Pick a date range</span>
-          )}
-        </BaseNode>
+        />
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0" align="center">
         <Calendar
           initialFocus
           mode="range"

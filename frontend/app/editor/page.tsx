@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 import { ImperativePanelHandle } from "react-resizable-panels";
 
+import dynamic from "next/dynamic";
 import { useStore } from "zustand";
 
 import {
@@ -11,70 +12,135 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { ChartContainer } from "@/features/charts/components/chart-container";
 import { CodeEditor } from "@/features/code/components/code-editor";
 import { Flow } from "@/features/flow/components/flow";
 import { Header } from "@/features/flow/components/header";
 import { Sidebar } from "@/features/flow/components/sidebar";
-import { SidebarDndContext } from "@/features/flow/components/sidebar/sidebar-dnd-context";
-import { useEditorToggle } from "@/features/flow/hooks/use-editor-toggle";
+import { useToggle } from "@/features/flow/hooks/use-toggle";
+import { Visualization } from "@/features/visualization/components/visualization";
+
+const SidebarDndContext = dynamic(
+  () =>
+    import("@/features/flow/components/sidebar/sidebar-dnd-context").then(
+      (mod) => mod.SidebarDndContext,
+    ),
+  {
+    ssr: false,
+  },
+);
 
 export default function EditorPage() {
-  const editor = useStore(useEditorToggle, (state) => state);
-  const dndPanelRef = useRef<ImperativePanelHandle>(null);
-  const codePanelRef = useRef<ImperativePanelHandle>(null);
+  const { isCodeEditorOpen, isFlowOpen, isVisualizationOpen } = useStore(
+    useToggle,
+    (state) => ({
+      isCodeEditorOpen: state.isCodeEditorOpen,
+      isFlowOpen: state.isFlowOpen,
+      isVisualizationOpen: state.isVisualizationOpen,
+    }),
+  );
 
-  const resetCodePanelSize = () => {
-    const codePanel = codePanelRef.current;
-    if (codePanel) {
-      codePanel.resize(30);
+  const shouldRenderUpperPanel = isFlowOpen || isCodeEditorOpen;
+  const leftPanelRef = useRef<ImperativePanelHandle>(null);
+  const upperPanelRef = useRef<ImperativePanelHandle>(null);
+
+  const resetVerticalPanelSize = () => {
+    const upperPanel = upperPanelRef.current;
+    if (upperPanel) {
+      upperPanel.resize(50);
     }
   };
 
-  const resetDndPanelSize = () => {
-    const dndPanel = dndPanelRef.current;
-    if (dndPanel) {
-      dndPanel.resize(50);
+  const resetHorizontalPanelSize = () => {
+    const leftPanel = leftPanelRef.current;
+    if (leftPanel) {
+      leftPanel.resize(50);
     }
   };
+
+  const showEmptyMessage =
+    !isFlowOpen && !isCodeEditorOpen && !isVisualizationOpen;
 
   return (
     <SidebarDndContext>
-      <div className="flex h-screen w-screen flex-col">
+      <section className="flex h-screen w-screen flex-col">
         <Header />
         <div className="flex h-full w-full">
           <Sidebar />
-          <ResizablePanelGroup
-            autoSaveId="group-1"
-            direction="vertical"
-            className="flex-1"
-          >
-            <ResizablePanel defaultSize={70} minSize={20}>
-              <ResizablePanelGroup autoSaveId="group-2" direction="horizontal">
-                <ResizablePanel ref={dndPanelRef} defaultSize={50} minSize={20}>
-                  <Flow />
-                </ResizablePanel>
-                <ResizableHandle onDoubleClickCapture={resetDndPanelSize} />
-                <ResizablePanel defaultSize={50} minSize={20}>
-                  <ChartContainer />
-                </ResizablePanel>
-              </ResizablePanelGroup>
-            </ResizablePanel>
-            {editor.isOpen && (
-              <>
-                <ResizableHandle onDoubleClickCapture={resetCodePanelSize} />
+          {showEmptyMessage ? (
+            <div className="flex flex-1 items-center justify-center text-sm">
+              <p className="text-center text-muted-foreground">
+                Use the buttons in the top-right corner to open a panel and
+                start exploring.
+              </p>
+            </div>
+          ) : (
+            <ResizablePanelGroup
+              autoSaveId="vertical-panel-group"
+              direction="vertical"
+              className="flex-1"
+            >
+              {shouldRenderUpperPanel && (
                 <ResizablePanel
-                  ref={codePanelRef}
-                  defaultSize={30}
+                  order={1}
+                  id="lower-panel"
+                  ref={upperPanelRef}
+                  defaultSize={50}
                   minSize={10}
                 >
-                  <CodeEditor />
+                  <ResizablePanelGroup
+                    autoSaveId="horizontal-panel-group"
+                    direction="horizontal"
+                  >
+                    {isFlowOpen && (
+                      <ResizablePanel
+                        order={2}
+                        id="flow-panel"
+                        ref={leftPanelRef}
+                        defaultSize={50}
+                        minSize={10}
+                      >
+                        <Flow />
+                      </ResizablePanel>
+                    )}
+
+                    {isFlowOpen && isCodeEditorOpen && (
+                      <ResizableHandle
+                        onDoubleClickCapture={resetHorizontalPanelSize}
+                      />
+                    )}
+
+                    {isCodeEditorOpen && (
+                      <ResizablePanel
+                        order={3}
+                        id="code-panel"
+                        defaultSize={50}
+                        minSize={10}
+                      >
+                        <CodeEditor />
+                      </ResizablePanel>
+                    )}
+                  </ResizablePanelGroup>
                 </ResizablePanel>
-              </>
-            )}
-          </ResizablePanelGroup>
+              )}
+              {shouldRenderUpperPanel && isVisualizationOpen && (
+                <ResizableHandle
+                  onDoubleClickCapture={resetVerticalPanelSize}
+                />
+              )}
+              {isVisualizationOpen && (
+                <ResizablePanel
+                  order={4}
+                  id="visualization-panel"
+                  defaultSize={50}
+                  minSize={10}
+                >
+                  <Visualization />
+                </ResizablePanel>
+              )}
+            </ResizablePanelGroup>
+          )}
         </div>
-      </div>
+      </section>
     </SidebarDndContext>
   );
 }

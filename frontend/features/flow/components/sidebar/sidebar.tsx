@@ -1,10 +1,18 @@
-import { LucideIcon } from "lucide-react";
+import React from "react";
 
+import { LucideIcon } from "lucide-react";
+import { useStore } from "zustand";
+
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { sidebarNodes } from "@/features/flow/components/sidebar/constants";
 import { SidebarDraggable } from "@/features/flow/components/sidebar/sidebar-draggable";
 import { SidebarToggle } from "@/features/flow/components/sidebar/sidebar-toggle";
-import { useSidebarToggle } from "@/features/flow/hooks/use-sidebar-toggle";
-import { useStore } from "@/hooks/use-store";
+import { useToggle } from "@/features/flow/hooks/use-toggle";
 import { cn } from "@/lib/utils";
 
 export type DraggableNode = {
@@ -14,39 +22,65 @@ export type DraggableNode = {
 };
 
 export const Sidebar = () => {
-  const sidebar = useStore(useSidebarToggle, (state) => state);
+  const { isSidebarOpen, toggleSidebar } = useStore(useToggle, (state) => ({
+    isSidebarOpen: state.isSidebarOpen,
+    toggleSidebar: state.toggleSidebar,
+  }));
 
   return (
     <aside
       className={cn(
         "z-20 flex h-full translate-x-0 flex-col border-r transition-[width] ease-in-out",
-        sidebar?.isOpen === false ? "w-[92px]" : "w-52",
+        isSidebarOpen === false ? "w-[92px]" : "w-52",
       )}
     >
       <div className="flex h-fit w-full items-center justify-center pt-4">
         <h1 className="text-sm font-bold">Nodes</h1>
-        <SidebarToggle
-          isOpen={sidebar?.isOpen}
-          setIsOpen={sidebar?.setIsOpen}
-        />
+        <SidebarToggle isOpen={isSidebarOpen} setIsOpen={toggleSidebar} />
       </div>
-      <div className="h-full w-full space-y-4 overflow-y-auto overflow-x-hidden bg-background p-4">
+      <div className="flex h-full w-full flex-col space-y-4 overflow-y-auto overflow-x-hidden bg-background p-4">
         {Object.entries(sidebarNodes).map(
           ([type, { label, title, icon: Icon }]) => {
-            return (
+            return !isSidebarOpen ? (
+              <TooltipProvider delayDuration={0} key={type}>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <SidebarDraggable
+                      key={type}
+                      id={type}
+                      type={type}
+                      className="flex h-14 w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:bg-primary-foreground hover:shadow-md"
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-accent">
+                        <Icon size={20} />
+                      </div>
+                    </SidebarDraggable>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="right"
+                    align="start"
+                    sideOffset={5}
+                    alignOffset={-3}
+                    className="text-[10px] capitalize"
+                  >
+                    {title}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
               <SidebarDraggable
                 key={type}
                 id={type}
                 type={type}
-                className="flex h-14 w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:shadow-md"
+                className="flex h-14 w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:bg-primary-foreground hover:shadow-md"
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
                   <Icon size={20} />
                 </div>
                 <div
                   className={cn(
-                    "absolute flex flex-col items-start pl-10 transition-opacity duration-75 ease-out",
-                    sidebar?.isOpen === false ? "opacity-0" : "opacity-100",
+                    "absolute flex flex-col items-start pl-10 transition-opacity ease-out",
+                    isSidebarOpen ? "opacity-100" : "opacity-0",
                   )}
                 >
                   <p className="text-nowrap text-[10px] capitalize opacity-50">
