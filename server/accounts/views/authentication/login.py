@@ -28,6 +28,10 @@ class LoginView(generics.GenericAPIView):
                 samesite="Strict",
             )
             return response
+        except requests.exceptions.ConnectionError as e:
+            return JsonResponse({
+                "error": "Failed to connect to the server", 
+                }, status=500)
         except requests.exceptions.RequestException as e:
             return JsonResponse({
                 "error": "Failed to connect to the server", 
