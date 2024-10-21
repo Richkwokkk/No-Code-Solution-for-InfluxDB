@@ -5,6 +5,36 @@ test.describe("Authentication Flow", () => {
     await page.goto("/login");
   });
 
+  test("logged in user stays on editor page when going to the login page after closing the window", async ({
+    page,
+  }) => {
+    await page.goto("/login");
+    await page.waitForURL("/login");
+    await page.fill('input[name="username"]', "dev1");
+    await page.fill('input[name="password"]', "developer@123influx");
+    await page.click('button[type="submit"]');
+    await page.waitForURL("/editor");
+    await page.reload();
+    await page.waitForURL("/editor");
+    await expect(page.getByText("Visual Flux")).toBeVisible();
+    await page.reload();
+    await page.waitForURL("/editor");
+    await expect(page.getByText("Visual Flux")).toBeVisible();
+  });
+
+  test("logged in user gets redirected to editor page when going to the login page", async ({
+    page,
+  }) => {
+    await page.fill('input[name="username"]', "dev1");
+    await page.fill('input[name="password"]', "developer@123influx");
+    await page.click('button[type="submit"]');
+    await page.waitForURL("/editor");
+
+    await page.goto("/login");
+    await page.waitForURL("/editor");
+    await expect(page.getByText("Visual Flux")).toBeVisible();
+  });
+
   test("successful login redirects to editor page", async ({ page }) => {
     await page.fill('input[name="username"]', "dev1");
     await page.fill('input[name="password"]', "developer@123influx");
@@ -76,35 +106,5 @@ test.describe("Authentication Flow", () => {
 
     await expect(page.getByText("Username is required")).toBeVisible();
     await expect(page.getByText("Password is required")).toBeVisible();
-  });
-
-  test("logged in user gets redirected to editor page when going to the login page", async ({
-    page,
-  }) => {
-    await page.fill('input[name="username"]', "dev1");
-    await page.fill('input[name="password"]', "developer@123influx");
-    await page.click('button[type="submit"]');
-    await page.waitForURL("/editor");
-
-    await page.goto("/login");
-    await page.waitForURL("/editor");
-    await expect(page.getByText("Visual Flux")).toBeVisible();
-  });
-
-  test("logged in user stays on editor page when going to the login page after closing the window", async ({
-    page,
-  }) => {
-    await page.goto("/login");
-    await page.waitForURL("/login");
-    await page.fill('input[name="username"]', "dev1");
-    await page.fill('input[name="password"]', "developer@123influx");
-    await page.click('button[type="submit"]');
-    await page.waitForURL("/editor");
-    await page.reload();
-    await page.waitForURL("/editor");
-    await expect(page.getByText("Visual Flux")).toBeVisible();
-    await page.reload();
-    await page.waitForURL("/editor");
-    await expect(page.getByText("Visual Flux")).toBeVisible();
   });
 });
