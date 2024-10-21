@@ -106,8 +106,8 @@ export const ValueThresholdNode = ({ id }: NodeProps) => {
         setOpen(isOpen);
       }}
     >
-      <PopoverTrigger className="focus:outline-none" asChild>
-        <div>
+      <PopoverTrigger>
+        <div className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
           <BaseNode
             value={nodeData?.value ?? "Pick a threshold"}
             title={NODE_TITLES.VALUE_THRESHOLD}

@@ -63,7 +63,7 @@ export function ComboboxNode({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger className="focus:outline-none">
+      <PopoverTrigger>
         <BaseNode
           value={value || `Select a ${type}`}
           title={type}

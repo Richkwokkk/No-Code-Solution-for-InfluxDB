@@ -100,7 +100,7 @@ export function DateRangeNode({ id }: NodeProps) {
 
   return (
     <Popover>
-      <PopoverTrigger className="focus:outline-none">
+      <PopoverTrigger>
         <BaseNode
           title={NODE_TITLES.DATE_RANGE}
           value={value ?? "Pick a date range"}

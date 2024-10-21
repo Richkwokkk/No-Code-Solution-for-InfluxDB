@@ -29,7 +29,7 @@ export function BaseNode({
   return (
     <div
       aria-expanded={ariaExpanded}
-      className="inline-flex h-14 min-w-[175px] items-center justify-start rounded-lg border bg-background py-7 shadow-sm transition-colors hover:cursor-grab hover:bg-primary-foreground active:cursor-grabbing"
+      className="inline-flex h-14 min-w-[175px] items-center justify-start rounded-lg border bg-background py-7 shadow-sm transition-colors hover:cursor-grab hover:bg-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:cursor-grabbing"
     >
       <div className="relative flex w-full items-center justify-between p-2">
         {upHandle ? (
