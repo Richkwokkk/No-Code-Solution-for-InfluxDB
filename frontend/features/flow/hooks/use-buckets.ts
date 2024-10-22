@@ -12,7 +12,7 @@ export function useBuckets() {
     queryKey: EDITOR_QUERY_KEYS.BUCKETS,
     queryFn: async () => {
       const response = await apiClient.get<GetBucketsResponse>(
-        EDITOR_ENDPOINTS.getBuckets,
+        `${EDITOR_ENDPOINTS.getBuckets}?organization=ATSYS`,
       );
       if (!response.ok) {
         throw new Error("Couldn't get buckets");

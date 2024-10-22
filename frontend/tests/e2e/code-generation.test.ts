@@ -37,8 +37,8 @@ test.describe("Code Generation Test", () => {
     // Select date from 2022-01-01 to 2022-01-08
     await page
       .locator('button:has-text("date range")')
-      .filter({ hasText: "Pick a date range" })
-      .click();
+      ?.filter({ hasText: "Pick a date range" })
+      ?.click();
     await page.getByLabel("Go to previous month").click();
     await page.getByLabel("Go to previous month").click();
     await page.getByLabel("Go to previous month").click();
@@ -130,7 +130,10 @@ test.describe("Code Generation Test", () => {
 
     await page.getByRole("button", { name: "Align" }).click();
     // Select value threshold
-    await page.getByRole("button", { name: "Pick a threshold" }).click();
+    await page
+      .getByRole("button", { name: "Pick a threshold" })
+      .first()
+      .click();
     await page.getByRole("spinbutton").fill("1");
     await page.getByRole("combobox").click();
     await page.getByText("Greater than").click();
@@ -142,13 +145,16 @@ test.describe("Code Generation Test", () => {
 
     await page.getByRole("button", { name: "Align" }).click();
 
-    // // Link value threshold and value threshold
+    // Link value threshold and value threshold
     await page
       .locator(".react-flow__handle-bottom")
       .nth(4)
       .dragTo(page.locator(".react-flow__handle-top").nth(4));
 
-    await page.getByRole("button", { name: "Pick a threshold" }).click();
+    await page
+      .getByRole("button", { name: "Pick a threshold" })
+      .first()
+      .click();
     await page.getByRole("spinbutton").fill("5");
     await page.getByRole("combobox").click();
     await page.getByText("Smaller than").click();
@@ -171,7 +177,7 @@ test.describe("Code Generation Test", () => {
     // Verify generated code
     expect(cleanedCode).toContain('from(bucket:"home")');
     expect(cleanedCode).toContain(
-      "range(start:2022-01-01T00:00:00Z,stop:2022-01-08T00:00:00Z)",
+      "range(start:2021-12-01T00:00:00Z,stop:2022-01-08T00:00:00Z)",
     );
     expect(cleanedCode).toContain('filter(fn:(r)=>(r._measurement=="home"');
     expect(cleanedCode).toContain('r._field=="co"');

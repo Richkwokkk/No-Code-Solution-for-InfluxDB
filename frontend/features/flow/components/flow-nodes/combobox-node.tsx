@@ -89,7 +89,7 @@ export function ComboboxNode({
             </CommandEmpty>
             {selections && selections.length > 0 && (
               <CommandGroup>
-                {selections.map((selection) => (
+                {selections?.map((selection) => (
                   <CommandItem
                     key={selection}
                     value={selection}

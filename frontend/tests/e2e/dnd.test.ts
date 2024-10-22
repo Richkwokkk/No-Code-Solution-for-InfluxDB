@@ -7,12 +7,12 @@ test.describe("Drag and Drop flow", () => {
     await page.fill('input[name="username"]', "dev1");
     await page.fill('input[name="password"]', "developer@123influx");
     await page.click('button[type="submit"]');
-      
+
     // Wait for redirection to the editor page
     await page.waitForURL("/editor");
   });
 
-  test('Drag nodes from sidebar and connect them', async ({ page }) => {
+  test("Drag nodes from sidebar and connect them", async ({ page }) => {
     // Select home for bucket
     await page.getByText("Select a bucket").click();
     await page.getByText("home").click();
@@ -36,8 +36,8 @@ test.describe("Drag and Drop flow", () => {
     // Select date from 2022-01-01 to 2022-01-08
     await page
       .locator('button:has-text("date range")')
-      .filter({ hasText: "Pick a date range" })
-      .click();
+      ?.filter({ hasText: "Pick a date range" })
+      ?.click();
     await page.getByLabel("Go to previous month").click();
     await page.getByLabel("Go to previous month").click();
     await page.getByLabel("Go to previous month").click();
@@ -129,7 +129,10 @@ test.describe("Drag and Drop flow", () => {
 
     await page.getByRole("button", { name: "Align" }).click();
     // Select value threshold
-    await page.getByRole("button", { name: "Pick a threshold" }).click();
+    await page
+      .getByRole("button", { name: "Pick a threshold" })
+      .first()
+      .click();
     await page.getByRole("spinbutton").fill("1");
     await page.getByRole("combobox").click();
     await page.getByText("Greater than").click();
@@ -147,12 +150,15 @@ test.describe("Drag and Drop flow", () => {
       .nth(4)
       .dragTo(page.locator(".react-flow__handle-top").nth(4));
 
-    await page.getByRole("button", { name: "Pick a threshold" }).click();
+    await page
+      .getByRole("button", { name: "Pick a threshold" })
+      .first()
+      .click();
     await page.getByRole("spinbutton").fill("5");
     await page.getByRole("combobox").click();
     await page.getByText("Smaller than").click();
-  
+
     // take a screenshot
-    await page.screenshot({ path: 'drag-and-connect-nodes.png' });
+    await page.screenshot({ path: "drag-and-connect-nodes.png" });
   });
-})
+});

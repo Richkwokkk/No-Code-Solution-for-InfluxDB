@@ -111,8 +111,8 @@ export function Chart({ type }: { type: "line" | "bar" | "area" }) {
 
   const chartComponentData = React.useMemo(() => {
     return chartData
-      .filter((row) => row.field === activeChart)
-      .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+      ?.filter((row) => row.field === activeChart)
+      ?.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
   }, [chartData, activeChart]);
 
   return (
@@ -129,8 +129,8 @@ export function Chart({ type }: { type: "line" | "bar" | "area" }) {
         </div>
         <div className="flex">
           {Array.from(labels)
-            .sort((a, b) => a[0].localeCompare(b[0]))
-            .map(([key, value]) => {
+            ?.sort((a, b) => a[0].localeCompare(b[0]))
+            ?.map(([key, value]) => {
               const chart = key as Row["field"];
               return (
                 <button
