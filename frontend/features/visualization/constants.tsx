@@ -1,5 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 
+import { ArrowUpDownIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import { ChartConfig } from "@/components/ui/chart";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Row } from "@/features/visualization/types";
@@ -31,11 +34,28 @@ export const columns: ColumnDef<Row>[] = [
   },
   {
     accessorKey: "time",
-    header: "Time",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Time
+          <ArrowUpDownIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "value",
-    header: "Value",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting()}>
+          Value
+          <ArrowUpDownIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "field",
