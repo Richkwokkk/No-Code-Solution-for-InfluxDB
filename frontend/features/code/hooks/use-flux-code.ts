@@ -28,10 +28,10 @@ export const useFluxCode = () => {
 
   const parseThresholds = React.useCallback(
     (node: Node, edges: Edge[], nodes: Node[]): string => {
-      const childEdges = edges.filter((edge: Edge) => edge.source === node.id);
+      const childEdges = edges?.filter((edge: Edge) => edge.source === node.id);
       const childNodes = childEdges
-        .map((edge: Edge) => nodes.find((n: Node) => n.id === edge.target))
-        .filter((n): n is Node => n !== undefined);
+        ?.map((edge: Edge) => nodes.find((n: Node) => n.id === edge.target))
+        ?.filter((n): n is Node => n !== undefined);
 
       if (childNodes.length === 0) {
         const thresholdData = node?.data as NodeData;
@@ -60,8 +60,8 @@ export const useFluxCode = () => {
       }
 
       const childConditions = childNodes
-        .map((childNode) => parseThresholds(childNode, edges, nodes))
-        .filter((condition) => condition !== "");
+        ?.map((childNode) => parseThresholds(childNode, edges, nodes))
+        ?.filter((condition) => condition !== "");
 
       const parentCondition = (() => {
         const thresholdData = node?.data as NodeData;
@@ -117,25 +117,25 @@ export const useFluxCode = () => {
       }
     }
 
-    const measurementEdges = edges.filter(
+    const measurementEdges = edges?.filter(
       (edge: Edge) => edge.source === dateRangeNode?.id,
     );
     const measurementNodes = measurementEdges
-      .map((edge: Edge) => nodes.find((node: Node) => node.id === edge.target))
-      .filter((n: Node | undefined): n is Node => n !== undefined);
+      ?.map((edge: Edge) => nodes.find((node: Node) => node.id === edge.target))
+      ?.filter((n: Node | undefined): n is Node => n !== undefined);
 
     if (measurementNodes.length > 0) {
       const combinedFilters = measurementNodes
         .map((measurementNode: Node) => {
           const connectedFieldNodes = edges
-            .filter((edge: Edge) => edge.source === measurementNode.id)
-            .map((edge: Edge) =>
+            ?.filter((edge: Edge) => edge.source === measurementNode.id)
+            ?.map((edge: Edge) =>
               nodes.find((node: Node) => node.id === edge.target),
             )
-            .filter((n: Node | undefined): n is Node => n !== undefined);
+            ?.filter((n: Node | undefined): n is Node => n !== undefined);
 
           const fieldFilters = connectedFieldNodes
-            .map((fieldNode: Node) => {
+            ?.map((fieldNode: Node) => {
               const thresholdFilter = parseThresholds(fieldNode, edges, nodes);
               return thresholdFilter
                 ? `(r._field == "${fieldNode?.data?.value ?? "/* Pick a field */"}" and ${thresholdFilter})`

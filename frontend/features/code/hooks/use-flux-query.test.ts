@@ -76,12 +76,16 @@ describe("useFluxQuery", () => {
     vi.clearAllMocks();
     const emptyCode = "";
     const commentCode = "/* a comment */";
-
-    const { result } = renderHook(() => useFluxQuery());
+    let capturedMutationFn: any;
+    vi.mocked(useMutation).mockImplementation((options: any) => {
+      capturedMutationFn = options.mutationFn;
+      return { mutate: vi.fn() } as any;
+    });
+    renderHook(() => useFluxQuery());
 
     await act(async () => {
-      const emptyResult = await result.current.mutateAsync(emptyCode);
-      const commentResult = await result.current.mutateAsync(commentCode);
+      const emptyResult = await capturedMutationFn(emptyCode);
+      const commentResult = await capturedMutationFn(commentCode);
 
       expect(emptyResult).toBeUndefined();
       expect(commentResult).toBeUndefined();

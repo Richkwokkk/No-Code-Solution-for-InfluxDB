@@ -17,11 +17,11 @@ export const useFluxQuery = () => {
   >({
     mutationFn: async (code: string) => {
       const sanitizedCode = code
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0)
-        .join(" ")
-        .replace(/\s*([|><=(),])\s*/g, "$1");
+        ?.split("\n")
+        ?.map((line) => line.trim())
+        ?.filter((line) => line.length > 0)
+        ?.join(" ")
+        ?.replace(/\s*([|><=(),])\s*/g, "$1");
 
       if (
         sanitizedCode === "" ||
@@ -48,9 +48,9 @@ export const useFluxQuery = () => {
       const chartData: Row[] = [];
       const tableData: Row[] = [];
       Object.values(data.result)
-        .flat()
-        .filter((r) => r.result === "_result")
-        .forEach((curr) => {
+        ?.flat()
+        ?.filter((r) => r.result === "_result")
+        ?.forEach((curr) => {
           const {
             room,
             _field: field,
@@ -68,7 +68,7 @@ export const useFluxQuery = () => {
             label: labels[field as "co" | "temp" | "hum"],
           });
 
-          const existingEntry = chartData.find(
+          const existingEntry = chartData?.find(
             (entry) =>
               entry.measurement === measurement &&
               entry.field === field &&
@@ -79,7 +79,7 @@ export const useFluxQuery = () => {
             existingEntry[room as "Kitchen" | "Living Room"] =
               parseFloat(value);
           } else {
-            chartData.push({
+            chartData?.push({
               time,
               measurement,
               field,
@@ -91,11 +91,11 @@ export const useFluxQuery = () => {
           }
         });
 
-      tableData.sort(
+      tableData?.sort(
         (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
       );
 
-      chartData.sort(
+      chartData?.sort(
         (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
       );
 

@@ -36,8 +36,8 @@ test.describe("Visualization", () => {
     // Select date from 2022-01-01 to 2022-01-08
     await page
       .locator('button:has-text("date range")')
-      .filter({ hasText: "Pick a date range" })
-      .click();
+      ?.filter({ hasText: "Pick a date range" })
+      ?.click();
     await page.getByLabel("Go to previous month").click();
     await page.getByLabel("Go to previous month").click();
     await page.getByLabel("Go to previous month").click();

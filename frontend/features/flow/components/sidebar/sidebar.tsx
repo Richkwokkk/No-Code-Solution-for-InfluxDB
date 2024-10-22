@@ -39,7 +39,7 @@ export const Sidebar = () => {
         <SidebarToggle isOpen={isSidebarOpen} setIsOpen={toggleSidebar} />
       </div>
       <div className="flex h-full w-full flex-col space-y-4 overflow-y-auto overflow-x-hidden bg-background p-4">
-        {Object.entries(sidebarNodes).map(
+        {Object.entries(sidebarNodes)?.map(
           ([type, { label, title, icon: Icon }]) => {
             return !isSidebarOpen ? (
               <TooltipProvider delayDuration={0} key={type}>
