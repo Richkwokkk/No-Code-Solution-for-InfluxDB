@@ -20,12 +20,20 @@ class RetrieveBucketsView(generics.GenericAPIView):
         try:
             # Check for authentication token in cookies
             cookies = request.COOKIES.get('login-session')
+            organization = request.query_params.get('organization')
             if not cookies:
                 return self.error_response("Unauthorized: Missing authentication token", status=401)
+            if not organization:
+                return self.error_response("Missing organization parameter", status=400)
 
             headers = self.get_headers(cookies)
-            response = self.make_request(headers)
             
+            # Get organization ID
+            org_id = self.get_organization_id(headers, organization)
+            if isinstance(org_id, JsonResponse):
+                return org_id  # Return error response if org_id is a JsonResponse
+
+            response = self.make_request(headers, org_id)
             return self.handle_response(response)
 
         except Timeout:
@@ -51,11 +59,27 @@ class RetrieveBucketsView(generics.GenericAPIView):
             "Content-Type": "application/json",
         }
 
-    def make_request(self, headers):
+    def get_organization_id(self, headers, organization):
+        """
+        Get the organization ID for the given organization name.
+        """
+        response_org = requests.get(f"{self.INFLUXDB_URL}/api/v2/orgs", headers=headers, timeout=self.TIMEOUT)
+        if response_org.status_code != 200:
+            return self.error_response("InfluxDB API returned an error", status=response_org.status_code)
+        
+        orgs_data = response_org.json().get('orgs', [])
+        for org in orgs_data:
+            if org['name'] == organization:
+                return org["id"]
+        
+        return self.error_response("Organization not found", status=404)
+
+    def make_request(self, headers, org_id):
         """
         Make a GET request to the InfluxDB API to retrieve buckets.
         """
-        return requests.get(f"{self.INFLUXDB_URL}/api/v2/buckets", headers=headers, timeout=self.TIMEOUT)
+        params = {"orgID": org_id}
+        return requests.get(f"{self.INFLUXDB_URL}/api/v2/buckets", headers=headers, params=params, timeout=self.TIMEOUT)
 
     def handle_response(self, response):
         """
