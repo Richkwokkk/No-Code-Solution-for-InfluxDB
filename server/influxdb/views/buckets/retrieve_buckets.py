@@ -6,7 +6,6 @@ from django.http import JsonResponse
 from requests.exceptions import RequestException, Timeout
 from json.decoder import JSONDecodeError
 
-# Set up logging for this module
 logger = logging.getLogger(__name__)
 
 class RetrieveBucketsView(generics.GenericAPIView):
