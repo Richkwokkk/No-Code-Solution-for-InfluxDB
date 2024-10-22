@@ -12,7 +12,7 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 import { LoginCard } from "@/features/auth/components/login-card";
 import { useLogin } from "@/features/auth/hooks/use-login";
 
-vi.mock("@/features/auth/hooks/useLogin", () => ({
+vi.mock("@/features/auth/hooks/use-login", () => ({
   useLogin: vi.fn(),
 }));
 
