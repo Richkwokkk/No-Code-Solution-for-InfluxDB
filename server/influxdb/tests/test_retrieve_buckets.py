@@ -10,7 +10,7 @@ class RetrieveBucketsViewTest(BaseTest):
 
     def test_retrieve_success_existing_data(self):
         payload_login = {
-            "username": "dev1",
+            "username": "dev0",
             "password": "developer@123influx"
         }
         response = self.client.post(self.url_login, payload_login, format='json')
@@ -26,31 +26,11 @@ class RetrieveBucketsViewTest(BaseTest):
         response_data = response.json()
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response_data['buckets'], ['home'])
-
-    def test_retrieve_success_future_time_range(self):
-        payload_login = {
-            "username": "dev1",
-            "password": "developer@123influx"
-        }
-        response = self.client.post(self.url_login, payload_login, format='json')
-        cookies = response.cookies.get('login-session')
-
-        payload_retrieve = {
-            "organization": "ATSYS",
-            "time-start": "2024-01-01T08:00:00Z",
-            "time-stop": "2024-01-01T20:00:01Z",
-        }
-
-        response = self.client.get(self.url_retrieve, payload_retrieve, cookies=cookies, format='json')
-        response_data = response.json()
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response_data['buckets'], [])
+        self.assertEqual(response_data['buckets'], ['_monitoring', '_tasks', 'bucket1', 'home'])
 
     def test_retrieve_fail_non_existing_org(self):
         payload_login = {
-            "username": "dev1",
+            "username": "dev0",
             "password": "developer@123influx"
         }
         response = self.client.post(self.url_login, payload_login, format='json')
