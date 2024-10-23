@@ -57,6 +57,8 @@ export const useFluxQuery = () => {
             _measurement: measurement,
             _time: time,
             _value: value,
+            _start: start,
+            _stop: stop,
           } = curr;
 
           tableData.push({
@@ -66,6 +68,8 @@ export const useFluxQuery = () => {
             room: room as "Kitchen" | "Living Room",
             value: parseFloat(value),
             label: labels[field as "co" | "temp" | "hum"],
+            start: formatDate(start as string, "yyyy-MM-dd HH:mm:ss"),
+            stop: formatDate(stop as string, "yyyy-MM-dd HH:mm:ss"),
           });
 
           const existingEntry = chartData?.find(
@@ -81,6 +85,8 @@ export const useFluxQuery = () => {
           } else {
             chartData?.push({
               time,
+              start,
+              stop,
               measurement,
               field,
               room,
