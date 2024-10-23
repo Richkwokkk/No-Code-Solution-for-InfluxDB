@@ -1,5 +1,7 @@
 export type Row = {
   time: string;
+  start: string;
+  stop: string;
   measurement: string;
   room: string;
   value: number;

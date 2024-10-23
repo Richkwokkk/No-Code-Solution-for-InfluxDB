@@ -56,9 +56,10 @@ export function Visualization() {
           <TabsContent value="table" className="mt-0">
             <div className="flex items-center gap-2">
               <Button
-                variant="outline"
                 className="px-3 text-xs font-semibold"
-                asChild
+                asChild={displayedData?.length !== 0}
+                disabled={displayedData?.length === 0}
+                variant="outline"
               >
                 <CSVLink data={displayedData} filename="export.csv">
                   Export CSV
