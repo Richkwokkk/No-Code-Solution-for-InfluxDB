@@ -88,8 +88,8 @@ export function Flow() {
 
   const isValidConnection = React.useCallback(
     (connection: Edge | Connection) => {
-      const sourceNode = nodes.find((node) => node.id === connection.source);
-      const targetNode = nodes.find((node) => node.id === connection.target);
+      const sourceNode = nodes?.find((node) => node.id === connection.source);
+      const targetNode = nodes?.find((node) => node.id === connection.target);
       const sourceType = sourceNode?.type as NodeType;
       const targetType = targetNode?.type as NodeType;
 

@@ -123,7 +123,7 @@ export function DateRangeNode({ id }: NodeProps) {
   };
 
   const getPresetRange = (presetName: string): DateRange => {
-    const preset = PRESETS.find(({ name }) => name === presetName);
+    const preset = PRESETS?.find(({ name }) => name === presetName);
     if (!preset) throw new Error(`Unknown date range preset: ${presetName}`);
     const from = new Date();
     const to = new Date();
