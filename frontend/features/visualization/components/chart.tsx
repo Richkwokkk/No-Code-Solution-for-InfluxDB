@@ -62,7 +62,7 @@ export function Chart({ type }: { type: "line" | "bar" | "area" }) {
 
   React.useEffect(() => {
     if (labels.size > 0) {
-      setActiveChart(Array.from(labels)[0][0] as Row["field"]);
+      setActiveChart(Array?.from(labels)[0][0] as Row["field"]);
     }
   }, [chartData, labels]);
 
@@ -120,7 +120,7 @@ export function Chart({ type }: { type: "line" | "bar" | "area" }) {
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle className="capitalize">
-            {Array.from(labels).find(([key]) => key === activeChart)?.[1]}
+            {Array?.from(labels)?.find(([key]) => key === activeChart)?.[1]}
           </CardTitle>
           <CardDescription>
             Showing data {dateRange.includes("-") ? "for " : "from "}
@@ -128,7 +128,7 @@ export function Chart({ type }: { type: "line" | "bar" | "area" }) {
           </CardDescription>
         </div>
         <div className="flex">
-          {Array.from(labels)
+          {Array?.from(labels)
             ?.sort((a, b) => a[0].localeCompare(b[0]))
             ?.map(([key, value]) => {
               const chart = key as Row["field"];

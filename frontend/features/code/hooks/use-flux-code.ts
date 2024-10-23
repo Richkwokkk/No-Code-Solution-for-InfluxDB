@@ -130,7 +130,7 @@ export const useFluxCode = () => {
           const connectedFieldNodes = edges
             ?.filter((edge: Edge) => edge.source === measurementNode.id)
             ?.map((edge: Edge) =>
-              nodes.find((node: Node) => node.id === edge.target),
+              nodes?.find((node: Node) => node.id === edge.target),
             )
             ?.filter((n: Node | undefined): n is Node => n !== undefined);
 
