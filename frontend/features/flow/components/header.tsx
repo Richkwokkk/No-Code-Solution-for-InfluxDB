@@ -63,6 +63,7 @@ export const Header = () => {
                   variant="outline"
                   onClick={() => setTheme(theme === "light" ? "dark" : "light")}
                   className="h-8 w-8 p-0"
+                  aria-label="toggle theme"
                 >
                   {theme === "light" ? (
                     <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -73,7 +74,9 @@ export const Header = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="center">
-                <span className="text-[10px] capitalize">toggle theme</span>
+                <span className="text-[10px] capitalize" aria-hidden>
+                  toggle theme
+                </span>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -82,12 +85,15 @@ export const Header = () => {
                   variant="outline"
                   onClick={() => toggleFlow?.()}
                   className={`h-8 w-8 p-0 ${isFlowOpen && "bg-accent text-accent-foreground"}`}
+                  aria-label={
+                    isFlowOpen ? "hide flow panel" : "show flow panel"
+                  }
                 >
                   <WorkflowIcon size={16} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="start" alignOffset={-40}>
-                <span className="text-[10px] capitalize">
+                <span className="text-[10px] capitalize" aria-hidden>
                   {isFlowOpen ? "hide" : "show"} flow panel
                 </span>
               </TooltipContent>
@@ -100,12 +106,17 @@ export const Header = () => {
                   className={`h-8 w-8 p-0 ${
                     isVisualizationOpen && "bg-accent text-accent-foreground"
                   }`}
+                  aria-label={
+                    isVisualizationOpen
+                      ? "hide visualization panel"
+                      : "show visualization panel"
+                  }
                 >
                   <ChartNoAxesCombinedIcon size={16} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="start" alignOffset={-60}>
-                <span className="text-[10px] capitalize">
+                <span className="text-[10px] capitalize" aria-hidden>
                   {isVisualizationOpen ? "hide" : "show"} visualization panel
                 </span>
               </TooltipContent>
@@ -118,19 +129,26 @@ export const Header = () => {
                   className={`h-8 w-8 p-0 ${
                     isCodeEditorOpen && "bg-accent text-accent-foreground"
                   }`}
+                  aria-label={
+                    isCodeEditorOpen ? "hide code editor" : "show code editor"
+                  }
                 >
                   <SquareTerminalIcon size={16} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="start" alignOffset={-40}>
-                <span className="text-[10px] capitalize">
+                <span className="text-[10px] capitalize" aria-hidden>
                   {isCodeEditorOpen ? "hide" : "show"} code editor
                 </span>
               </TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button className="h-8 w-8 p-0" onClick={handleRunQuery}>
+                <Button
+                  className="h-8 w-8 p-0"
+                  onClick={handleRunQuery}
+                  aria-label={isQueryRunning ? "pause query" : "run query"}
+                >
                   {isQueryRunning ? (
                     <PauseIcon size={16} />
                   ) : (
@@ -139,7 +157,7 @@ export const Header = () => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent align="start" alignOffset={-30}>
-                <span className="text-[10px] capitalize">
+                <span className="text-[10px] capitalize" aria-hidden>
                   {isQueryRunning ? "pause" : "run"} query
                 </span>
               </TooltipContent>
