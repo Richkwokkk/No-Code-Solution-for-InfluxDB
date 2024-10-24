@@ -18,6 +18,7 @@ function makeQueryClient({ isServer }: { isServer: boolean }) {
       queries: {
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
+        refetchOnWindowFocus: false, // default: true
         staleTime: 1000 * 60 * 60 * 24, // 24 hours
         gcTime: 1000 * 60 * 60 * 24, // 24 hours
       },
