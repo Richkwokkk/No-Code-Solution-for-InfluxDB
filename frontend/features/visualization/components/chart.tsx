@@ -61,8 +61,8 @@ export function Chart({ type }: { type: "line" | "bar" | "area" }) {
   const [activeChart, setActiveChart] = React.useState<Row["field"]>("co");
 
   React.useEffect(() => {
-    if (labels.size > 0) {
-      setActiveChart(Array.from(labels)[0][0] as Row["field"]);
+    if (labels?.size > 0) {
+      setActiveChart(Array?.from(labels)[0][0] as Row["field"]);
     }
   }, [chartData, labels]);
 
@@ -111,43 +111,53 @@ export function Chart({ type }: { type: "line" | "bar" | "area" }) {
 
   const chartComponentData = React.useMemo(() => {
     return chartData
-      .filter((row) => row.field === activeChart)
-      .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+      ?.filter((row) => row.field === activeChart)
+      ?.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
   }, [chartData, activeChart]);
 
   return (
     <Card>
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle className="capitalize">
-            {Array.from(labels).find(([key]) => key === activeChart)?.[1]}
-          </CardTitle>
-          <CardDescription>
-            Showing data {dateRange.includes("-") ? "for " : "from "}
-            {dateRange}
-          </CardDescription>
+          {labels?.size > 0 ? (
+            <>
+              <CardTitle className="capitalize">
+                {Array?.from(labels)?.find(([key]) => key === activeChart)?.[1]}
+              </CardTitle>
+              <CardDescription>
+                Showing data {dateRange.includes("-") ? "for " : "from "}
+                {dateRange}
+              </CardDescription>
+            </>
+          ) : (
+            <CardDescription className="text-center">
+              No data available
+            </CardDescription>
+          )}
         </div>
         <div className="flex">
-          {Array.from(labels)
-            .sort((a, b) => a[0].localeCompare(b[0]))
-            .map(([key, value]) => {
-              const chart = key as Row["field"];
-              return (
-                <button
-                  key={chart}
-                  data-active={activeChart === chart}
-                  className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
-                  onClick={() => setActiveChart(chart)}
-                >
-                  <span className="text-xs capitalize text-muted-foreground">
-                    Avg. {value}
-                  </span>
-                  <span className="text-lg font-bold leading-none sm:text-3xl">
-                    {average[chart as keyof typeof average]?.toFixed(2)}
-                  </span>
-                </button>
-              );
-            })}
+          {labels?.size > 0
+            ? Array?.from(labels)
+                ?.sort((a, b) => a[0].localeCompare(b[0]))
+                ?.map(([key, value]) => {
+                  const chart = key as Row["field"];
+                  return (
+                    <button
+                      key={chart}
+                      data-active={activeChart === chart}
+                      className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
+                      onClick={() => setActiveChart(chart)}
+                    >
+                      <span className="text-xs capitalize text-muted-foreground">
+                        Avg. {value}
+                      </span>
+                      <span className="text-lg font-bold leading-none sm:text-3xl">
+                        {average[chart as keyof typeof average]?.toFixed(2)}
+                      </span>
+                    </button>
+                  );
+                })
+            : null}
         </div>
       </CardHeader>
       <CardContent className="px-2 sm:p-6">

@@ -6,7 +6,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 
 function makeQueryClient({ isServer }: { isServer: boolean }) {
@@ -18,6 +18,7 @@ function makeQueryClient({ isServer }: { isServer: boolean }) {
       queries: {
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
+        refetchOnWindowFocus: false, // default: true
         staleTime: 1000 * 60 * 60 * 24, // 24 hours
         gcTime: 1000 * 60 * 60 * 24, // 24 hours
       },
@@ -69,7 +70,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   );
 }

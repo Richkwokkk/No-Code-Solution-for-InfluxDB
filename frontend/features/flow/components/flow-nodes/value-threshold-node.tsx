@@ -118,7 +118,7 @@ export const ValueThresholdNode = ({ id }: NodeProps) => {
           />
         </div>
       </PopoverTrigger>
-      <PopoverContent align="center" className="w-[230px] p-0">
+      <PopoverContent align="center" className="w-[200px] p-0">
         <div className="space-y-3 p-4">
           <div className="flex w-full items-center justify-between">
             <label
@@ -153,7 +153,7 @@ export const ValueThresholdNode = ({ id }: NodeProps) => {
                 value={nodeData?.result?.thresholdType}
               >
                 <SelectTrigger className="w-full text-xs">
-                  <SelectValue placeholder="Select a type" />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent align="center">
                   <SelectGroup>

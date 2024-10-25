@@ -20,13 +20,13 @@ function DataTable({ table }: { table: ReturnType<typeof useTable> }) {
   return isClient ? (
     <>
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table?.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+        <Table aria-label="Data table" role="table">
+          <TableHeader role="rowgroup">
+            {table?.getHeaderGroups()?.map((headerGroup) => (
+              <TableRow key={headerGroup.id} role="row">
+                {headerGroup.headers?.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} role="columnheader" scope="col">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -39,21 +39,23 @@ function DataTable({ table }: { table: ReturnType<typeof useTable> }) {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody role="rowgroup">
             {table?.getRowModel().rows?.length ? (
-              table?.getRowModel().rows.map((row) => (
+              table?.getRowModel().rows?.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+                  {row
+                    .getVisibleCells()
+                    ?.map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
                 </TableRow>
               ))
             ) : (
@@ -62,7 +64,7 @@ function DataTable({ table }: { table: ReturnType<typeof useTable> }) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  No data available
                 </TableCell>
               </TableRow>
             )}
@@ -70,7 +72,11 @@ function DataTable({ table }: { table: ReturnType<typeof useTable> }) {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+        <div
+          className="flex-1 text-sm text-muted-foreground"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {table?.getFilteredSelectedRowModel().rows.length} of{" "}
           {table?.getFilteredRowModel().rows.length} row(s) selected.
         </div>
@@ -80,6 +86,7 @@ function DataTable({ table }: { table: ReturnType<typeof useTable> }) {
             size="sm"
             onClick={() => table?.previousPage()}
             disabled={!table?.getCanPreviousPage()}
+            aria-label="Previous page"
           >
             Previous
           </Button>
@@ -88,6 +95,7 @@ function DataTable({ table }: { table: ReturnType<typeof useTable> }) {
             size="sm"
             onClick={() => table?.nextPage()}
             disabled={!table?.getCanNextPage()}
+            aria-label="Next page"
           >
             Next
           </Button>

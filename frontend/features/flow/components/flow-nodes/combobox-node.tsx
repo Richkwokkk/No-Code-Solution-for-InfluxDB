@@ -84,15 +84,19 @@ export function ComboboxNode({
             />
           )}
           <CommandList>
-            <CommandEmpty className="flex items-center justify-center p-3 text-xs">
+            <CommandEmpty
+              className="flex items-center justify-center p-3 text-xs"
+              aria-label={`No ${type} found.`}
+            >
               No {type} found.
             </CommandEmpty>
             {selections && selections.length > 0 && (
               <CommandGroup>
-                {selections.map((selection) => (
+                {selections?.map((selection) => (
                   <CommandItem
                     key={selection}
                     value={selection}
+                    aria-label={`Select ${selection}`}
                     onSelect={(currentValue) => {
                       updateNodeData(id, {
                         value: currentValue === value ? "" : currentValue,
@@ -108,8 +112,11 @@ export function ComboboxNode({
                         "mr-2 h-4 w-4",
                         value === selection ? "opacity-100" : "opacity-0",
                       )}
+                      aria-hidden={value === selection}
                     />
-                    <span className="text-xs">{selection}</span>
+                    <span className="text-xs" aria-hidden={value === selection}>
+                      {selection}
+                    </span>
                   </CommandItem>
                 ))}
               </CommandGroup>

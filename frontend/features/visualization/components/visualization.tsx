@@ -24,9 +24,9 @@ export function Visualization() {
     ? table.getSelectedRowModel().rows
     : table.getCoreRowModel().rows;
 
-  const displayedData = rows.map((row) => {
+  const displayedData = rows?.map((row) => {
     const visibleData: Record<string, any> = {};
-    table.getVisibleFlatColumns().forEach((column) => {
+    table.getVisibleFlatColumns()?.forEach((column) => {
       if (column.id === "select") return;
       visibleData[column.id] = row.getValue(column.id);
     });
@@ -56,9 +56,10 @@ export function Visualization() {
           <TabsContent value="table" className="mt-0">
             <div className="flex items-center gap-2">
               <Button
-                variant="outline"
                 className="px-3 text-xs font-semibold"
-                asChild
+                asChild={displayedData?.length !== 0}
+                disabled={displayedData?.length === 0}
+                variant="outline"
               >
                 <CSVLink data={displayedData} filename="export.csv">
                   Export CSV
@@ -86,8 +87,8 @@ export function Visualization() {
                 <DropdownMenuContent align="end">
                   {table
                     .getAllColumns()
-                    .filter((column) => column.getCanHide())
-                    .map((column) => {
+                    ?.filter((column) => column?.getCanHide())
+                    ?.map((column) => {
                       return (
                         <DropdownMenuCheckboxItem
                           key={column.id}

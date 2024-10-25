@@ -39,6 +39,7 @@
 **/playwright-report/
 **/blob-report/
 **/playwright/.cache/
+**/*.png
 
 # log
 *.log

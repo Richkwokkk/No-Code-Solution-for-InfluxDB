@@ -39,20 +39,24 @@ export const Sidebar = () => {
         <SidebarToggle isOpen={isSidebarOpen} setIsOpen={toggleSidebar} />
       </div>
       <div className="flex h-full w-full flex-col space-y-4 overflow-y-auto overflow-x-hidden bg-background p-4">
-        {Object.entries(sidebarNodes).map(
+        {Object.entries(sidebarNodes)?.map(
           ([type, { label, title, icon: Icon }]) => {
             return !isSidebarOpen ? (
-              <TooltipProvider delayDuration={0} key={type}>
-                <Tooltip>
-                  <TooltipTrigger>
+              <TooltipProvider delayDuration={0} key={type} aria-hidden>
+                <Tooltip aria-hidden>
+                  <TooltipTrigger aria-hidden>
                     <SidebarDraggable
                       key={type}
                       id={type}
                       type={type}
                       className="flex h-14 w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:bg-primary-foreground hover:shadow-md"
+                      aria-label={`Drag ${title} node`}
                     >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-accent">
-                        <Icon size={20} />
+                      <div
+                        className="flex h-10 w-10 items-center justify-center rounded-md bg-accent"
+                        aria-hidden
+                      >
+                        <Icon size={20} aria-hidden />
                       </div>
                     </SidebarDraggable>
                   </TooltipTrigger>
@@ -62,6 +66,7 @@ export const Sidebar = () => {
                     sideOffset={5}
                     alignOffset={-3}
                     className="text-[10px] capitalize"
+                    aria-hidden
                   >
                     {title}
                   </TooltipContent>
@@ -72,10 +77,14 @@ export const Sidebar = () => {
                 key={type}
                 id={type}
                 type={type}
+                aria-label={`Drag ${title} node`}
                 className="flex h-14 w-full cursor-grab items-center space-x-2 rounded-lg border bg-background p-2 shadow-sm transition-all ease-in-out hover:bg-primary-foreground hover:shadow-md"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
-                  <Icon size={20} />
+                <div
+                  className="flex h-10 w-10 items-center justify-center rounded-md bg-secondary"
+                  aria-hidden
+                >
+                  <Icon size={20} aria-hidden />
                 </div>
                 <div
                   className={cn(
