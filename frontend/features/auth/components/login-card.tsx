@@ -69,7 +69,7 @@ export function LoginCard() {
                 aria-invalid={errors.username ? "true" : "false"}
               />
               {errors.username && (
-                <span className="text-sm text-red-500">
+                <span className="text-sm text-destructive">
                   {errors.username.message ?? " "}
                 </span>
               )}
@@ -85,7 +85,7 @@ export function LoginCard() {
                 aria-invalid={errors.password ? "true" : "false"}
               />
               {errors.password && (
-                <span className="text-sm text-red-500">
+                <span className="text-sm text-destructive">
                   {errors.password.message}
                 </span>
               )}
